@@ -1,6 +1,6 @@
 <template>
   <div
-    class="container mx-auto flex h-24 max-w-screen-xl flex-wrap overflow-y-hidden font-medium"
+    class="container mx-auto flex h-24 max-w-screen-2xl flex-wrap overflow-y-hidden font-medium"
   >
     <img
       class="-mt-4 h-[130px] flex-none max-lg:hidden lg:order-1"
