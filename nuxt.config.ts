@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     compatibilityVersion: 4, // Nuxt 4 대비해서 미리 활성화
   },
 
-  modules: ['@nuxt/eslint'],
+  modules: ['@nuxt/eslint', '@nuxtjs/tailwindcss'],
   eslint: {
     config: {
       stylistic: true,
