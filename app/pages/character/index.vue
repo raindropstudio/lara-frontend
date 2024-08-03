@@ -1,7 +1,8 @@
 <template>
   <div>
-    <NavBar />
-    <NuxtPage />
+    <h1 class="text-3xl font-bold underline">
+      ㅁㄴㅇㄹ
+    </h1>
   </div>
 </template>
 
