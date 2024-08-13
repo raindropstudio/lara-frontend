@@ -26,3 +26,9 @@
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+useSeoMeta({
+  title: 'lara.moe',
+})
+</script>
