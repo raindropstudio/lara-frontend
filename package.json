@@ -26,7 +26,8 @@
     "nuxt": "^3.12.4",
     "pinia": "^2.2.1",
     "pretendard": "^1.3.9",
-    "vue": "latest"
+    "vue": "latest",
+    "vue-confetti-explosion": "^1.0.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.4.0",

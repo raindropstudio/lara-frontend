@@ -1,5 +1,9 @@
 <template>
   <div class="w-full">
+    <ConfettiExplosion
+      v-if="age.text === '주년'"
+      class="mx-auto"
+    />
     <div
       class="flex w-full select-none justify-center overflow-x-clip text-nowrap"
     >
@@ -9,8 +13,22 @@
         <div class="mr-[-170px] bg-gradient-to-r from-lucid-50 via-red-700 via-20% to-black to-70% bg-clip-text font-semibold text-transparent">
           제네시스 무기 해방자
         </div>
-        <div class="-mt-2 mr-[-160px] bg-gradient-to-r from-lucid-50 to-lucidviolet-500 to-20% bg-clip-text font-light text-transparent">
-          <span class="font-thin">#모험</span> {{ age }}<span class="font-thin">일 차</span>
+        <div class="-mt-2 mr-[-160px]">
+          <span class="bg-gradient-to-r from-lucid-50 to-lucidviolet-500 to-40% bg-clip-text font-thin text-transparent">#모험 </span>
+          <span
+            v-if="age.text === '주년'"
+            class="bg-gradient-to-tr from-sunnyorange to-yellow-300 bg-clip-text font-medium text-transparent"
+          >
+            <IconPopper class="-mx-2 inline size-9 text-sunnyorange" />
+            {{ age.number }}{{ age.text }}
+            <IconPopper class="-mx-2 inline size-9 -scale-x-100 text-sunnyorange" />
+          </span>
+          <span
+            v-else
+            class="text-lucidviolet-500"
+          >
+            {{ age.number }}<span class="font-thin">{{ age.text }}</span>
+          </span>
         </div>
         <div class="-mt-2 mr-[-165px] bg-gradient-to-r from-lucid-50 to-lucidviolet-500 to-20% bg-clip-text font-thin text-transparent">
           #나무의 수보다 많은 경험
@@ -57,7 +75,7 @@
         </div>
         <div class="-mt-2 ms-[-205px] font-normal text-lucidviolet-700">
           <span class="font-thin text-lucidviolet-500">
-            {{ (character?.popularity ?? 0) >= 0 ? '좋아요' : '싫어요' }}
+            {{ popularityText }}
           </span>
           {{ character?.popularity }}
           <div class="-ms-3 inline-block text-4xl font-normal text-lucidviolet-300">
@@ -77,31 +95,64 @@
 </template>
 
 <script lang="ts" setup>
-const { character } = defineProps<{
+import ConfettiExplosion from 'vue-confetti-explosion'
+
+const props = defineProps<{
   character: Character | undefined
 }>()
+const character = toRef(props, 'character')
 
 // 캐릭터 풀사이즈 이미지
 const characterFullImageUrl = computed(() => {
-  if (!character) return ''
-  return character.imageUrl.replace('Character', 'Character/180')
+  if (!character.value) return ''
+  return character.value.imageUrl.replace('Character', 'Character/180')
 })
 
 // 캐릭터 누적일수
 const age = computed(() => {
-  if (!character) return 0
-  const created = new Date(character.dateCreate)
+  if (!character.value) return { number: 0, text: '을 언제 시작했더라' }
+  const created = new Date(character.value.dateCreate)
   const now = new Date()
+  const kstNow = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Seoul' }))
+
+  if (kstNow.getFullYear() > created.getFullYear() && kstNow.getMonth() === created.getMonth() && kstNow.getDate() === created.getDate()) {
+    return {
+      number: kstNow.getFullYear() - created.getFullYear(),
+      text: '주년',
+    }
+  }
+
   const diff = now.getTime() - created.getTime()
-  return Math.floor(diff / (1000 * 60 * 60 * 24))
+  return {
+    number: Math.floor(diff / (1000 * 60 * 60 * 24)),
+    text: '일 차',
+  }
 })
 
 // 성별 텍스트
 const genderText = computed(() => {
-  if (!character) return ''
-  if (character.gender === '남') return '소년'
-  if (character.gender === '여') return '소녀'
-  if (character.gender === '기타') return '쌍둥이' // 제로
+  if (!character.value) return ''
+  if (character.value.gender === '남') return '소년'
+  if (character.value.gender === '여') return '소녀'
+  if (character.value.gender === '기타') return '쌍둥이' // 제로
   return ''
+})
+
+// 캐릭터 인기도 멘트
+const popularityText = computed(() => {
+  if (!character.value) return ''
+  if (character.value.popularity >= 99999) return '메이플의 슈퍼스타'
+  if (character.value.popularity >= 50000) return '메이플 셀러브리티'
+  if (character.value.popularity >= 10000) return '메이플의 아이돌'
+  if (character.value.popularity >= 5000) return '메이플 라이징스타'
+  if (character.value.popularity >= 1000) return '메이플의 인기인'
+  if (character.value.popularity >= 500) return '걸어다니는 좋아요'
+  if (character.value.popularity >= 100) return '모두가 좋아하는'
+  if (character.value.popularity >= 10) return '좋아요 수집가'
+  if (character.value.popularity === 1) return '친구가 눌러준'
+  if (character.value.popularity === 0) return '중립적인 사람'
+  if (character.value.popularity === -1) return '실수로 비추누른'
+  if (character.value.popularity <= -99999) return '어둠의 슈퍼스타'
+  return '싫어요'
 })
 </script>

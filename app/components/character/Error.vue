@@ -16,5 +16,5 @@
 </template>
 
 <script lang="ts" setup>
-// TODO: 오류 코드별로 메시지 분리
+// TODO: 오류 코드별로 메시지 분리 / 재시도 및 리셋버튼
 </script>
