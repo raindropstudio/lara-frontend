@@ -71,7 +71,7 @@
         leave-to="opacity-0 w-0"
       >
         <span class="inline-block w-14 text-right">
-          {{ duration }} 전
+          {{ duration === '0분' ? '방금 전' : duration + ' 전' }}
         </span>
       </HTransitionRoot>
     </button>

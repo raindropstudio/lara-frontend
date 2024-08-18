@@ -10,8 +10,11 @@
       <div
         class="flex min-w-96 flex-1 flex-col items-end text-right text-5xl"
       >
-        <div class="mr-[-170px] bg-gradient-to-r from-lucid-50 via-red-700 via-20% to-black to-70% bg-clip-text font-semibold text-transparent">
-          제네시스 무기 해방자
+        <div
+          class="mr-[-160px] bg-gradient-to-r from-lucid-50 via-20% to-black to-70% bg-clip-text font-semibold text-transparent"
+          :class="typeof liberation === 'object' ? liberation.class : ''"
+        >
+          {{ liberation.text }}
         </div>
         <div class="-mt-2 mr-[-160px]">
           <span class="bg-gradient-to-r from-lucid-50 to-lucidviolet-500 to-40% bg-clip-text font-thin text-transparent">#모험 </span>
@@ -51,7 +54,7 @@
         class="flex min-w-96 flex-1 flex-col text-5xl"
       >
         <div
-          class="ms-[-180px] font-extrabold text-sunnyorange"
+          class="ms-[-180px] font-extrabold text-emerald-700"
         >
           {{ character?.class }}
         </div>
@@ -108,6 +111,14 @@ const characterFullImageUrl = computed(() => {
   return character.value.imageUrl.replace('Character', 'Character/180')
 })
 
+// 제네시스 무기 해방여부멘트
+const liberation = computed(() => {
+  if (!character.value) return { text: '', class: '' }
+  if (character.value.liberationQuestClear) return { text: '제네시스 무기의 주인', class: 'via-red-700' }
+  if (character.value.level < 200) return { text: '성장의 길 위에 선', class: 'via-blue-700' }
+  return { text: '검은마법사의 대적자', class: 'via-red-700' }
+})
+
 // 캐릭터 누적일수
 const age = computed(() => {
   if (!character.value) return { number: 0, text: '을 언제 시작했더라' }
@@ -154,5 +165,30 @@ const popularityText = computed(() => {
   if (character.value.popularity === -1) return '실수로 비추누른'
   if (character.value.popularity <= -99999) return '어둠의 슈퍼스타'
   return '싫어요'
+})
+
+const jobInfoMap: { [key: string]: { prefix: string, group: string } } = {
+  // 모험가 직업군
+  '히어로': { prefix: '전설적인', group: '모험가' },
+  '팔라딘': { prefix: '빛의 수호자', group: '모험가' },
+  '다크나이트': { prefix: '어둠의', group: '모험가' },
+  '비숍': { prefix: '빛을 다루는', group: '모험가' },
+  '나이트로드': { prefix: '그림자 속의', group: '모험가' },
+  '섀도어': { prefix: '암흑의', group: '모험가' },
+  '듀얼블레이드': { prefix: '양손검의', group: '모험가' },
+  '아크메이지(불,독)': { prefix: '불과 독을 다루는', group: '모험가' },
+  '아크메이지(썬,콜)': { prefix: '태양과 냉기를 다루는', group: '모험가' },
+  '캡틴': { prefix: '바다를 누비는', group: '모험가' },
+  '캐논슈터': { prefix: '포탄을 날리는', group: '모험가' },
+
+}
+
+const defaultJobInfo = { prefix: '전설적인', group: '알 수 없는 직업군' }
+
+const jobInfo = computed(() => {
+  if (!character.value) return defaultJobInfo
+
+  const className = character.value.class
+  return jobInfoMap[className] || defaultJobInfo // 직업군 매핑 테이블에서 정보를 찾아 반환
 })
 </script>
