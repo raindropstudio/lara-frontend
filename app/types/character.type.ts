@@ -14,6 +14,8 @@ export interface Character {
   liberationQuestClear: boolean
   popularity: number
   updatedAt: string
-
-  // ...
+  stat: [{
+    statName: string
+    statValue: number
+  }]
 }

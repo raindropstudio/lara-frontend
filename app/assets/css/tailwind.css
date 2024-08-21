@@ -21,9 +21,9 @@
 
   /* 스크롤바 */
   html {
-    background-color: theme('colors.lucid.50');
+    background-color: theme('colors.lucid.light');
     scrollbar-gutter: stable;
     scrollbar-width: auto;
-    scrollbar-color: theme('colors.lucidviolet.300') theme('colors.lucid.50');
+    scrollbar-color: theme('colors.lucidviolet.300') theme('colors.lucid.light');
   }
 }

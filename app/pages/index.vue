@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-useSeoMeta({
+useHead({
   title: 'lara.moe',
 })
 </script>

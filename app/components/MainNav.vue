@@ -14,7 +14,7 @@
         </NuxtLink>
       </div>
       <HPopover class="relative sm:hidden">
-        <HPopoverButton class="flex items-center px-8 text-lg text-lucidviolet-700">
+        <HPopoverButton class="flex items-center px-2 text-lg text-lucidviolet-700">
           <span class="ml-6">
             {{ currentTitle }}
           </span>
@@ -29,7 +29,7 @@
             /></svg>
           </div>
         </HPopoverButton>
-        <HPopoverPanel class="absolute -left-4 z-50 mt-2 w-48 divide-y divide-lucidviolet-200 rounded-lg bg-white text-center shadow-lg ring-1 ring-lucidviolet-200">
+        <HPopoverPanel class="absolute -left-10 z-50 mt-2 w-48 divide-y divide-lucidviolet-200 rounded-lg bg-white text-center shadow-lg ring-1 ring-lucidviolet-200">
           <NuxtLink
             v-for="(link, idx) in links"
             :key="idx"
@@ -45,7 +45,7 @@
           <NuxtLink
             v-for="(link, idx) in links"
             :key="idx"
-            :to="link.path"
+            :to="link.disabled ? '' : link.path"
             :class="getLinkClass(link.path) + ' rounded-lg p-2'"
           >
             {{ link.name }}

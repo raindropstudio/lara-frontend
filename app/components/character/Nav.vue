@@ -2,7 +2,7 @@
   <div
     class="flex items-center justify-center text-nowrap rounded-full border border-lucidviolet-200 bg-white py-1 text-lucidviolet-700 transition-all duration-300 ease-in-out"
     :class="[
-      showImage && isReady ? 'px-4' : 'px-8',
+      showImage && isReady ? 'px-1' : 'px-1',
     ]"
   >
     <div
@@ -12,14 +12,15 @@
         :show="showImage && isReady"
         enter="transition-all duration-300 ease-in-out"
         enter-from="opacity-0 scale-0 size-0"
-        enter-to="opacity-100 scale-100 size-6 mr-4"
-        entered="size-6 mr-4"
+        enter-to="opacity-100 scale-100 size-6 mr-2"
+        entered="size-6 mr-2"
         leave="transition-all duration-300 ease-in-out"
-        leave-from="opacity-100 scale-100 size-6 mr-4"
+        leave-from="opacity-100 scale-100 size-6 mr-2"
         leave-to="opacity-0 scale-0 size-0"
       >
-        <div
-          class="size-6 overflow-hidden rounded-full border border-lucidviolet-200"
+        <button
+          class="size-6 overflow-hidden rounded-full border border-lucidviolet-200 ring-lucidviolet-50 hover:ring-2"
+          @click="scrollToTop"
         >
           <img
             :src="characterImageUrl"
@@ -27,25 +28,26 @@
             class="size-12 -translate-y-1/4 -scale-x-100 object-cover"
             draggable="false"
           >
-        </div>
+        </button>
       </HTransitionRoot>
     </div>
-    <div class="flex items-center justify-center gap-8">
-      <div>
-        기본정보
-      </div>
-      <div>
-        장비
-      </div>
-      <div>
-        헥사
-      </div>
-      <div>
-        스텟
-      </div>
+    <div class="relative flex items-center justify-center font-light">
+      <NuxtLink
+        v-for="(menu, idx) in menus"
+        :key="idx"
+        :to="{ hash: menu.hash }"
+        class="rounded-full px-4 transition-all hover:bg-lucidviolet-100 hover:text-lucidviolet-800"
+        :class="[
+          currentSection === menu.hash.slice(1)
+            ? 'bg-lucidviolet-50 text-lucidviolet-800'
+            : '',
+        ]"
+      >
+        {{ menu.name }}
+      </NuxtLink>
     </div>
     <button
-      class="ms-6 flex items-center justify-center rounded-full px-2 font-extralight hover:bg-lucidviolet-50"
+      class="flex items-center justify-center rounded-full px-1 font-extralight hover:bg-lucidviolet-100"
       :disabled="updateStatus === 'pending'"
       :class="[
         updateStatus === 'pending' ? 'cursor-wait text-lucidviolet-400' : 'cursor-pointer',
@@ -53,6 +55,19 @@
       ]"
       @click="$emit('refresh')"
     >
+      <HTransitionRoot
+        :show="updateStatus !== 'pending'"
+        enter="transition-all duration-300 ease-in-out"
+        enter-from="opacity-0 w-0"
+        enter-to="opacity-100 w-16"
+        leave="transition-all duration-300 ease-in-out"
+        leave-from="opacity-100 w-16"
+        leave-to="opacity-0 w-0"
+      >
+        <span class="inline-block w-16">
+          {{ duration === '0분' ? '방금 전' : duration + ' 전' }}
+        </span>
+      </HTransitionRoot>
       <div class="size-4">
         <IconRefresh
           v-if="updateStatus !== 'pending'"
@@ -61,19 +76,6 @@
           v-if="updateStatus === 'pending'"
         />
       </div>
-      <HTransitionRoot
-        :show="updateStatus !== 'pending'"
-        enter="transition-all duration-300 ease-in-out"
-        enter-from="opacity-0 w-0"
-        enter-to="opacity-100 w-14"
-        leave="transition-all duration-300 ease-in-out"
-        leave-from="opacity-100 w-14"
-        leave-to="opacity-0 w-0"
-      >
-        <span class="inline-block w-14 text-right">
-          {{ duration === '0분' ? '방금 전' : duration + ' 전' }}
-        </span>
-      </HTransitionRoot>
     </button>
   </div>
 </template>
@@ -86,11 +88,14 @@ const props = defineProps<{
   showImage: boolean
   updatedAt: string | undefined
   updateStatus: string
+  currentSection: string
 }>()
 defineEmits <{
   refresh: []
 }>()
-const { characterImageUrl, showImage, updatedAt, updateStatus } = toRefs(props)
+const { characterImageUrl, showImage, updatedAt, updateStatus, currentSection } = toRefs(props)
+
+// 캐릭터 이미지 아이콘 플래시때문에 딜레이 추가
 const isReady = ref(false)
 
 onMounted(() => {
@@ -119,4 +124,22 @@ const duration = computed(() => {
     spacer: '',
   })
 })
+
+const menus = [
+  { name: '요약', hash: '#summary' },
+  { name: '장비', hash: '#equipment' },
+  { name: '헥사', hash: '#hexa' },
+  { name: '스텟', hash: '#stat' },
+]
+
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  })
+  // after scroll, url hash will be removed
+  setTimeout(() => {
+    window.location.hash = ''
+  }, 1000)
+}
 </script>

@@ -1,13 +1,19 @@
 <template>
   <div class="flex flex-col items-center justify-center">
     <div class="mt-20 flex items-center justify-center">
-      <h1 class="bg-gradient-to-r from-lucidviolet-300 to-lucidviolet-800 bg-clip-text text-8xl font-bold text-transparent">
+      <h1
+        class="bg-gradient-to-r from-lucidviolet-300 to-lucidviolet-800 bg-clip-text text-8xl font-bold text-transparent"
+        @click="initStatus === 'error'
+          ? navigateTo(`/character?input=${$route.params.nickname}`)
+          : ''
+        "
+      >
         {{ $route.params.nickname }}
       </h1>
     </div>
     <div
       ref="header"
-      class="h-64"
+      class="h-64 w-full"
     >
       <HTransitionRoot
         appear
@@ -44,20 +50,49 @@
       enter="transition-opacity duration-300 ease-in"
       enter-from="opacity-0"
       enter-to="opacity-100"
+      class="flex w-full flex-col items-center justify-center"
     >
       <div
-        class="sticky top-4 mb-4"
+        class="sticky top-4"
       >
         <CharacterNav
           :character-image-url="character?.imageUrl"
           :show-image="!headerIsVisible"
           :updated-at="character?.updatedAt"
           :update-status="updateStatus"
+          :current-section="headerIsVisible ? '' : currentSection"
           @refresh="updateCharacter"
         />
       </div>
-      <div class="h-[2000px]">
-        test
+      <div
+        id="summary"
+        ref="summary"
+        class="w-full max-w-screen-xl px-4 py-12"
+      >
+        <CharacterSummary
+          :character="character"
+        />
+      </div>
+      <div
+        id="equipment"
+        ref="equipment"
+        class="h-[500px] w-full bg-white py-24"
+      >
+        장비
+      </div>
+      <div
+        id="hexa"
+        ref="hexa"
+        class="h-[1000px] w-full py-24"
+      >
+        헥사
+      </div>
+      <div
+        id="stat"
+        ref="stat"
+        class="h-[500px] w-full bg-white py-24"
+      >
+        스텟
       </div>
     </HTransitionRoot>
   </div>
@@ -68,7 +103,7 @@ import type { AsyncDataRequestStatus } from '#app'
 
 const route = useRoute()
 
-useSeoMeta({
+useHead({
   title: `${route.params.nickname} | lara.moe`,
 })
 
@@ -79,6 +114,7 @@ const { status: initStatus, data: character } = useLara<Character>(`character/${
 const updateStatus = ref<AsyncDataRequestStatus>('idle')
 
 const updateCharacter = async () => {
+  updateStatus.value = 'pending'
   const { status, data: updatedCharacter } = await useLara<Character>(`character/${route.params.nickname}`, {
     params: {
       update: true,
@@ -89,4 +125,28 @@ const updateCharacter = async () => {
     character.value = updatedCharacter.value
   }
 }
+
+const currentSection = ref('')
+const summary = ref<HTMLElement | null>(null)
+const equipment = ref<HTMLElement | null>(null)
+const hexa = ref<HTMLElement | null>(null)
+const stat = ref<HTMLElement | null>(null)
+
+const sections = [
+  { key: 'summary', ref: summary },
+  { key: 'equipment', ref: equipment },
+  { key: 'hexa', ref: hexa },
+  { key: 'stat', ref: stat },
+]
+
+sections.forEach((section) => {
+  useIntersectionObserver(section.ref, (entries) => {
+    if (entries[0]?.isIntersecting) {
+      currentSection.value = section.key
+    }
+  }, {
+    rootMargin: '-50% 0% -50% 0%',
+    threshold: 0,
+  })
+})
 </script>

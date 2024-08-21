@@ -26,8 +26,13 @@ export default <Partial<Config>>{
           950: '#2d2b3b',
         },
         lucid: {
-          50: '#fafaff', // lucidLight
-          900: '#1C2129', // lucidDark // TODO: 색 선정하기
+          light: '#fafaff',
+          violetGray: '#7E7F99',
+        },
+        lucidGray: {
+          light: '#E6E6E6',
+          medium: '#BBBBBB',
+          dark: '#6D6D6D',
         },
       },
       fontFamily: {

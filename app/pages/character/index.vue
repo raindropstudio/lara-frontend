@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mt-[70px] flex items-center justify-center">
+    <div class="mt-[70.5px] flex items-center justify-center">
       <div class="w-16" />
       <input
         ref="input"
@@ -22,7 +22,10 @@
 <script lang="ts" setup>
 import { createTypeStream, delay } from 'hangul-typing-animation'
 
-useSeoMeta({
+const route = useRoute()
+const router = useRouter()
+
+useHead({
   title: '캐릭터검색 | lara.moe',
 })
 
@@ -79,9 +82,12 @@ onMounted(() => {
 })
 
 onActivated(async () => {
+  const queryInput = route.query.input as string | undefined
+
   if (input.value) {
-    input.value.value = ''
+    input.value.value = queryInput ?? ''
     input.value.focus()
+    router.replace({ query: { ...route.query, input: undefined } })
   }
 })
 </script>
