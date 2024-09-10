@@ -66,20 +66,30 @@ const props = defineProps<{
 const character = toRef(props, 'character')
 
 const combatPower = computed(() => {
-  const combat = character.value?.stat?.find(stat => stat.statName === '전투력')?.statValue
+  const combat = character.value?.stat?.combatPower
 
   // 123456789 => 1억 2345만 6789
   return formatToKoreanNumber(combat ?? 0)
 })
 
 const mainStat = computed(() => {
-  const list = ['STR', 'DEX', 'INT', 'LUK']
-  const maxStat = list.reduce((acc, cur) => {
-    const stat = character.value?.stat.find(stat => stat.statName === cur)
-    if (!stat) return acc
-    return acc.statValue > stat.statValue ? acc : stat
-  }, { statName: '', statValue: 0 })
-  return maxStat
+  const stats = {
+    str: character.value?.stat?.str,
+    dex: character.value?.stat?.dex,
+    int: character.value?.stat?.int,
+    luk: character.value?.stat?.luk,
+  }
+  const mainStat = {
+    statName: '',
+    statValue: 0,
+  }
+  Object.entries(stats).forEach(([key, value]) => {
+    if ((value ?? -1) > mainStat.statValue) {
+      mainStat.statName = key.toUpperCase()
+      mainStat.statValue = value ?? -1
+    }
+  })
+  return mainStat
 })
 
 // TODO: 임시값 처리한것들 실제값 받아와서 변경하기

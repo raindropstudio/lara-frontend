@@ -23,7 +23,7 @@
           @click="scrollToTop"
         >
           <img
-            :src="characterImageUrl"
+            :src="getCharacterImageUrl(characterImageUrl)"
             alt="character avatar"
             class="size-12 -translate-y-1/4 -scale-x-100 object-cover"
             draggable="false"

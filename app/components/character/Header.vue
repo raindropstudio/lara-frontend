@@ -25,7 +25,7 @@
       </div>
       <div class="-mt-48">
         <img
-          :src="characterFullImageUrl"
+          :src="getLargeCharacterImageUrl(character?.imageUrl)"
           alt="character"
           class="pointer-events-none relative z-10 size-[448px] drop-shadow-lg [image-rendering:_pixelated]"
           draggable="false"
@@ -58,12 +58,6 @@ const props = defineProps<{
   character: Character | undefined
 }>()
 const character = toRef(props, 'character')
-
-// 캐릭터 풀사이즈 이미지
-const characterFullImageUrl = computed(() => {
-  if (!character.value) return ''
-  return character.value.imageUrl.replace('Character', 'Character/180')
-})
 
 // 생일 여부
 const birthday = computed(() => {
