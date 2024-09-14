@@ -4,7 +4,7 @@
       <div class="text-base font-normal text-gray-500">
         유니온
       </div>
-      <div class="text-3xl font-bold text-lucid-violetGray">
+      <div class="text-3xl font-bold text-lucid-violetgray">
         00000
       </div>
       <div class="text-sm font-normal text-lucidviolet-700">
@@ -15,7 +15,7 @@
       <div class="text-base font-normal text-gray-500">
         레벨
       </div>
-      <div class="text-3xl font-bold text-lucid-violetGray">
+      <div class="text-3xl font-bold text-lucid-violetgray">
         {{ character?.level }}.{{ character?.expRate.toFixed(0) }}
       </div>
       <div class="text-sm font-normal text-lucidviolet-700">
@@ -37,7 +37,7 @@
       <div class="text-base font-normal text-gray-500">
         {{ mainStat.statName }}
       </div>
-      <div class="text-3xl font-bold text-lucid-violetGray">
+      <div class="text-3xl font-bold text-lucid-violetgray">
         {{ mainStat.statValue }}
       </div>
       <div class="text-sm font-normal text-lucidviolet-700">
@@ -48,7 +48,7 @@
       <div class="text-base font-normal text-gray-500">
         헥사 강화
       </div>
-      <div class="text-3xl font-bold text-lucid-violetGray">
+      <div class="text-3xl font-bold text-lucid-violetgray">
         00.00%
       </div>
       <div class="text-sm font-normal text-lucidviolet-700">

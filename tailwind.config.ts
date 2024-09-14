@@ -27,9 +27,9 @@ export default <Partial<Config>>{
         },
         lucid: {
           light: '#fafaff',
-          violetGray: '#7E7F99',
+          violetgray: '#7E7F99',
         },
-        lucidGray: {
+        lucidgray: {
           light: '#E6E6E6',
           medium: '#BBBBBB',
           dark: '#6D6D6D',

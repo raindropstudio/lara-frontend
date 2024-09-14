@@ -23,7 +23,7 @@
     "@vueuse/nuxt": "^10.11.1",
     "hangul-typing-animation": "^1.1.5",
     "humanize-duration": "^3.32.1",
-    "nuxt": "^3.12.4",
+    "nuxt": "^3.13.1",
     "pinia": "^2.2.1",
     "pretendard": "^1.3.9",
     "vue": "latest",

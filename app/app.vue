@@ -5,7 +5,11 @@
     />
     <div class="">
       <MainNav />
-      <NuxtPage :keepalive="{ exclude: [], max: 10 }" />
+      <NuxtPage
+        :keepalive="{ exclude: [], max: 10 }"
+        class="min-h-[calc(100vh-80px)]"
+      />
+      <MainFooter />
     </div>
   </div>
 </template>
