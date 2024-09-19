@@ -34,6 +34,14 @@ export default <Partial<Config>>{
           medium: '#BBBBBB',
           dark: '#6D6D6D',
         },
+        potential: {
+          normal: '#C5C5C5',
+          rare: '#0093F6',
+          epic: '#D253FF',
+          unique: '#FFD600',
+          legendary: '#00FF1A',
+          exceptional: '#FE1C1C',
+        },
       },
       fontFamily: {
         sans: [

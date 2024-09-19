@@ -77,16 +77,20 @@
         <div
           id="equipment"
           ref="equipment"
-          class="h-[500px] w-full bg-white py-24"
+          class="w-full bg-white"
         >
-          장비
+          <div class="mx-auto max-w-screen-xl">
+            <CharacterEquipment
+              :character="character"
+            />
+          </div>
         </div>
         <div
-          id="hexa"
-          ref="hexa"
+          id="skill"
+          ref="skill"
           class="h-[1000px] w-full py-24"
         >
-          헥사
+          스킬
         </div>
         <div
           id="stat"
@@ -94,6 +98,13 @@
           class="h-[500px] w-full bg-white py-24"
         >
           스텟
+        </div>
+        <div
+          id="union"
+          ref="union"
+          class="h-[1000px] w-full py-24"
+        >
+          유니온
         </div>
       </HTransitionRoot>
     </div>
@@ -131,14 +142,16 @@ const updateCharacter = async () => {
 const currentSection = ref('')
 const summary = ref<HTMLElement | null>(null)
 const equipment = ref<HTMLElement | null>(null)
-const hexa = ref<HTMLElement | null>(null)
+const skill = ref<HTMLElement | null>(null)
 const stat = ref<HTMLElement | null>(null)
+const union = ref<HTMLElement | null>(null)
 
 const sections = [
   { key: 'summary', ref: summary },
   { key: 'equipment', ref: equipment },
-  { key: 'hexa', ref: hexa },
+  { key: 'skill', ref: skill },
   { key: 'stat', ref: stat },
+  { key: 'union', ref: union },
 ]
 
 sections.forEach((section) => {
