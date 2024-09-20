@@ -34,8 +34,27 @@
       </div>
     </div>
     <div class="flex w-28 flex-col items-center justify-center">
-      <div class="text-base font-normal text-gray-500">
+      <div class="inline-flex items-center text-base font-normal text-lucidgray-dark">
         {{ mainStat.statName }}
+        <UiTooltip v-if="mainStat.statName === 'MIX'">
+          <IconInfo class="-mr-4 size-4 text-lucidgray-medium" />
+          <template #tooltip>
+            <div>
+              STR, DEX, LUK 합의 70%로 계산한 값이에요.
+              <div class="font-medium text-lucidviolet-700">
+                STR: {{ character?.stat?.str }} | DEX: {{ character?.stat?.dex }} | LUK: {{ character?.stat?.luk }}
+              </div>
+            </div>
+          </template>
+        </UiTooltip>
+        <UiTooltip v-if="mainStat.statName === 'HP'">
+          <IconInfo class="-mr-4 size-4 text-lucidgray-medium" />
+          <template #tooltip>
+            <div>
+              메이플 API의 한계로 최대 50만까지만 보여요.
+            </div>
+          </template>
+        </UiTooltip>
       </div>
       <div class="text-3xl font-bold text-lucid-violetgray">
         {{ mainStat.statValue }}
@@ -73,22 +92,22 @@ const combatPower = computed(() => {
 })
 
 const mainStat = computed(() => {
-  const stats = {
-    str: character.value?.stat?.str,
-    dex: character.value?.stat?.dex,
-    int: character.value?.stat?.int,
-    luk: character.value?.stat?.luk,
-  }
   const mainStat = {
     statName: '',
     statValue: 0,
   }
-  Object.entries(stats).forEach(([key, value]) => {
-    if ((value ?? -1) > mainStat.statValue) {
-      mainStat.statName = key.toUpperCase()
-      mainStat.statValue = value ?? -1
-    }
-  })
+  const stat = findMainStat(character.value)
+  mainStat.statName = stat?.toUpperCase() ?? 'ERROR'
+
+  // 제논
+  if (stat === 'mix') {
+    const mix = (character.value?.stat?.str ?? 0) + (character.value?.stat?.dex ?? 0) + (character.value?.stat?.luk ?? 0)
+    mainStat.statValue = Math.round(mix * 0.7)
+  }
+  else if (stat) {
+    mainStat.statValue = character.value?.stat?.[stat] ?? 0
+  }
+
   return mainStat
 })
 
