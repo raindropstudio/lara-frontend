@@ -1,5 +1,4 @@
 export interface ItemOption {
-  hash: string
   str?: number
   dex?: number
   int?: number
@@ -23,7 +22,6 @@ export interface ItemOption {
 }
 
 export interface ItemEquipmentInfo {
-  hash: string
   part: string
   slot: string
   name: string
