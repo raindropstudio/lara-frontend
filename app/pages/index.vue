@@ -1,7 +1,7 @@
 <template>
   <div>
     <KinesisContainer>
-      <section class="relative flex min-h-[calc(100vh-80px)] flex-col items-center justify-center">
+      <section class="relative flex min-h-[calc(100vh-80px)] flex-col items-center justify-center overflow-hidden">
         <KinesisElement
           class="absolute inset-0 flex items-center justify-center"
           type="translate"
@@ -57,7 +57,7 @@
             </h2>
           </div>
           <div class="my-4 flex w-full items-center justify-center text-3xl font-thin text-lucidviolet-700">
-            라라가 열심히 망치질중!
+            라라가 열심히 공사중!
           </div>
         </div>
         <div class="my-auto flex h-20 items-center justify-center">
