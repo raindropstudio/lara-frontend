@@ -25,10 +25,13 @@
       </div>
       <div class="-mt-48">
         <img
+          ref="characterImage"
           :src="getLargeCharacterImageUrl(character?.imageUrl)"
           alt="character"
-          class="pointer-events-none relative z-10 size-[448px] drop-shadow-lg [image-rendering:_pixelated]"
+          class="pointer-events-none relative z-10 size-[448px] drop-shadow-lg transition-opacity duration-300 ease-in-out [image-rendering:_pixelated]"
+          :class="imageLoaded ? 'opacity-100' : 'opacity-0'"
           draggable="false"
+          @load="imageLoad"
         >
       </div>
       <div
@@ -58,6 +61,24 @@ const props = defineProps<{
   character: Character | undefined
 }>()
 const character = toRef(props, 'character')
+
+const characterImage = ref<HTMLImageElement | null>(null)
+const imageLoaded = ref(false)
+
+// 캐릭터 이미지 깜빡임 방지
+const imageLoad = () => {
+  if (!imageLoaded.value) imageLoaded.value = true
+  else {
+    imageLoaded.value = false
+    setTimeout(() => {
+      imageLoaded.value = true
+    }, 300)
+  }
+}
+
+onMounted(() => {
+  if (characterImage.value?.complete) imageLoaded.value = true
+})
 
 // 생일 여부
 const birthday = computed(() => {

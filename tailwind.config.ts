@@ -12,6 +12,7 @@ export default <Partial<Config>>{
     extend: {
       colors: {
         sunnyorange: '#FFB944',
+        sunnycarrot: '#FF7A00',
         lucidviolet: {
           50: '#f4f5f9',
           100: '#ebedf4',
@@ -41,6 +42,7 @@ export default <Partial<Config>>{
           unique: '#F8D000',
           legendary: '#2AF42B',
           exceptional: '#FF2E2E',
+          expired: '#FF7A00', // sunnycarrot
         },
       },
       fontFamily: {

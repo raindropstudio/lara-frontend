@@ -8,3 +8,12 @@ export const useLara: useLazyFetchType = (path, options = {}) => {
 
   return useLazyFetch(path, options)
 }
+
+export const fetchLara = async <T>(path: string, options = {}): Promise<T> => {
+  const config = useRuntimeConfig()
+
+  return $fetch(path, {
+    ...options,
+    baseURL: config.public.apiBaseUrl,
+  })
+}

@@ -129,7 +129,7 @@ const menus = [
   { name: '요약', hash: '#summary' },
   { name: '장비', hash: '#equipment' },
   { name: '스킬', hash: '#skill' },
-  { name: '스텟', hash: '#stat' },
+  { name: '스탯', hash: '#stat' },
   { name: '유니온', hash: '#union' },
 ]
 

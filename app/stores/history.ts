@@ -16,7 +16,7 @@ interface HistoryBase {
 type HistoryType = 'character'
 export type Info = CharacterInfo
 
-type History =
+export type History =
   | HistoryBase & { type: 'character', info: CharacterInfo }
 
 const MAX_ENTRIES = 100

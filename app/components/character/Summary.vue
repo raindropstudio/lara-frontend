@@ -16,7 +16,7 @@
         레벨
       </div>
       <div class="text-3xl font-bold text-lucid-violetgray">
-        {{ character?.level }}.{{ character?.expRate.toFixed(0) }}
+        {{ character?.level }}.{{ character?.expRate.toFixed(0).padStart(2, '0') }}
       </div>
       <div class="text-sm font-normal text-lucidviolet-700">
         상위 0.00%

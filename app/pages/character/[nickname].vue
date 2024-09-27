@@ -4,29 +4,44 @@
       <div class="mt-20 flex items-center justify-center">
         <h1
           class="z-10 bg-gradient-to-r from-lucidviolet-300 to-lucidviolet-800 bg-clip-text text-8xl font-bold text-transparent"
-          @click="initStatus === 'error'
-            ? navigateTo(`/character?input=${$route.params.nickname}`)
-            : ''
-          "
+          :class="initStatus === 'pending' ? 'animate-pulse' : ''"
+          @click="initStatus === 'error' && navigateTo(`/character?input=${$route.params.nickname}`)"
         >
           {{ $route.params.nickname }}
         </h1>
         <ClientOnly>
-          <div class="absolute right-8 text-lucidviolet-500">
-            <button
-              v-if="character"
-              @click="changeStarred"
-            >
-              <IconStar
-                v-if="isStarred"
-                class="size-56 rotate-12 text-sunnyorange/30"
-              />
-              <IconStarOutline
-                v-else
-                class="size-56 rotate-12 text-lucidviolet-400/30"
-              />
-            </button>
-          </div>
+          <HTransitionRoot
+            class="absolute right-8 text-lucidviolet-500"
+            :show="initStatus === 'success'"
+            enter="transition-opacity duration-300 ease-in"
+            enter-from="opacity-0"
+            enter-to="opacity-100"
+          >
+            <div>
+              <button
+                v-if="character"
+                title="즐겨찾기"
+                class="rotate-12"
+                @click="changeStarred"
+              >
+                <UiTooltip>
+                  <IconStar
+                    v-if="isStarred"
+                    class="size-56 text-sunnyorange/30"
+                  />
+                  <IconStarOutline
+                    v-else
+                    class="size-56 text-lucidviolet-200/30"
+                  />
+                  <template #tooltip>
+                    <div>
+                      즐겨찾기
+                    </div>
+                  </template>
+                </UiTooltip>
+              </button>
+            </div>
+          </HTransitionRoot>
         </ClientOnly>
       </div>
       <div
@@ -143,6 +158,56 @@ const headerIsVisible = useElementVisibility(header)
 
 const { status: initStatus, data: character } = useLara<Character>(`character/${route.params.nickname}`)
 
+const updateStatus = ref<AsyncDataRequestStatus>('idle')
+
+const updateCharacter = async () => {
+  updateStatus.value = 'pending'
+
+  try {
+    const data = await fetchLara<Character>(`character/${route.params.nickname}`, {
+      params: {
+        update: true,
+      },
+    })
+    if (data) {
+      updateStatus.value = 'success'
+      character.value = data
+      // 정보 갱신시 검색기록 정보도 갱신
+      history.updateHistory('character', character.value?.nickname, extractHistoryData(character.value))
+    }
+    else {
+      updateStatus.value = 'error'
+    }
+  }
+  catch {
+    updateStatus.value = 'error'
+  }
+}
+
+const extractHistoryData = (character: Character) => {
+  return {
+    nickname: character.nickname,
+    imageUrl: character.imageUrl,
+    level: character.level,
+    class: character.class,
+    guildName: character.guildName,
+    worldName: character.worldName,
+  }
+}
+
+// 캐릭터 로딩 성공시 검색기록 추가
+watch(initStatus, (newStatus) => {
+  if (newStatus === 'success' && character.value) {
+    history.addHistory('character', character.value?.nickname, extractHistoryData(character.value))
+  }
+})
+onActivated(() => {
+  if (initStatus.value === 'success' && character.value) {
+    history.addHistory('character', character.value?.nickname, extractHistoryData(character.value))
+  }
+})
+
+// 즐겨찾기
 const isStarred = computed(() => {
   return history.favorite.some(entry => entry.type === 'character' && entry.info.nickname === character.value?.nickname)
 })
@@ -154,57 +219,6 @@ const changeStarred = () => {
     else {
       history.addFavorite('character', character.value.nickname)
     }
-  }
-}
-
-// 캐릭터 로딩 성공시 검색기록 추가
-watch(initStatus, (newStatus) => {
-  if (newStatus === 'success' && character.value) {
-    history.addHistory('character', character.value?.nickname, {
-      nickname: character.value?.nickname,
-      imageUrl: character.value?.imageUrl,
-      level: character.value?.level,
-      class: character.value?.class,
-      guildName: character.value?.guildName,
-      worldName: character.value?.worldName,
-    })
-  }
-})
-onActivated(() => {
-  if (initStatus.value === 'success' && character.value) {
-    history.addHistory('character', character.value?.nickname, {
-      nickname: character.value?.nickname,
-      imageUrl: character.value?.imageUrl,
-      level: character.value?.level,
-      class: character.value?.class,
-      guildName: character.value?.guildName,
-      worldName: character.value?.worldName,
-    })
-  }
-})
-
-const updateStatus = ref<AsyncDataRequestStatus>('idle')
-
-const updateCharacter = async () => {
-  updateStatus.value = 'pending'
-  const { status, data: updatedCharacter } = await useLara<Character>(`character/${route.params.nickname}`, {
-    params: {
-      update: true,
-    },
-  })
-  updateStatus.value = status.value
-  if (status.value === 'success' && updatedCharacter.value) {
-    character.value = updatedCharacter.value
-
-    // 정보 갱신시 검색기록 정보도 갱신
-    history.updateHistory('character', updatedCharacter.value?.nickname, {
-      nickname: updatedCharacter.value?.nickname,
-      imageUrl: updatedCharacter.value?.imageUrl,
-      level: updatedCharacter.value?.level,
-      class: updatedCharacter.value?.class,
-      guildName: updatedCharacter.value?.guildName,
-      worldName: updatedCharacter.value?.worldName,
-    })
   }
 }
 

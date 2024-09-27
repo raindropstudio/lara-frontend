@@ -47,8 +47,8 @@ export interface ItemEquipmentInfo {
   starforce?: number
   starforceScrollFlag?: boolean
   specialRingLevel?: number
-  dateExpire?: Date
-  dateOptionExpire?: Date
+  dateExpire?: string
+  dateOptionExpire?: string
   totalOption?: ItemOption
   baseOption?: ItemOption
   exceptionalOption?: ItemOption

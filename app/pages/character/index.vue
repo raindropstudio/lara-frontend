@@ -19,121 +19,40 @@
           <IconSearch class="size-16" />
         </button>
       </div>
-      <div class="mt-8 flex w-full max-w-screen-md flex-col gap-4">
+      <div class="mt-12 flex w-full max-w-screen-md flex-col gap-4">
         <div class="flex flex-col">
-          <div class="my-2 text-3xl font-bold text-lucidgray-medium">
-            즐겨찾기
-          </div>
           <ClientOnly>
             <div
-              v-if="!favoriteList || favoriteList.length === 0"
-              class="py-4 text-center text-lg text-lucidgray-medium"
-            >
-              즐겨찾기가 없어요!
-            </div>
-            <div
-              v-else
-              class="flex flex-wrap"
-            >
-              <template
-                v-for="(entry, idx) in searchedFavorite"
-                :key="idx"
-              >
-                <div
-                  class="flex w-64 items-center"
-                >
-                  <button
-                    class="group flex grow items-center gap-2 rounded-lg p-2 hover:bg-lucidviolet-50"
-                    @click="navigateTo(`/character/${entry.query}`)"
-                  >
-                    <div class="size-12 overflow-hidden rounded-full border border-lucidviolet-200 ring-lucidviolet-50">
-                      <img
-                        :src="getCharacterImageUrl(entry.info.imageUrl)"
-                        alt="character avatar"
-                        class="size-16 -scale-x-100 object-cover"
-                      >
-                    </div>
-                    <div class="flex flex-col items-start justify-center">
-                      <div class="text-xl font-medium text-lucidviolet-700">
-                        {{ entry.info.nickname }}
-                      </div>
-                      <div class="text-sm font-light text-lucid-violetgray">
-                        <span class="text-base font-normal text-lucid-violetgray">
-                          Lv.{{ entry.info.level }}
-                        </span>
-                        | {{ entry.info.class }}
-                      </div>
-                    </div>
-                    <div
-                      class="ml-auto self-start"
-                      @click="
-                        (event) => {
-                          event.stopPropagation();
-                          history.deleteFavorite('character', entry.query)
-                        }
-                      "
-                    >
-                      <Star class="size-4 rounded-lg text-transparent hover:text-lucid-violetgray group-hover:text-sunnyorange" />
-                    </div>
-                  </button>
-                </div>
-              </template>
-            </div>
-          </clientonly>
-        </div>
-        <div class="flex flex-col">
-          <div class="my-2 text-3xl font-bold text-lucidgray-medium">
-            검색기록
-          </div>
-          <ClientOnly>
-            <div
-              v-if="!historyList || historyList.length === 0"
+              v-if="favoriteList.length === 0 && historyList.length === 0"
               class="py-4 text-center text-lg text-lucidgray-medium"
             >
               검색기록이 없어요!
             </div>
             <div
               v-else
-              v-auto-animate
               class="flex flex-col"
             >
               <template
-                v-for="(entry, idx) in searchedHistory.slice(0, 5)"
+                v-for="(entry, idx) in searchedFavorite"
                 :key="idx"
               >
-                <div
-                  class="group flex items-center"
-                >
-                  <button
-                    class="flex grow items-center gap-2 rounded-lg p-2 hover:bg-lucidviolet-50"
-                    @click="navigateTo(`/character/${entry.query}`)"
-                  >
-                    <div class="size-8 overflow-hidden rounded-full border border-lucidviolet-200 ring-lucidviolet-50">
-                      <img
-                        :src="getCharacterImageUrl(entry.info.imageUrl)"
-                        alt="character avatar"
-                        class="size-16 -translate-y-1/4 -scale-x-100 object-cover"
-                      >
-                    </div>
-                    <div class="text-xl font-medium text-lucidviolet-700">
-                      {{ entry.info.nickname }}
-                    </div>
-                    <div class="text-base font-light text-lucid-violetgray">
-                      <span class="font-normal">Lv.{{ entry.info.level }}</span>
-                      | {{ entry.info.class }} | {{ entry.info.worldName }} | {{ entry.info.guildName ? entry.info.guildName : '-' }}
-                    </div>
-                  </button>
-                  <button
-                    @click="history.addFavorite('character', entry.query)"
-                  >
-                    <StarOutline class="size-12 rounded-lg p-3 text-transparent hover:bg-lucidviolet-50 hover:text-lucidviolet-700 group-hover:text-lucidviolet-500" />
-                  </button>
-                  <button
-                    @click="history.deleteHistory('character', entry.query)"
-                  >
-                    <IconClose class="size-12 rounded-lg p-3 text-transparent hover:bg-lucidviolet-50 hover:text-lucidviolet-700 group-hover:text-lucidviolet-500" />
-                  </button>
-                </div>
+                <UiSearchEntry
+                  :entry="entry"
+                  type="favorite"
+                />
+              </template>
+              <div
+                v-if="searchedFavorite.length > 0 && searchedHistory.length > 0"
+                class="m-2 border-t border-lucidviolet-100"
+              />
+              <template
+                v-for="(entry, idx) in searchedHistory.slice(0, 50)"
+                :key="idx"
+              >
+                <UiSearchEntry
+                  :entry="entry"
+                  type="history"
+                />
               </template>
             </div>
           </ClientOnly>
@@ -147,8 +66,6 @@
 import hansearch from 'hangul-search'
 import { createTypeStream, delay } from 'hangul-typing-animation'
 import { convertEnglishToKorean, convertKoreanToEnglish } from 'typingchanger_easy'
-import Star from '~/components/icon/Star.vue'
-import StarOutline from '~/components/icon/StarOutline.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -190,14 +107,13 @@ const searchHistory = (list: object[]) => {
   return []
 }
 const favoriteList = computed(() => {
-  return history.favorite.filter(entry => entry.type === 'character')
+  return history.favorite.filter(entry => entry.type === 'character').map(entry => ({ ...entry, isFavorite: true }))
+})
+const historyList = computed(() => {
+  return history.history.filter(entry => entry.type === 'character').map(entry => ({ ...entry, isFavorite: false }))
 })
 const searchedFavorite = computed(() => {
   return searchHistory(favoriteList.value)
-})
-
-const historyList = computed(() => {
-  return history.history.filter(entry => entry.type === 'character')
 })
 const searchedHistory = computed(() => {
   return searchHistory(historyList.value)

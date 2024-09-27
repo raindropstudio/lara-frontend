@@ -75,19 +75,44 @@ const itemSummary = computed(() => {
       if (equip.slot !== '모자' && equip.slot !== '장갑') {
         acc.potentialCount += 1
         potential?.forEach((pot) => {
-          acc.potential += parsePotential(pot, '올스탯', '%') * 1.1
-          acc.potential += parsePotential(pot, mainStatName.value, '%')
+          if (mainStatName.value === 'HP') {
+            acc.potential += parsePotential(pot, '최대 HP', '%')
+          }
+          else if (mainStatName.value === 'MIX') {
+            acc.potential += parsePotential(pot, '올스탯', '%')
+            acc.potential += parsePotential(pot, 'STR', '%') * 0.33
+            acc.potential += parsePotential(pot, 'DEX', '%') * 0.33
+            acc.potential += parsePotential(pot, 'LUK', '%') * 0.33
+          }
+          else {
+            acc.potential += parsePotential(pot, '올스탯', '%') * 1.1
+            acc.potential += parsePotential(pot, mainStatName.value, '%')
+          }
         })
       }
 
       // 에디: <주스탯> : +N% / 올스탯 : +N% / <공/마> : +N / 캐릭터 기준 9레벨 당 <주스탯> : +N / <주스탯> : +N
       acc.additionalCount += 1
       additional?.forEach((add) => {
-        acc.additional += parsePotential(add, '올스탯', '%') * 1.1
-        acc.additional += parsePotential(add, mainStatName.value, '%')
-        acc.additional += parsePotential(add, mainStatName.value) * 0.13
-        acc.additional += parsePotential(add, atkStat.value) * 0.32
-        acc.additional += parsePotential(add, '캐릭터 기준 9레벨 당') * 3.4
+        if (mainStatName.value === 'HP') {
+          acc.additional += parsePotential(add, '최대 HP', '%')
+          acc.additional += parsePotential(add, atkStat.value) * 0.4
+        }
+        else if (mainStatName.value === 'MIX') {
+          acc.additional += parsePotential(add, '올스탯', '%')
+          acc.additional += parsePotential(add, 'STR', '%') * 0.33
+          acc.additional += parsePotential(add, 'DEX', '%') * 0.33
+          acc.additional += parsePotential(add, 'LUK', '%') * 0.33
+          acc.additional += parsePotential(add, atkStat.value) * 0.32
+          acc.additional += parsePotential(add, '캐릭터 기준 9레벨 당') * 3.4 / 3
+        }
+        else {
+          acc.additional += parsePotential(add, '올스탯', '%') * 1.1
+          acc.additional += parsePotential(add, mainStatName.value, '%')
+          acc.additional += parsePotential(add, mainStatName.value) * 0.13
+          acc.additional += parsePotential(add, atkStat.value) * 0.32
+          acc.additional += parsePotential(add, '캐릭터 기준 9레벨 당') * 3.4
+        }
       })
 
       return acc
