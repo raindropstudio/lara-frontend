@@ -5,10 +5,7 @@
         유니온
       </div>
       <div class="text-3xl font-bold text-lucid-violetgray">
-        00000
-      </div>
-      <div class="text-sm font-normal text-lucidviolet-700">
-        대대대마스터9
+        {{ character?.union?.unionLevel ?? '-' }}
       </div>
     </div>
     <div class="flex w-28 flex-col items-center justify-center">
@@ -18,9 +15,6 @@
       <div class="text-3xl font-bold text-lucid-violetgray">
         {{ character?.level }}.{{ character?.expRate.toFixed(0).padStart(2, '0') }}
       </div>
-      <div class="text-sm font-normal text-lucidviolet-700">
-        상위 0.00%
-      </div>
     </div>
     <div class="flex flex-col items-center justify-center">
       <div class="text-lg font-normal text-gray-500">
@@ -28,9 +22,6 @@
       </div>
       <div class="bg-gradient-to-r from-[#FF4D00] to-[#EB00FF] bg-clip-text text-5xl font-bold text-transparent">
         {{ combatPower }}
-      </div>
-      <div class="text-base font-normal text-lucidviolet-700">
-        상위 0.00%
       </div>
     </div>
     <div class="flex w-28 flex-col items-center justify-center">
@@ -59,9 +50,6 @@
       <div class="text-3xl font-bold text-lucid-violetgray">
         {{ mainStat.statValue }}
       </div>
-      <div class="text-sm font-normal text-lucidviolet-700">
-        상위 0.00%
-      </div>
     </div>
     <div class="flex w-28 flex-col items-center justify-center">
       <div class="text-base font-normal text-gray-500">
@@ -69,9 +57,6 @@
       </div>
       <div class="text-3xl font-bold text-lucid-violetgray">
         00.00%
-      </div>
-      <div class="text-sm font-normal text-lucidviolet-700">
-        00/0000
       </div>
     </div>
   </div>

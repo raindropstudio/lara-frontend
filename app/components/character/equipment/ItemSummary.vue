@@ -57,103 +57,105 @@ const itemSummary = computed(() => {
       count: acc.count + 1,
     }
   }, { sum: 0, count: 0 })
-  summary.starforce = { name: '스타포스', value: (starforce.sum / starforce.count).toFixed(1) }
+  summary.starforce = { name: '스타포스', value: (starforce.sum / (starforce.count || 1)).toFixed(1) }
 
   // 잠재, 에디
-  if (mainStatName.value) {
-    const statPer = viewPreset.value.reduce((acc, equip) => {
-      if (!equip) return acc
-      if (equip.slot === '무기' || equip.slot === '보조무기' || equip.slot === '엠블렘') return acc // 무기류 제외
-      if (!equip.potentialOptionGrade && !equip.additionalPotentialOptionGrade) return acc // 잠재 없으면
+  const statPer = viewPreset.value.reduce((acc, equip) => {
+    if (!equip) return acc
+    if (equip.slot === '무기' || equip.slot === '보조무기' || equip.slot === '엠블렘') return acc // 무기류 제외
+    if (!equip.potentialOptionGrade && !equip.additionalPotentialOptionGrade) return acc // 잠재 없으면
 
-      // 잠재
-      const potential = equip.potentialOption
-      const additional = equip.additionalPotentialOption
+    // 잠재
+    const potential = equip.potentialOption
+    const additional = equip.additionalPotentialOption
 
-      // 모자, 장갑은 에디만 계산
-      // 잠재: <주스탯> : +N% / 올스탯 : +N%
-      if (equip.slot !== '모자' && equip.slot !== '장갑') {
-        acc.potentialCount += 1
-        potential?.forEach((pot) => {
-          if (mainStatName.value === 'HP') {
-            acc.potential += parsePotential(pot, '최대 HP', '%')
-          }
-          else if (mainStatName.value === 'MIX') {
-            acc.potential += parsePotential(pot, '올스탯', '%')
-            acc.potential += parsePotential(pot, 'STR', '%') * 0.33
-            acc.potential += parsePotential(pot, 'DEX', '%') * 0.33
-            acc.potential += parsePotential(pot, 'LUK', '%') * 0.33
-          }
-          else {
-            acc.potential += parsePotential(pot, '올스탯', '%') * 1.1
-            acc.potential += parsePotential(pot, mainStatName.value, '%')
-          }
-        })
+    // 모자, 장갑은 에디만 계산
+    // 잠재: <주스탯> : +N% / 올스탯 : +N%
+    if (equip.slot !== '모자' && equip.slot !== '장갑') {
+      acc.potentialCount += 1
+      const parsed = parsePotentialList(potential ?? [])
+      if (mainStatName.value === 'HP') {
+        acc.potential += parsed.maxHpRate
       }
+      else if (mainStatName.value === 'MIX') {
+        acc.potential += parsed.allStatRate
+        acc.potential += parsed.strRate * 0.33
+        acc.potential += parsed.dexRate * 0.33
+        acc.potential += parsed.lukRate * 0.33
+      }
+      else {
+        acc.potential += parsed.allStatRate * 1.1
+        const mainStatKey = mainStatName.value.toLowerCase() + 'Rate'
+        acc.potential += parsed[mainStatKey as 'strRate' | 'dexRate' | 'intRate' | 'lukRate']
+      }
+    }
 
-      // 에디: <주스탯> : +N% / 올스탯 : +N% / <공/마> : +N / 캐릭터 기준 9레벨 당 <주스탯> : +N / <주스탯> : +N
-      acc.additionalCount += 1
-      additional?.forEach((add) => {
-        if (mainStatName.value === 'HP') {
-          acc.additional += parsePotential(add, '최대 HP', '%')
-          acc.additional += parsePotential(add, atkStat.value) * 0.4
-        }
-        else if (mainStatName.value === 'MIX') {
-          acc.additional += parsePotential(add, '올스탯', '%')
-          acc.additional += parsePotential(add, 'STR', '%') * 0.33
-          acc.additional += parsePotential(add, 'DEX', '%') * 0.33
-          acc.additional += parsePotential(add, 'LUK', '%') * 0.33
-          acc.additional += parsePotential(add, atkStat.value) * 0.32
-          acc.additional += parsePotential(add, '캐릭터 기준 9레벨 당') * 3.4 / 3
-        }
-        else {
-          acc.additional += parsePotential(add, '올스탯', '%') * 1.1
-          acc.additional += parsePotential(add, mainStatName.value, '%')
-          acc.additional += parsePotential(add, mainStatName.value) * 0.13
-          acc.additional += parsePotential(add, atkStat.value) * 0.32
-          acc.additional += parsePotential(add, '캐릭터 기준 9레벨 당') * 3.4
-        }
-      })
+    // 에디: <주스탯> : +N% / 올스탯 : +N% / <공/마> : +N / 캐릭터 기준 9레벨 당 <주스탯> : +N / <주스탯> : +N
+    acc.additionalCount += 1
+    const addiParsed = parsePotentialList(additional ?? [])
+    if (mainStatName.value === 'HP') {
+      acc.additional += addiParsed.maxHpRate
+      acc.additional += addiParsed.attackPower * 0.4
+    }
+    else if (mainStatName.value === 'MIX') {
+      acc.additional += addiParsed.allStatRate
+      acc.additional += addiParsed.strRate * 0.33
+      acc.additional += addiParsed.dexRate * 0.33
+      acc.additional += addiParsed.lukRate * 0.33
+      acc.additional += addiParsed.attackPower * 0.32
+      acc.additional += addiParsed.strPerLevel * 1.5
+      acc.additional += addiParsed.dexPerLevel * 1.5
+      acc.additional += addiParsed.lukPerLevel * 1.5
+    }
+    else {
+      acc.additional += addiParsed.allStatRate * 1.1
+      const mainStatKey = mainStatName.value.toLowerCase() + 'Rate'
+      acc.additional += addiParsed[mainStatKey as 'strRate' | 'dexRate' | 'intRate' | 'lukRate']
+      if (atkStat.value === '공격력') acc.additional += addiParsed.attackPower * 0.32
+      else acc.additional += addiParsed.magicPower * 0.32
+      const mainLevelKey = mainStatName.value.toLowerCase() + 'PerLevel'
+      const mainLevelRate = addiParsed[mainLevelKey as 'strPerLevel' | 'dexPerLevel' | 'intPerLevel' | 'lukPerLevel']
+      acc.additional += mainLevelRate * 3.4
+    }
 
-      return acc
-    }, {
-      potential: 0,
-      additional: 0,
-      potentialCount: 0,
-      additionalCount: 0,
-    })
+    return acc
+  }, {
+    potential: 0,
+    additional: 0,
+    potentialCount: 0,
+    additionalCount: 0,
+  })
 
-    // 보공, 공/마%, 방무
-    const boss = viewPreset.value.reduce((acc, equip) => {
-      if (!equip) return acc
-      if (equip.slot !== '무기' && equip.slot !== '보조무기' && equip.slot !== '엠블렘') return acc // 무기류만
+  // 보공, 공/마%, 방무
+  const boss = viewPreset.value.reduce((acc, equip) => {
+    if (!equip) return acc
+    if (equip.slot !== '무기' && equip.slot !== '보조무기' && equip.slot !== '엠블렘') return acc // 무기류만
 
-      const potential = equip.potentialOption
-      const additional = equip.additionalPotentialOption
+    const potential = equip.potentialOption
+    const additional = equip.additionalPotentialOption
 
-      acc.boss += (potential ?? []).reduce((sum, pot) => sum + parsePotential(pot, '보스 몬스터', '%'), 0)
-      acc.boss += (additional ?? []).reduce((sum, add) => sum + parsePotential(add, '보스 몬스터', '%'), 0)
+    acc.boss += (potential ?? []).reduce((sum, pot) => sum + parsePotentialNumber(pot, '보스 몬스터', '%'), 0)
+    acc.boss += (additional ?? []).reduce((sum, add) => sum + parsePotentialNumber(add, '보스 몬스터', '%'), 0)
 
-      acc.atkp += (potential ?? []).reduce((sum, pot) => sum + parsePotential(pot, atkStat.value, '%'), 0)
-      acc.atkp += (additional ?? []).reduce((sum, add) => sum + parsePotential(add, atkStat.value, '%'), 0)
+    acc.atkp += (potential ?? []).reduce((sum, pot) => sum + parsePotentialNumber(pot, atkStat.value, '%'), 0)
+    acc.atkp += (additional ?? []).reduce((sum, add) => sum + parsePotentialNumber(add, atkStat.value, '%'), 0)
 
-      const potDef = (potential ?? []).reduce((acc, pot) => acc * (100 - parsePotential(pot, '몬스터 방어율', '%')) / 100, 1)
-      const addDef = (additional ?? []).reduce((acc, add) => acc * (100 - parsePotential(add, '몬스터 방어율', '%')) / 100, 1)
-      acc.ignoreDef *= potDef * addDef
+    const potDef = (potential ?? []).reduce((acc, pot) => acc * (100 - parsePotentialNumber(pot, '몬스터 방어율', '%')) / 100, 1)
+    const addDef = (additional ?? []).reduce((acc, add) => acc * (100 - parsePotentialNumber(add, '몬스터 방어율', '%')) / 100, 1)
+    acc.ignoreDef *= potDef * addDef
 
-      return acc
-    }, {
-      boss: 0,
-      atkp: 0,
-      ignoreDef: 1,
-    })
+    return acc
+  }, {
+    boss: 0,
+    atkp: 0,
+    ignoreDef: 1,
+  })
 
-    summary.potential = { name: '잠재 ' + mainStatName.value, value: (statPer.potential / statPer.potentialCount).toFixed(1) + '%' }
-    summary.additional = { name: '에디 ' + mainStatName.value, value: (statPer.additional / statPer.additionalCount).toFixed(1) + '%' }
-    summary.boss = { name: '무기류 보공', value: boss.boss + '%' }
-    summary.atkp = { name: '무기류 ' + atkStat.value, value: boss.atkp + '%' }
-    summary.ignoreDef = { name: '무기류 방무', value: ((1 - boss.ignoreDef) * 100).toFixed(0) + '%' }
-  }
+  summary.potential = { name: '잠재 ' + mainStatName.value, value: (statPer.potential / (statPer.potentialCount || 1)).toFixed(1) + '%' }
+  summary.additional = { name: '에디 ' + mainStatName.value, value: (statPer.additional / (statPer.additionalCount || 1)).toFixed(1) + '%' }
+  summary.boss = { name: '무기류 보공', value: boss.boss + '%' }
+  summary.atkp = { name: '무기류 ' + atkStat.value, value: boss.atkp + '%' }
+  summary.ignoreDef = { name: '무기류 방무', value: ((1 - boss.ignoreDef) * 100).toFixed(0) + '%' }
 
   return summary
 })

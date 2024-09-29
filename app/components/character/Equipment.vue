@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mb-8 flex flex-col">
+    <div class="flex flex-col py-8">
       <div class="text-8xl font-black text-lucidgray-light">
         Equipment
       </div>
@@ -22,8 +22,9 @@
           <HTransitionRoot
             :show="viewMode === 'card'"
             enter="transition-all duration-300 ease-in-out"
-            enter-from="opacity-0 w-[304px] h-[368px]"
-            enter-to="opacity-100 w-[563px] h-[492px]"
+            enter-from="opacity-0 w-[304px] max-h-[368px]"
+            enter-to="opacity-100 w-[563px] max-h-[492px]"
+            entered="min-w-[563px]"
           >
             <CharacterEquipmentCardView
               v-if="viewMode === 'card'"
@@ -105,18 +106,18 @@ const props = defineProps<{
 }>()
 
 const character = toRef(props, 'character')
-const equipPreset = character.value?.itemEquipmentPreset
-const activePresetIdx = equipPreset?.findIndex(equip => equip.active)
-const viewPresetIdx = ref(activePresetIdx) // 기본값은 활성화 프리셋
+const equipPreset = computed(() => character.value?.itemEquipmentPreset)
+const activePresetIdx = computed(() => equipPreset.value?.findIndex(equip => equip.active))
+const viewPresetIdx = ref(activePresetIdx.value) // 기본값은 활성화 프리셋
 const viewMode = ref<'icon' | 'card'>('icon')
 
 const viewPreset = computed(() => {
   // 백엔드 converter에서 프리셋 순서대로 보내주도록 보장함
-  const preset = equipPreset?.[viewPresetIdx.value ?? 0]?.itemEquipmentInfo
+  const preset = equipPreset.value?.[viewPresetIdx.value ?? 0]?.itemEquipmentInfo
   const addEquip = []
 
   // 칭호
-  const title = equipPreset?.[3]?.itemEquipmentInfo?.[0]
+  const title = equipPreset.value?.[3]?.itemEquipmentInfo?.[0]
   if (title) addEquip.push(title)
 
   // TODO: 드래곤, 메카닉 장비

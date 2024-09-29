@@ -175,7 +175,7 @@ const getUpgrade = (item: ItemEquipmentInfo) => {
   const mainAtkUpgrade = ((atkStat.value === '마력' ? item.etcOption.magicPower : item.etcOption.attackPower) ?? 0) / count
   const upgradable = !!item.scrollResilienceCount || !!item.scrollUpgradeableCount
 
-  // TODO: 작추정
+  // TODO: 주흔작
 
   return Math.round(mainStatUpgrade * 10) / 10
     + '/'
@@ -197,88 +197,60 @@ const getPotentialColor = (grade: string) => {
 const getPotentialText = (item: ItemEquipmentInfo, pot: boolean) => {
   const potential = pot ? item.potentialOption : item.additionalPotentialOption
   if (!potential) return ''
+  const parsed = parsePotentialList(potential)
 
   // 무보엠
   if (item.slot === '무기' || item.slot === '보조무기' || item.slot === '엠블렘') {
-    const res = potential.reduce((acc, pot) => {
-      if (!pot) return acc
-      acc.boss += parsePotential(pot, '보스 몬스터', '%')
-      acc.ignoreDef += parsePotential(pot, '몬스터 방어율', '%')
-      acc.atkp += parsePotential(pot, atkStat.value, '%')
-
-      acc.hp += parsePotential(pot, '최대 HP', '%')
-      acc.str += parsePotential(pot, 'STR', '%')
-      acc.dex += parsePotential(pot, 'DEX', '%')
-      acc.int += parsePotential(pot, 'INT', '%')
-      acc.luk += parsePotential(pot, 'LUK', '%')
-      acc.allStat += parsePotential(pot, '올스탯', '%')
-      return acc
-    }, { boss: 0, ignoreDef: 0, atkp: 0, str: 0, dex: 0, int: 0, luk: 0, hp: 0, allStat: 0 })
+    const atkRate = atkStat.value === '공격력' ? parsed.attackPowerRate : parsed.magicPowerRate
 
     const text = []
-    if (res.atkp && !pot) text.push(atkStat.value.slice(0, 1) + res.atkp)
-    if (res.boss) text.push('보' + res.boss)
-    if (res.ignoreDef) text.push('방' + res.ignoreDef)
-    if (res.atkp && pot) text.push(atkStat.value.slice(0, 1) + res.atkp)
+    if (atkRate && !pot) text.push(atkStat.value.slice(0, 1) + atkRate)
+    if (parsed.bossDamage) text.push('보' + parsed.bossDamage)
+    if (parsed.ignoreMonsterArmor) text.push('방' + parsed.ignoreMonsterArmor)
+    if (atkRate && pot) text.push(atkStat.value.slice(0, 1) + atkRate)
 
-    if (mainStatName.value === 'HP' && res.hp) text.push('HP' + res.hp)
-    if ((mainStatName.value === 'STR' || mainStatName.value === 'MIX') && res.str) text.push('힘' + res.str)
-    if ((mainStatName.value === 'DEX' || mainStatName.value === 'MIX') && res.dex) text.push('덱' + res.dex)
-    if (mainStatName.value === 'INT' && res.int) text.push('인' + res.int)
-    if ((mainStatName.value === 'LUK' || mainStatName.value === 'MIX') && res.luk) text.push('럭' + res.luk)
-    if (res.allStat) text.push('올' + res.allStat)
+    if (mainStatName.value === 'HP' && parsed.maxHpRate) text.push('HP' + parsed.maxHpRate)
+    if ((mainStatName.value === 'STR' || mainStatName.value === 'MIX') && parsed.strRate) text.push('힘' + parsed.strRate)
+    if ((mainStatName.value === 'DEX' || mainStatName.value === 'MIX') && parsed.dexRate) text.push('덱' + parsed.dexRate)
+    if (mainStatName.value === 'INT' && parsed.intRate) text.push('인' + parsed.intRate)
+    if ((mainStatName.value === 'LUK' || mainStatName.value === 'MIX') && parsed.lukRate) text.push('럭' + parsed.lukRate)
+    if (parsed.allStatRate) text.push('올' + parsed.allStatRate)
 
     if (text.length === 0) return '-'
     return text.join('⋅')
   }
 
   // 일반템
-  const res = potential.reduce((acc, pot) => {
-    if (!pot) return acc
-
-    acc.item += parsePotential(pot, '아이템 드롭률', '%')
-    acc.meso += parsePotential(pot, '메소', '%')
-    acc.critical += parsePotential(pot, '크리티컬 데미지', '%')
-    acc.levelStat += parsePotential(pot, '캐릭터 기준 9레벨 당')
-
-    acc.hp += parsePotential(pot, '최대 HP', '%')
-    acc.str += parsePotential(pot, 'STR', '%')
-    acc.dex += parsePotential(pot, 'DEX', '%')
-    acc.int += parsePotential(pot, 'INT', '%')
-    acc.luk += parsePotential(pot, 'LUK', '%')
-    acc.allStat += parsePotential(pot, '올스탯', '%')
-
-    acc.atk += parsePotential(pot, atkStat.value)
-    return acc
-  }, { item: 0, meso: 0, critical: 0, levelStat: 0, str: 0, dex: 0, int: 0, luk: 0, hp: 0, allStat: 0, atk: 0 })
-
   const text = []
-  if (res.item) text.push('드' + res.item)
-  if (res.meso) text.push('메' + res.meso)
-  if (res.critical) text.push('크' + res.critical)
+  if (parsed.itemDropRate) text.push('드' + parsed.itemDropRate)
+  if (parsed.mesosObtainedRate) text.push('메' + parsed.mesosObtainedRate)
+  if (parsed.cooldownReduction) text.push('쿨' + parsed.cooldownReduction)
+  if (parsed.criticalDamageRate) text.push('크' + parsed.criticalDamageRate)
 
-  if (mainStatName.value === 'HP' && res.hp) text.push(res.hp + '%')
+  if (mainStatName.value === 'HP' && parsed.maxHpRate) text.push('HP' + parsed.maxHpRate)
   else if (mainStatName.value === 'MIX') {
-    if (res.allStat) text.push(res.allStat + '%')
-    if (res.levelStat) text.push('9렙' + res.levelStat)
-    if (res.str) text.push('힘' + res.str)
-    if (res.dex) text.push('덱' + res.dex)
-    if (res.luk) text.push('럭' + res.luk)
+    if (parsed.allStatRate) text.push('올' + parsed.allStatRate)
+    if (parsed.strPerLevel) text.push('9렙힘' + parsed.strPerLevel)
+    if (parsed.dexPerLevel) text.push('9렙덱' + parsed.dexPerLevel)
+    if (parsed.lukPerLevel) text.push('9렙럭' + parsed.lukPerLevel)
+    if (parsed.strRate) text.push('힘' + parsed.strRate)
+    if (parsed.dexRate) text.push('덱' + parsed.dexRate)
+    if (parsed.lukRate) text.push('럭' + parsed.lukRate)
   }
   else {
-    if (res.levelStat) text.push('9렙' + res.levelStat)
-    if (res[mainStatName.value.toLowerCase() as 'str' | 'dex' | 'int' | 'luk']) {
-      text.push(
-        res[mainStatName.value.toLowerCase() as 'str' | 'dex' | 'int' | 'luk']
-        + res.allStat
-        + '%')
-    }
-  }
+    const mainStatRateKey = mainStatName.value.toLowerCase() as 'str' | 'dex' | 'int' | 'luk' + 'Rate'
+    const mainPerLevelKey = mainStatName.value.toLowerCase() as 'str' | 'dex' | 'int' | 'luk' + 'PerLevel'
+    const mainStatRate = parsed[mainStatRateKey as 'strRate' | 'dexRate' | 'intRate' | 'lukRate']
+    const mainPerLevel = parsed[mainPerLevelKey as 'strPerLevel' | 'dexPerLevel' | 'intPerLevel' | 'lukPerLevel']
 
-  if (res.atk) text.push(atkStat.value.slice(0, 1) + res.atk)
+    if (mainPerLevel) text.push('9렙' + mainPerLevel)
+    if (mainStatRate) text.push(mainStatRate + parsed.allStatRate + '%')
+  }
+  const atk = atkStat.value === '공격력' ? parsed.attackPower : parsed.magicPower
+  if (atk) text.push(atkStat.value.slice(0, 1) + atk)
 
   if (text.length === 0) return '-'
-  return text.join('⋅') + (res.allStat && mainStatName.value !== 'HP' && mainStatName.value !== 'MIX' ? '⁺' : '')
+  return text.join('⋅') + (parsed.allStatRate && mainStatName.value !== 'HP' && mainStatName.value !== 'MIX' ? '⁺' : '')
 }
 
 const formatDate = (dateString: string) => {
@@ -321,7 +293,7 @@ const getPotentialLine = (item: ItemEquipmentInfo) => {
       })
     }
     else if (item.dateOptionExpire) {
-      const isExpired = item.dateOptionExpire === '1998-12-31T15:00:00.000Z'
+      const isExpired = new Date(item.dateOptionExpire) < new Date()
 
       // 초단위 제거
       contents.push({

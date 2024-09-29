@@ -1,5 +1,6 @@
 import type { ItemEquipmentPreset } from './itemEquipment.type'
 import type { Stat } from './stat.type'
+import type { Union } from './union.type'
 
 export interface Character {
   nickname: string
@@ -19,4 +20,5 @@ export interface Character {
   updatedAt: string
   stat: Stat
   itemEquipmentPreset: ItemEquipmentPreset[]
+  union?: Union
 }

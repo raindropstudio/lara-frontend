@@ -100,7 +100,7 @@
         <div
           id="summary"
           ref="summary"
-          class="w-full max-w-screen-xl px-4 py-12"
+          class="mb-4 w-full max-w-screen-xl px-4 py-12"
         >
           <CharacterSummary
             :character="character"
@@ -109,20 +109,44 @@
         <div
           id="equipment"
           ref="equipment"
-          class="w-full bg-white"
+          class="w-full"
         >
-          <div class="mx-auto max-w-screen-xl">
-            <CharacterEquipment
-              :character="character"
-            />
+          <div
+            class="w-full bg-white"
+          >
+            <div class="mx-auto max-w-screen-xl">
+              <CharacterEquipment
+                :character="character"
+              />
+            </div>
+          </div>
+          <div class="w-full">
+            <div class="mx-auto max-w-screen-xl">
+              <CharacterCoordinate
+                :character="character"
+              />
+            </div>
+          </div>
+          <div class="h-[500px] w-full bg-white py-24">
+            심볼
           </div>
         </div>
         <div
           id="skill"
           ref="skill"
-          class="h-[1000px] w-full py-24"
+          class="w-full"
         >
-          스킬
+          <div
+            class="h-[500px] w-full py-24"
+          >
+            헥사스킬
+          </div>
+          <div class="h-[500px] w-full bg-white py-24">
+            5차스킬
+          </div>
+          <div class="h-[500px] w-full py-24">
+            링크스킬
+          </div>
         </div>
         <div
           id="stat"
@@ -134,7 +158,7 @@
         <div
           id="union"
           ref="union"
-          class="h-[1000px] w-full py-24"
+          class="h-[500px] w-full py-24"
         >
           유니온
         </div>
