@@ -55,7 +55,7 @@ export default defineNuxtConfig({
         {
           hid: 'description',
           name: 'description',
-          content: '메이플스토리 종합 데이터분석 서비스 라라모에', // TODO: 메타태그 설정, 파비콘 및 OG이미지 설정
+          content: '메이플스토리 종합 데이터분석 서비스 라라모에', // TODO: 메타태그 설정
         },
       ],
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
