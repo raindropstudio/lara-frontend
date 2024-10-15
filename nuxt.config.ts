@@ -51,6 +51,7 @@ export default defineNuxtConfig({
         { name: 'og:type', property: 'og:type', content: 'website' },
         { name: 'og:site_name', property: 'og:site_name', content: 'lara.moe' },
         { name: 'og:title', property: 'og:title', content: 'lara.moe' },
+        { name: 'og:image', property: 'og:image', content: '/og.png' },
         {
           hid: 'description',
           name: 'description',
