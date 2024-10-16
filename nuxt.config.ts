@@ -28,6 +28,10 @@ export default defineNuxtConfig({
     dirs: ['types/*.ts'],
   },
 
+  build: {
+    transpile: ['hangul-typing-animation'],
+  },
+
   eslint: {
     config: {
       stylistic: true,
