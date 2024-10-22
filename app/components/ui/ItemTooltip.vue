@@ -104,11 +104,10 @@
         </div>
       </div>
 
-      <!-- 점선 구분선 -->
-      <hr class="my-2 border-t border-dashed border-gray-300">
-
       <!-- 기본 옵션 (STR, DEX, INT, LUK, HP, 공격력, 마력 등) -->
       <div v-if="computedStats.length > 0">
+        <!-- 점선 구분선 -->
+        <hr class="my-2 border-t border-dashed border-gray-300">
         <div
           v-for="(stat, index) in computedStats"
           :key="index"
