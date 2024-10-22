@@ -146,12 +146,16 @@
         가위 사용 가능 횟수: {{ item.cuttableCount }}
       </div>
 
-      <!-- 점선 구분선 -->
-      <hr class="my-2 border-t border-dashed border-gray-300">
-
       <!-- 잠재 옵션 -->
       <div v-if="item.potentialOption && item.potentialOption.length > 0">
-        <div class="break-words font-semibold">
+        <!-- 점선 구분선 -->
+        <hr class="my-2 border-t border-dashed border-gray-300">
+        <div class="flex items-center break-words font-semibold">
+          <!-- 원 아이콘 -->
+          <span
+            class="mr-1 size-2 rounded-full"
+            :style="{ backgroundColor: getBackgroundColor(item.potentialOptionGrade) }"
+          />
           잠재옵션
         </div>
         <div
@@ -162,11 +166,16 @@
         </div>
       </div>
 
-      <!-- 점선 구분선 -->
-      <hr class="my-2 border-t border-dashed border-gray-300">
       <!-- 에디셔널 잠재 옵션 -->
       <div v-if="item.additionalPotentialOption && item.additionalPotentialOption.length > 0">
-        <div class="break-words font-semibold">
+        <!-- 점선 구분선 -->
+        <hr class="my-2 border-t border-dashed border-gray-300">
+        <div class="flex items-center break-words font-semibold">
+          <!-- 원 아이콘 -->
+          <span
+            class="mr-1 size-2 rounded-full"
+            :style="{ backgroundColor: getBackgroundColor(item.additionalPotentialOptionGrade) }"
+          />
           에디셔널 잠재옵션
         </div>
         <div
@@ -177,12 +186,11 @@
         </div>
       </div>
 
-      <!-- 점선 구분선 -->
-      <hr class="my-2 border-t border-dashed border-gray-300">
-
       <!-- 적용된 소울 옵션 -->
       <div v-if="item.soulName">
-        <div class="mt-4 break-words font-semibold">
+        <!-- 점선 구분선 -->
+        <hr class="my-2 border-t border-dashed border-gray-300">
+        <div class="break-words font-semibold">
           {{ item.soulName }}
         </div>
         <div>
@@ -192,7 +200,9 @@
 
       <!-- 익셉셔널 옵션 -->
       <div v-if="item.exceptionalOption?.exceptionalUpgrade">
-        <div class="mt-4 font-semibold">
+        <!-- 점선 구분선 -->
+        <hr class="my-2 border-t border-dashed border-gray-300">
+        <div class="font-semibold">
           익셉셔널
         </div>
         <div>
@@ -205,6 +215,8 @@
 
       <!-- 아이템 설명 -->
       <div v-if="item.description">
+        <!-- 점선 구분선 -->
+        <hr class="my-2 border-t border-dashed border-gray-300">
         <div class="whitespace-pre-wrap text-pretty break-words">
           {{ item.description }}
         </div>
@@ -399,6 +411,24 @@ const getBorderColor = (grade: string | undefined) => {
       return 'border-potential-rare' // 레어 - 파란색
     default:
       return 'border-potential-normal' // 기본 - 회색
+  }
+}
+
+/**
+ * 잠재능력에 따라 원 아이콘의 배경색 반환
+ */
+const getBackgroundColor = (grade: string | undefined) => {
+  switch (grade) {
+    case 'LEGENDARY':
+      return '#00FF00' // 레전드리 - 초록색
+    case 'UNIQUE':
+      return '#FFFF00' // 유니크 - 노란색
+    case 'EPIC':
+      return '#800080' // 에픽 - 보라색
+    case 'RARE':
+      return '#0000FF' // 레어 - 파란색
+    default:
+      return '#808080' // 기본 - 회색
   }
 }
 </script>
