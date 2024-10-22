@@ -7,24 +7,424 @@
     <slot />
     <div
       v-if="visible && item"
-      class="pointer-events-none absolute left-full top-0 z-30 ml-2 overflow-visible whitespace-pre rounded-md bg-white px-2 py-1 text-sm font-light text-lucidviolet-900 ring-1 ring-lucidgray-light"
+      class="pointer-events-none absolute left-full top-0 z-30 ml-2 w-64 overflow-visible whitespace-pre-wrap rounded-md bg-white px-2 py-1 text-sm font-light text-lucidviolet-900 ring-1 ring-lucidgray-light"
     >
-      <div>
-        {{ item.starforce }}
+      <div
+        v-if="showStarforce && item.starforce !== undefined"
+        class="mt-2"
+      >
+        <!-- 스타포스 수치만큼 별을 렌더링 -->
+        <div class="mb-1 flex flex-col items-center">
+          <div class="flex justify-center">
+            <template
+              v-for="index in Math.min(maxStarforce, 15)"
+              :key="'star-' + index"
+            >
+              <IconStar
+                :class="{
+                  'size-3': true,
+                  'text-yellow-500': index <= item.starforce,
+                  'text-gray-300': index > item.starforce,
+                }"
+              />
+              <span
+                v-if="index % 5 === 0 && index < Math.min(maxStarforce, 15)"
+                class="mx-1"
+              />
+            </template>
+          </div>
+          <div
+            v-if="maxStarforce > 15"
+            class="mt-2 flex justify-center"
+          >
+            <template
+              v-for="index in maxStarforce - 15"
+              :key="'star-second-' + index"
+            >
+              <IconStar
+                :class="{
+                  'size-3': true,
+                  'text-yellow-500': index + 15 <= item.starforce,
+                  'text-gray-300': index + 15 > item.starforce,
+                }"
+              />
+              <span
+                v-if="(index + 15) % 5 === 0 && index + 15 < maxStarforce"
+                class="mx-1"
+              />
+            </template>
+          </div>
+        </div>
       </div>
-      <div>
+
+      <!-- (소울) 아이템 이름 (+몇 강인지) -->
+      <div
+        v-if="item.soulName"
+        class="-mb-1 text-center text-base"
+      >
+        {{ getSoulPrefix }}
+      </div>
+      <div class="text-center text-lg font-bold">
         {{ item.name }}
+        <span v-if="item.scrollUpgrade">(+{{ item.scrollUpgrade }})</span>
+      </div>
+
+      <!-- 아이템 잠재능력 등급 -->
+      <div
+        v-if="displayedPotentialGrade"
+        class="text-center"
+      >
+        ({{ displayedPotentialGrade }} 아이템)
+      </div>
+
+      <!-- 점선 구분선 -->
+      <hr class="my-2 border-t border-dashed border-gray-300">
+
+      <!-- 아이템 이미지, 장비 장착 레벨 -->
+      <div class="mt-2 flex items-center space-x-4">
+        <!-- 이미지 박스, 잠재능력 색에 따라 외곽선 변경 -->
+        <div
+          :class="['flex size-16 items-center justify-center rounded-md bg-zinc-700', getBorderColor(item.potentialOptionGrade)]"
+          class="size-16"
+        >
+          <img
+            :src="getItemImageUrl(item.shapeIcon || item.icon)"
+            alt="item.name"
+            class="size-10 object-contain"
+          >
+        </div>
+        <div class="text-sm font-semibold">
+          REQ LEVEL: {{ item.baseOption?.baseEquipmentLevel }}
+        </div>
+      </div>
+
+      <!-- 점선 구분선 -->
+      <hr class="my-2 border-t border-dashed border-gray-300">
+
+      <!-- 장비 분류 -->
+      <div v-if="item.part">
+        장비 분류 : {{ item.part }}
+      </div>
+
+      <!-- 기본 옵션 (STR, DEX, INT, LUK, HP, 공격력, 마력 등) -->
+      <div v-if="computedStats.length > 0">
+        <div
+          v-for="(stat, index) in computedStats"
+          :key="index"
+          class="text-sm"
+        >
+          {{ stat.label }} : <span class="text-teal-500">+{{ stat.isPercentage ? stat.totalValue + '%' : stat.totalValue }}</span>
+          <span v-if="stat.breakdown.length > 1"> (
+            <template
+              v-for="(part, idx) in stat.breakdown"
+              :key="idx"
+            >
+              <span
+                :class="optionTypeClassMap[part.type]"
+              >{{ part.valueSign }}{{ stat.isPercentage ? part.value + '%' : part.value }}</span><span v-if="idx < stat.breakdown.length -1">&nbsp;</span>
+            </template>
+            )
+          </span>
+        </div>
+      </div>
+
+      <!-- 업그레이드 가능 횟수 -->
+      <div v-if="scrollUpgradeableCount">
+        <span class="text-gray-500">업그레이드 가능 횟수: {{ scrollUpgradeableCount }}</span>
+        <span
+          v-if="scrollResilienceCount > 0"
+          class="text-yellow-500"
+        >
+          (복구 가능 횟수: {{ scrollResilienceCount }})
+        </span>
+      </div>
+      <div v-if="item.goldenHammerFlag">
+        황금망치 재련 적용
+      </div>
+      <div v-if="item.cuttableCount !== null && item.cuttableCount !== 255">
+        가위 사용 가능 횟수: {{ item.cuttableCount }}
+      </div>
+
+      <!-- 점선 구분선 -->
+      <hr class="my-2 border-t border-dashed border-gray-300">
+
+      <!-- 잠재 옵션 -->
+      <div v-if="item.potentialOption && item.potentialOption.length > 0">
+        <div class="mt-4 break-words font-semibold">
+          잠재옵션
+        </div>
+        <div
+          v-for="(option, index) in item.potentialOption"
+          :key="index"
+        >
+          {{ option }}
+        </div>
+      </div>
+
+      <!-- 점선 구분선 -->
+      <hr class="my-2 border-t border-dashed border-gray-300">
+      <!-- 에디셔널 잠재 옵션 -->
+      <div v-if="item.additionalPotentialOption && item.additionalPotentialOption.length > 0">
+        <div class="mt-4 break-words font-semibold">
+          에디셔널 잠재옵션
+        </div>
+        <div
+          v-for="(option, index) in item.additionalPotentialOption"
+          :key="index"
+        >
+          {{ option }}
+        </div>
+      </div>
+
+      <!-- 점선 구분선 -->
+      <hr class="my-2 border-t border-dashed border-gray-300">
+
+      <!-- 적용된 소울 옵션 -->
+      <div v-if="item.soulName">
+        <div class="mt-4 break-words font-semibold">
+          {{ item.soulName }}
+        </div>
+        <div>
+          {{ item.soulOption }}
+        </div>
+      </div>
+
+      <!-- 익셉셔널 옵션 -->
+      <div v-if="item.exceptionalOption?.exceptionalUpgrade">
+        <div class="mt-4 font-semibold">
+          익셉셔널
+        </div>
+        <div>
+          올스탯 : +{{ item.exceptionalOption.str }} <br>
+          최대 HP / 최대 MP : +{{ item.exceptionalOption.maxHp }} <br>
+          공격력 / 마력 : +{{ item.exceptionalOption.attackPower }} <br>
+          익셉셔널 강화 {{ item.exceptionalOption.exceptionalUpgrade }}회 적용 <br>
+        </div>
+      </div>
+
+      <!-- 모루 내용 -->
+      <div v-if="item.shapeName && item.shapeIcon">
+        <div class="w-full break-words">
+          신비의 모루에 의해 [{{ item.shapeName }}]의 외형이 합성됨
+        </div>
+      </div>
+
+      <!-- 아이템 설명 -->
+      <div v-if="item.description">
+        <div class="break-words">
+          {{ item.description }}
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { computed, defineProps, ref, toRefs } from 'vue'
+
 const props = defineProps<{
   item: ItemEquipmentInfo | undefined
 }>()
 
 const { item } = toRefs(props)
-
 const visible = ref(false)
+
+/**
+ * 복구 가능 횟수가 undefined일 경우 0으로 변환
+ */
+const scrollResilienceCount = computed(() => item.value?.scrollResilienceCount || 0)
+
+// 스타포스 표시 여부 (엠블렘, 훈장 같은 스타포스가 적용되지 않는 아이템 제외)
+const showStarforce = computed(() => {
+  const nonStarforceItems = ['엠블렘', '훈장', '뱃지', '포켓 아이템']
+  return item.value && !nonStarforceItems.includes(item.value.part) && item.value.starforce !== null
+})
+
+// 아이템 레벨에 따른 최대 스타포스 계산
+const maxStarforce = computed(() => {
+  const level = item.value?.baseOption?.baseEquipmentLevel || 0
+
+  // 슈페리얼 아이템인지 확인 (특정 단어가 이름에 포함된 경우)
+  const isSuperior = item.value?.name.includes('타일런트') || item.value?.name.includes('슈페리얼')
+
+  if (isSuperior) {
+    if (level < 95) return 3
+    if (level < 108) return 5
+    if (level < 118) return 8
+    if (level < 128) return 10
+    if (level < 138) return 12
+    return 15
+  }
+
+  // 일반 아이템의 경우
+  if (level < 95) return 5
+  if (level < 108) return 8
+  if (level < 118) return 10
+  if (level < 128) return 15
+  if (level < 138) return 20
+  return 25
+})
+
+/**
+ * 무기 이름 위에 들어갈 소울 이름 파싱 ("위대한 매그너스의 소울"이면, "위대한 매그너스의"만 반환)
+ */
+const getSoulPrefix = computed(() => {
+  if (item.value?.soulName) {
+    return item.value.soulName.replace(' 소울 적용', '')
+  }
+  return ''
+})
+
+/**
+ * 영어 등급을 한글 등급으로 변환하는 매핑 객체
+ */
+const gradeMap: { [key: string]: string } = {
+  LEGENDARY: '레전드리',
+  UNIQUE: '유니크',
+  EPIC: '에픽',
+  RARE: '레어',
+}
+
+/**
+ * 강화 가능 횟수 계산
+ */
+const scrollUpgradeableCount = computed(() => {
+  if (item.value?.scrollUpgradeableCount !== undefined && item.value?.scrollUpgrade !== undefined) {
+    return item.value.scrollUpgradeableCount
+  }
+  else if (item.value?.scrollUpgradeableCount === undefined && item.value?.scrollUpgrade !== undefined) {
+    return '0'
+  }
+  else {
+    return undefined
+  }
+})
+
+/**
+ * 잠재 능력 등급 한글 매핑
+ */
+const displayedPotentialGrade = computed(() => {
+  if (item.value?.potentialOptionGrade) {
+    return gradeMap[item.value.potentialOptionGrade] || item.value.potentialOptionGrade
+  }
+  if (item.value?.additionalPotentialOptionGrade) {
+    return gradeMap[item.value.additionalPotentialOptionGrade] || item.value.additionalPotentialOptionGrade
+  }
+  return ''
+})
+
+/**
+ * 기본 옵션들을 표시하기 위한 배열
+ */
+const statsToDisplay = [
+  { key: 'str', label: 'STR', isPercentage: false },
+  { key: 'dex', label: 'DEX', isPercentage: false },
+  { key: 'int', label: 'INT', isPercentage: false },
+  { key: 'luk', label: 'LUK', isPercentage: false },
+  { key: 'maxHp', label: 'HP', isPercentage: false },
+  { key: 'maxMp', label: 'MP', isPercentage: false },
+  { key: 'maxHpRate', label: '최대 HP', isPercentage: true },
+  { key: 'maxMpRate', label: '최대 MP', isPercentage: true },
+  { key: 'attackPower', label: '공격력', isPercentage: false },
+  { key: 'magicPower', label: '마력', isPercentage: false },
+  { key: 'equipmentLevelDecrease', label: '착용 레벨 감소', isPercentage: false },
+  { key: 'armor', label: '방어력', isPercentage: false },
+  { key: 'speed', label: '이동속도', isPercentage: false },
+  { key: 'jump', label: '점프력', isPercentage: false },
+  { key: 'bossDamage', label: '보스 몬스터 공격 시 데미지', isPercentage: true },
+  { key: 'ignoreMonsterArmor', label: '몬스터 방어율 무시', isPercentage: true },
+  { key: 'allStat', label: '올스탯', isPercentage: true },
+  { key: 'damage', label: '데미지', isPercentage: true },
+]
+
+/**
+ * 각 옵션의 총합과 세부 내역을 계산하여 배열로 반환
+ */
+const computedStats = computed(() => {
+  if (!item.value) {
+    return []
+  }
+
+  const stats = []
+
+  for (const stat of statsToDisplay) {
+    const totalValue = item.value.totalOption?.[stat.key as keyof ItemOption] || 0
+
+    if (totalValue !== 0) {
+      const breakdown = []
+
+      const baseValue = item.value.baseOption?.[stat.key as keyof ItemOption] || 0
+      const addValue = item.value.addOption?.[stat.key as keyof ItemOption] || 0
+      const etcValue = item.value.etcOption?.[stat.key as keyof ItemOption] || 0
+      const starforceValue = item.value.starforceOption?.[stat.key as keyof ItemOption] || 0
+
+      if (baseValue >= 0) {
+        breakdown.push({ value: baseValue, type: 'base', valueSign: baseValue >= 0 ? '' : '-' })
+      }
+      if (addValue !== 0) {
+        breakdown.push({ value: addValue, type: 'add', valueSign: addValue > 0 ? '+' : '-' })
+      }
+      if (etcValue !== 0) {
+        breakdown.push({ value: etcValue, type: 'etc', valueSign: etcValue > 0 ? '+' : '-' })
+      }
+      if (starforceValue !== 0) {
+        breakdown.push({ value: starforceValue, type: 'starforce', valueSign: starforceValue > 0 ? '+' : '' })
+      }
+
+      stats.push({
+        label: stat.label,
+        totalValue,
+        isPercentage: stat.isPercentage,
+        breakdown,
+      })
+    }
+  }
+  return stats
+})
+
+/**
+ * 옵션 유형별 CSS 클래스 매핑
+ */
+const optionTypeClassMap: { [key: string]: string } = {
+  base: 'text-gray-400',
+  add: 'text-green-500',
+  etc: 'text-gray-500',
+  starforce: 'text-yellow-500',
+}
+
+/**
+ * 잠재능력에 따라 외곽선 색상 반환
+ */
+const getBorderColor = (grade: string | undefined) => {
+  switch (grade) {
+    case 'LEGENDARY':
+      return 'border-potential-legendary' // 레전드리 - 초록색
+    case 'UNIQUE':
+      return 'border-potential-unique' // 유니크 - 노란색
+    case 'EPIC':
+      return 'border-potential-epic' // 에픽 - 보라색
+    case 'RARE':
+      return 'border-potential-rare' // 레어 - 파란색
+    default:
+      return 'border-potential-normal' // 기본 - 회색
+  }
+}
 </script>
+
+<style scoped>
+.border-potential-legendary {
+  border: 2px solid green; /* 초록색 */
+}
+.border-potential-unique {
+  border: 2px solid yellow; /* 노란색 */
+}
+.border-potential-epic {
+  border: 2px solid purple; /* 보라색 */
+}
+.border-potential-rare {
+  border: 2px solid blue; /* 파란색 */
+}
+.border-potential-normal {
+  border: 2px solid gray; /* 회색 */
+}
+</style>
