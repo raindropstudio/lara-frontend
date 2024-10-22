@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center justify-center text-nowrap rounded-full border border-lucidviolet-200 bg-white py-1 text-lucidviolet-700 transition-all duration-300 ease-in-out"
+    class="flex items-center justify-center text-nowrap rounded-full border border-lucidviolet-200 bg-white/50 py-1 text-lucid-violetgray backdrop-blur-lg transition-all duration-300 ease-in-out"
     :class="[
       showImage && isReady ? 'px-1' : 'px-1',
     ]"
@@ -19,7 +19,7 @@
         leave-to="opacity-0 scale-0 size-0"
       >
         <button
-          class="size-6 overflow-hidden rounded-full border border-lucidviolet-200 ring-lucidviolet-50 hover:ring-2"
+          class="size-6 overflow-hidden rounded-full border border-lucidviolet-200 ring-lucidviolet-50/70 hover:ring-2"
           @click="scrollToTop"
         >
           <img
@@ -36,10 +36,10 @@
         v-for="(menu, idx) in menus"
         :key="idx"
         :to="{ hash: menu.hash }"
-        class="rounded-full px-4 transition-all hover:bg-lucidviolet-100 hover:text-lucidviolet-800"
+        class="rounded-full px-4 transition-all hover:bg-lucidviolet-100/70 hover:text-lucidviolet-800"
         :class="[
           currentSection === menu.hash.slice(1)
-            ? 'bg-lucidviolet-50 text-lucidviolet-800'
+            ? 'bg-lucidviolet-50/70 text-lucidviolet-800'
             : '',
         ]"
       >
@@ -47,7 +47,7 @@
       </NuxtLink>
     </div>
     <button
-      class="flex items-center justify-center rounded-full px-1 font-extralight hover:bg-lucidviolet-100"
+      class="flex items-center justify-center rounded-full px-1 font-extralight hover:bg-lucidviolet-100/70"
       :disabled="updateStatus === 'pending'"
       :class="[
         updateStatus === 'pending' ? 'cursor-wait text-lucidviolet-400' : 'cursor-pointer',

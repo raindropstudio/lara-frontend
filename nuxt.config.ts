@@ -1,19 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devServer: {
-    port: 3001,
-  },
-
-  devtools: {
-    enabled: true,
-    timeline: {
-      enabled: true,
-    },
-  },
-  compatibilityDate: '2024-08-10',
-  future: {
-    compatibilityVersion: 4, // Nuxt 4 대비해서 미리 활성화
-  },
 
   modules: [
     '@nuxt/eslint',
@@ -28,21 +14,11 @@ export default defineNuxtConfig({
     dirs: ['types/*.ts'],
   },
 
-  build: {
-    transpile: ['hangul-typing-animation'],
-  },
-
-  eslint: {
-    config: {
-      stylistic: true,
+  devtools: {
+    enabled: true,
+    timeline: {
+      enabled: true,
     },
-  },
-
-  css: [
-    'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css',
-  ],
-  tailwindcss: {
-    cssPath: '~/assets/css/tailwind.css',
   },
 
   app: {
@@ -65,13 +41,37 @@ export default defineNuxtConfig({
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     },
   },
+
+  css: [
+    'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css',
+  ],
   runtimeConfig: {
     public: {
       apiBaseUrl: 'https://api.lara.moe',
     },
   },
 
+  build: {
+    transpile: ['hangul-typing-animation'],
+  },
+  devServer: {
+    port: 3001,
+  },
+  future: {
+    compatibilityVersion: 4, // Nuxt 4 대비해서 미리 활성화
+  },
+  compatibilityDate: '2024-08-10',
+
+  eslint: {
+    config: {
+      stylistic: true,
+    },
+  },
+
   headlessui: {
     prefix: 'H',
+  },
+  tailwindcss: {
+    cssPath: '~/assets/css/tailwind.css',
   },
 })

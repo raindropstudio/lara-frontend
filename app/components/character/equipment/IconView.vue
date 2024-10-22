@@ -12,14 +12,17 @@
         >
           <div
             v-if="iconViewMap[idx]"
-            class="relative z-0 flex size-12 items-center justify-center rounded bg-gray-50 ring-2 drop-shadow-md hover:bg-gray-100"
-            :class="getSlotColor(item)"
+            class="relative z-0 flex size-12 items-center justify-center rounded bg-gray-50 drop-shadow-md transition-all duration-700 ease-in-out hover:bg-gray-100"
+            :class="[
+              getSlotColor(item),
+              itemChanged[idx] ? '' : 'ring-2',
+            ]"
           >
             <img
               v-if="item"
               :src="getItemImageUrl(item.icon)"
               :alt="item.name"
-              class="drop-shadow-md [image-rendering:_pixelated]"
+              class="drop-shadow-md transition-all duration-300 ease-in-out [image-rendering:_pixelated]"
             >
             <div
               v-if="item?.dateOptionExpire === '1998-12-31T15:00:00.000Z'"
@@ -58,6 +61,22 @@ const mappedPreset = computed(() => {
   return iconViewMap
     .map(slot => viewPreset.value?.find(equip => equip.slot === slot))
 })
+
+// 아이템 부드럽게 변경
+const itemChanged = ref(new Array(iconViewMap.length).fill(false))
+watch(
+  () => mappedPreset.value,
+  (newPreset, oldPreset) => {
+    newPreset.forEach((item, idx) => {
+      if (item?.icon !== oldPreset[idx]?.icon) {
+        itemChanged.value[idx] = true
+        setTimeout(() => {
+          itemChanged.value[idx] = false
+        }, 300)
+      }
+    })
+  },
+)
 
 const getSlotColor = (item?: ItemEquipmentInfo) => {
   if (!viewPreset?.value) return 'ring-potential-normal'

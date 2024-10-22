@@ -11,7 +11,10 @@
           :item="item"
         >
           <div
-            class="flex h-11 items-center justify-start rounded bg-gray-50 py-1 pr-2 outline outline-gray-300 drop-shadow-sm hover:bg-gray-100"
+            class="flex h-11 items-center justify-start rounded bg-gray-50 py-1 pr-2 ring-gray-300 drop-shadow-sm transition-all duration-700 ease-in-out hover:bg-gray-100"
+            :class="[
+              itemChanged[idx] ? '' : 'ring-1',
+            ]"
           >
             <div class="flex w-12 items-center justify-center">
               <img
@@ -91,6 +94,22 @@ const mappedPreset = computed(() => {
     .map(slot => viewPreset.value?.find(equip => equip.slot === slot))
     .filter(equip => !!equip)
 })
+
+// 아이템 부드럽게 변경
+const itemChanged = ref(new Array(cardViewMap.length).fill(false))
+watch(
+  () => mappedPreset.value,
+  (newPreset, oldPreset) => {
+    newPreset.forEach((item, idx) => {
+      if (item?.icon !== oldPreset[idx]?.icon) {
+        itemChanged.value[idx] = true
+        setTimeout(() => {
+          itemChanged.value[idx] = false
+        }, 300)
+      }
+    })
+  },
+)
 
 // 무기추옵
 const getWeaponAddOption = (item: ItemEquipmentInfo) => {

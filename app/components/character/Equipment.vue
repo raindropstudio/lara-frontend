@@ -60,8 +60,8 @@
                 <button
                   class="size-5 rounded hover:bg-lucidviolet-100"
                   :class="{
-                    'bg-lucidviolet-50 font-semibold text-lucidviolet-700': viewPresetIdx === presetNo - 1,
-                    'outline outline-lucidgray-light': activePresetIdx === presetNo - 1,
+                    'bg-lucidviolet-100 font-semibold text-lucidviolet-700': viewPresetIdx === presetNo - 1,
+                    'underline': activePresetIdx === presetNo - 1,
                   }"
                   @click="viewPresetIdx = presetNo - 1"
                 >

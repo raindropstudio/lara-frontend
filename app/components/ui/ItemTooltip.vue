@@ -7,7 +7,7 @@
     <slot />
     <div
       v-if="visible && item"
-      class="pointer-events-none absolute left-full top-0 z-30 ml-2 w-64 overflow-visible whitespace-pre-wrap rounded-md bg-white px-2 py-1 text-sm font-light text-lucidviolet-900 ring-1 ring-lucidgray-light"
+      class="pointer-events-none absolute left-full top-0 z-30 ml-2 w-64 overflow-visible rounded-md bg-white/50 px-2 py-1 text-xs font-light text-lucidviolet-900 ring-2 ring-lucidgray-light backdrop-blur-2xl"
     >
       <div
         v-if="showStarforce && item.starforce !== undefined"
@@ -60,58 +60,59 @@
       <!-- (소울) 아이템 이름 (+몇 강인지) -->
       <div
         v-if="item.soulName"
-        class="-mb-1 text-center text-base"
+        class="-mb-3 text-center text-base"
       >
         {{ getSoulPrefix }}
       </div>
-      <div class="text-center text-lg font-bold">
+      <div class="py-2 text-center text-lg font-bold">
         {{ item.name }}
         <span v-if="item.scrollUpgrade">(+{{ item.scrollUpgrade }})</span>
-      </div>
-
-      <!-- 아이템 잠재능력 등급 -->
-      <div
-        v-if="displayedPotentialGrade"
-        class="text-center"
-      >
-        ({{ displayedPotentialGrade }} 아이템)
       </div>
 
       <!-- 점선 구분선 -->
       <hr class="my-2 border-t border-dashed border-gray-300">
 
       <!-- 아이템 이미지, 장비 장착 레벨 -->
-      <div class="mt-2 flex items-center space-x-4">
+      <div class="mt-2 flex items-stretch space-x-2">
         <!-- 이미지 박스, 잠재능력 색에 따라 외곽선 변경 -->
         <div
-          :class="['flex size-16 items-center justify-center rounded-md bg-zinc-700', getBorderColor(item.potentialOptionGrade)]"
-          class="size-16"
+          :class="getBorderColor(item.potentialOptionGrade)"
+          class="flex size-16 items-center justify-center rounded-md border-2 bg-gray-50"
         >
           <img
             :src="getItemImageUrl(item.shapeIcon || item.icon)"
             alt="item.name"
-            class="size-10 object-contain"
+            class="size-10 object-contain [image-rendering:pixelated]"
           >
         </div>
-        <div class="text-sm font-semibold">
-          REQ LEVEL: {{ item.baseOption?.baseEquipmentLevel }}
+        <div class="flex flex-col items-start text-xs">
+          <div class="min-h-4 font-semibold">
+            {{ displayedPotentialGrade ? displayedPotentialGrade + ' 아이템' : '' }}
+          </div>
+          <div class="font-semibold">
+            REQ LEVEL : {{ item.baseOption?.baseEquipmentLevel || 0 }}
+          </div>
+          <div>
+            장비 분류 : {{ item.part }}
+          </div>
+          <div
+            v-if="item.shapeName && item.shapeIcon && item.shapeIcon !== item.icon"
+            class="mt-auto text-lucidgray-dark"
+          >
+            외형 : {{ item.shapeName }}
+          </div>
         </div>
       </div>
 
       <!-- 점선 구분선 -->
       <hr class="my-2 border-t border-dashed border-gray-300">
 
-      <!-- 장비 분류 -->
-      <div v-if="item.part">
-        장비 분류 : {{ item.part }}
-      </div>
-
       <!-- 기본 옵션 (STR, DEX, INT, LUK, HP, 공격력, 마력 등) -->
       <div v-if="computedStats.length > 0">
         <div
           v-for="(stat, index) in computedStats"
           :key="index"
-          class="text-sm"
+          class="text-xs"
         >
           {{ stat.label }} : <span class="text-teal-500">+{{ stat.isPercentage ? stat.totalValue + '%' : stat.totalValue }}</span>
           <span v-if="stat.breakdown.length > 1"> (
@@ -141,7 +142,7 @@
       <div v-if="item.goldenHammerFlag">
         황금망치 재련 적용
       </div>
-      <div v-if="item.cuttableCount !== null && item.cuttableCount !== 255">
+      <div v-if="item.cuttableCount && item.cuttableCount !== 255">
         가위 사용 가능 횟수: {{ item.cuttableCount }}
       </div>
 
@@ -150,7 +151,7 @@
 
       <!-- 잠재 옵션 -->
       <div v-if="item.potentialOption && item.potentialOption.length > 0">
-        <div class="mt-4 break-words font-semibold">
+        <div class="break-words font-semibold">
           잠재옵션
         </div>
         <div
@@ -165,7 +166,7 @@
       <hr class="my-2 border-t border-dashed border-gray-300">
       <!-- 에디셔널 잠재 옵션 -->
       <div v-if="item.additionalPotentialOption && item.additionalPotentialOption.length > 0">
-        <div class="mt-4 break-words font-semibold">
+        <div class="break-words font-semibold">
           에디셔널 잠재옵션
         </div>
         <div
@@ -202,16 +203,9 @@
         </div>
       </div>
 
-      <!-- 모루 내용 -->
-      <div v-if="item.shapeName && item.shapeIcon">
-        <div class="w-full break-words">
-          신비의 모루에 의해 [{{ item.shapeName }}]의 외형이 합성됨
-        </div>
-      </div>
-
       <!-- 아이템 설명 -->
       <div v-if="item.description">
-        <div class="break-words">
+        <div class="whitespace-pre-wrap text-pretty break-words">
           {{ item.description }}
         </div>
       </div>
@@ -220,8 +214,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineProps, ref, toRefs } from 'vue'
-
 const props = defineProps<{
   item: ItemEquipmentInfo | undefined
 }>()
@@ -410,21 +402,3 @@ const getBorderColor = (grade: string | undefined) => {
   }
 }
 </script>
-
-<style scoped>
-.border-potential-legendary {
-  border: 2px solid green; /* 초록색 */
-}
-.border-potential-unique {
-  border: 2px solid yellow; /* 노란색 */
-}
-.border-potential-epic {
-  border: 2px solid purple; /* 보라색 */
-}
-.border-potential-rare {
-  border: 2px solid blue; /* 파란색 */
-}
-.border-potential-normal {
-  border: 2px solid gray; /* 회색 */
-}
-</style>
