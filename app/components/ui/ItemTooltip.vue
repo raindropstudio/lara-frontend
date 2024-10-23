@@ -21,11 +21,8 @@
               :key="'star-' + index"
             >
               <IconStar
-                :class="{
-                  'size-3': true,
-                  'text-yellow-500': index <= item.starforce,
-                  'text-gray-300': index > item.starforce,
-                }"
+                v-if="index <= (item?.starforce ?? 0)"
+                :class="getStarColor(index, item?.starforceScrollFlag ?? false)"
               />
               <span
                 v-if="index % 5 === 0 && index < Math.min(maxStarforce, 15)"
@@ -34,7 +31,7 @@
             </template>
           </div>
           <div
-            v-if="maxStarforce > 15"
+            v-if="maxStarforce > 15 && !item?.starforceScrollFlag"
             class="mt-2 flex justify-center"
           >
             <template
@@ -42,11 +39,7 @@
               :key="'star-second-' + index"
             >
               <IconStar
-                :class="{
-                  'size-3': true,
-                  'text-yellow-500': index + 15 <= item.starforce,
-                  'text-gray-300': index + 15 > item.starforce,
-                }"
+                :class="getStarColor(index + 15, false)"
               />
               <span
                 v-if="(index + 15) % 5 === 0 && index + 15 < maxStarforce"
@@ -60,7 +53,7 @@
       <!-- (소울) 아이템 이름 (+몇 강인지) -->
       <div
         v-if="item.soulName"
-        class="-mb-3 text-center text-base"
+        class="-mb-3 mt-3 text-center text-base"
       >
         {{ getSoulPrefix }}
       </div>
@@ -76,7 +69,7 @@
       <div class="mt-2 flex items-stretch space-x-2">
         <!-- 이미지 박스, 잠재능력 색에 따라 외곽선 변경 -->
         <div
-          :class="getBorderColor(item.potentialOptionGrade)"
+          :class="getPotentialBorderColor(item.potentialOptionGrade)"
           class="flex size-16 items-center justify-center rounded-md border-2 bg-gray-50"
         >
           <img
@@ -130,19 +123,19 @@
 
       <!-- 업그레이드 가능 횟수 -->
       <div v-if="scrollUpgradeableCount">
-        <span class="text-gray-500">업그레이드 가능 횟수: {{ scrollUpgradeableCount }}</span>
+        <span class="text-gray-500">업그레이드 가능 횟수 : {{ scrollUpgradeableCount }}</span>
         <span
           v-if="scrollResilienceCount > 0"
           class="text-yellow-500"
         >
-          (복구 가능 횟수: {{ scrollResilienceCount }})
+          (복구 가능 횟수 : {{ scrollResilienceCount }})
         </span>
       </div>
       <div v-if="item.goldenHammerFlag">
         황금망치 재련 적용
       </div>
       <div v-if="item.cuttableCount && item.cuttableCount !== 255">
-        가위 사용 가능 횟수: {{ item.cuttableCount }}
+        가위 사용 가능 횟수 : {{ item.cuttableCount }}
       </div>
 
       <!-- 잠재 옵션 -->
@@ -153,7 +146,7 @@
           <!-- 원 아이콘 -->
           <span
             class="mr-1 size-2 rounded-full"
-            :style="{ backgroundColor: getBackgroundColor(item.potentialOptionGrade) }"
+            :class="getPotentialBackgroundColor(item.potentialOptionGrade)"
           />
           잠재옵션
         </div>
@@ -173,7 +166,7 @@
           <!-- 원 아이콘 -->
           <span
             class="mr-1 size-2 rounded-full"
-            :style="{ backgroundColor: getBackgroundColor(item.additionalPotentialOptionGrade) }"
+            :class="getPotentialBackgroundColor(item.additionalPotentialOptionGrade)"
           />
           에디셔널 잠재옵션
         </div>
@@ -201,7 +194,12 @@
       <div v-if="item.exceptionalOption?.exceptionalUpgrade">
         <!-- 점선 구분선 -->
         <hr class="my-2 border-t border-dashed border-gray-300">
-        <div class="font-semibold">
+        <div class="flex items-center break-words font-semibold">
+          <!-- 원 아이콘 -->
+          <span
+            class="mr-1 size-2 rounded-full"
+            :class="getPotentialBackgroundColor('EXCEPTIONAL')"
+          />
           익셉셔널
         </div>
         <div>
@@ -218,6 +216,15 @@
         <hr class="my-2 border-t border-dashed border-gray-300">
         <div class="whitespace-pre-wrap text-pretty break-words">
           {{ item.description }}
+        </div>
+      </div>
+
+      <!-- 놀라운 장비강화 주문서 적용 -->
+      <div v-if="item.starforceScrollFlag">
+        <!-- 점선 구분선 -->
+        <hr class="my-2 border-t border-dashed border-gray-300">
+        <div>
+          놀라운 장비강화 주문서가 사용되었습니다.
         </div>
       </div>
     </div>
@@ -398,7 +405,7 @@ const optionTypeClassMap: { [key: string]: string } = {
 /**
  * 잠재능력에 따라 외곽선 색상 반환
  */
-const getBorderColor = (grade: string | undefined) => {
+const getPotentialBorderColor = (grade: string | undefined) => {
   switch (grade) {
     case 'LEGENDARY':
       return 'border-potential-legendary' // 레전드리 - 초록색
@@ -416,18 +423,37 @@ const getBorderColor = (grade: string | undefined) => {
 /**
  * 잠재능력에 따라 원 아이콘의 배경색 반환
  */
-const getBackgroundColor = (grade: string | undefined) => {
+const getPotentialBackgroundColor = (grade: string | undefined) => {
   switch (grade) {
     case 'LEGENDARY':
-      return '#00FF00' // 레전드리 - 초록색
+      return 'bg-potential-legendary'
     case 'UNIQUE':
-      return '#FFFF00' // 유니크 - 노란색
+      return 'bg-potential-unique'
     case 'EPIC':
-      return '#800080' // 에픽 - 보라색
+      return 'bg-potential-epic'
     case 'RARE':
-      return '#0000FF' // 레어 - 파란색
+      return 'bg-potential-rare'
+    case 'EXCEPTIONAL':
+      return 'bg-potential-exceptional'
     default:
-      return '#808080' // 기본 - 회색
+      return 'bg-potential-normal'
+  }
+}
+
+// 별 색상 결정 함수
+const getStarColor = (index: number, isScrollFlag: boolean) => {
+  if (isScrollFlag) {
+    return {
+      'size-3': true,
+      'text-blue-500': index <= (item.value?.starforce ?? 0), // 파란색 별
+    }
+  }
+  else {
+    return {
+      'size-3': true,
+      'text-yellow-500': index <= (item.value?.starforce ?? 0), // 기존 색상
+      'text-gray-300': index > (item.value?.starforce ?? 0),
+    }
   }
 }
 </script>
