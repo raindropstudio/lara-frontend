@@ -85,7 +85,10 @@
           <div class="font-semibold">
             REQ LEVEL : {{ item.baseOption?.baseEquipmentLevel || 0 }}
           </div>
-          <div>
+          <div v-if="item.slot === '무기'">
+            무기 분류 : {{ item.part }}
+          </div>
+          <div v-else>
             장비 분류 : {{ item.part }}
           </div>
           <div
@@ -104,10 +107,14 @@
         <div
           v-for="(stat, index) in computedStats"
           :key="index"
+          :class="{
+            //'text-gray-400': stat.breakdown.length <= 1,
+            'text-cyan-500': stat.breakdown.length > 1,
+          }"
           class="text-xs"
         >
-          {{ stat.label }} : <span class="text-teal-500">+{{ stat.isPercentage ? stat.totalValue + '%' : stat.totalValue }}</span>
-          <span v-if="stat.breakdown.length > 1"> (
+          {{ stat.label }} : <span>+{{ stat.isPercentage ? stat.totalValue + '%' : stat.totalValue }}</span>
+          <span v-if="stat.breakdown.length > 1"> <span class="text-gray-500"> (</span>
             <template
               v-for="(part, idx) in stat.breakdown"
               :key="idx"
@@ -116,18 +123,15 @@
                 :class="optionTypeClassMap[part.type]"
               >{{ part.valueSign }}{{ stat.isPercentage ? part.value + '%' : part.value }}</span><span v-if="idx < stat.breakdown.length -1">&nbsp;</span>
             </template>
-            )
+            <span class="text-gray-500">)</span>
           </span>
         </div>
       </div>
 
       <!-- 업그레이드 가능 횟수 -->
       <div v-if="scrollUpgradeableCount">
-        <span class="text-gray-500">업그레이드 가능 횟수 : {{ scrollUpgradeableCount }}</span>
-        <span
-          v-if="scrollResilienceCount > 0"
-          class="text-yellow-500"
-        >
+        업그레이드 가능 횟수 : {{ scrollUpgradeableCount }}
+        <span v-if="scrollResilienceCount > 0">
           (복구 가능 횟수 : {{ scrollResilienceCount }})
         </span>
       </div>
@@ -135,7 +139,7 @@
         황금망치 재련 적용
       </div>
       <div v-if="item.cuttableCount && item.cuttableCount !== 255">
-        가위 사용 가능 횟수 : {{ item.cuttableCount }}
+        <span class="text-yellow-500">가위 사용 가능 횟수 : {{ item.cuttableCount }}</span>
       </div>
 
       <!-- 잠재 옵션 -->
@@ -396,7 +400,7 @@ const computedStats = computed(() => {
  * 옵션 유형별 CSS 클래스 매핑
  */
 const optionTypeClassMap: { [key: string]: string } = {
-  base: 'text-gray-400',
+  base: 'text-gray-600',
   add: 'text-green-500',
   etc: 'text-gray-500',
   starforce: 'text-yellow-500',
