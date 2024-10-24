@@ -86,10 +86,10 @@
             REQ LEVEL : {{ item.baseOption?.baseEquipmentLevel || 0 }}
           </div>
           <div v-if="item.slot === '무기'">
-            무기 분류 : {{ item.part }}
+            무기분류 : {{ item.part }}
           </div>
           <div v-else>
-            장비 분류 : {{ item.part }}
+            장비분류 : {{ item.part }}
           </div>
           <div
             v-if="item.shapeName && item.shapeIcon && item.shapeIcon !== item.icon"
@@ -131,7 +131,7 @@
       <!-- 업그레이드 가능 횟수 -->
       <div v-if="scrollUpgradeableCount">
         업그레이드 가능 횟수 : {{ scrollUpgradeableCount }}
-        <span v-if="scrollResilienceCount > 0">
+        <span class="text-yellow-500">
           (복구 가능 횟수 : {{ scrollResilienceCount }})
         </span>
       </div>
