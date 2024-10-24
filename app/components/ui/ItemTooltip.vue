@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="popupRef"
     class="relative inline-block"
     @mouseenter="visible = true"
     @mouseleave="visible = false"
@@ -7,7 +8,9 @@
     <slot />
     <div
       v-if="visible && item"
-      class="pointer-events-none absolute left-full top-0 z-30 ml-2 w-64 overflow-visible rounded-md bg-white/50 px-2 py-1 text-xs font-light text-lucidviolet-900 ring-2 ring-lucidgray-light backdrop-blur-2xl"
+      ref="popupFloating"
+      :style="floatingStyles"
+      class="pointer-events-none absolute left-0 top-0 z-30 w-64 overflow-visible rounded-md bg-white/50 p-2 text-xs font-light text-lucidviolet-900 ring-2 ring-lucidgray-light backdrop-blur-2xl"
     >
       <div
         v-if="showStarforce && item.starforce !== undefined"
@@ -32,7 +35,7 @@
           </div>
           <div
             v-if="maxStarforce > 15 && !item?.starforceScrollFlag"
-            class="mt-2 flex justify-center"
+            class="mt-1 flex justify-center"
           >
             <template
               v-for="index in maxStarforce - 15"
@@ -53,17 +56,17 @@
       <!-- (소울) 아이템 이름 (+몇 강인지) -->
       <div
         v-if="item.soulName"
-        class="-mb-3 mt-3 text-center text-base"
+        class="-mb-2 mt-2 text-center text-base"
       >
         {{ getSoulPrefix }}
       </div>
-      <div class="py-2 text-center text-lg font-bold">
+      <div class="py-1 text-center text-lg font-bold">
         {{ item.name }}
         <span v-if="item.scrollUpgrade">(+{{ item.scrollUpgrade }})</span>
       </div>
 
       <!-- 점선 구분선 -->
-      <hr class="my-2 border-t border-dashed border-gray-300">
+      <hr class="my-2 border-t border-dashed border-gray-200">
 
       <!-- 아이템 이미지, 장비 장착 레벨 -->
       <div class="mt-2 flex items-stretch space-x-2">
@@ -103,7 +106,7 @@
       <!-- 기본 옵션 (STR, DEX, INT, LUK, HP, 공격력, 마력 등) -->
       <div v-if="computedStats.length > 0">
         <!-- 점선 구분선 -->
-        <hr class="my-2 border-t border-dashed border-gray-300">
+        <hr class="my-2 border-t border-dashed border-gray-200">
         <div
           v-for="(stat, index) in computedStats"
           :key="index"
@@ -111,7 +114,7 @@
             //'text-gray-400': stat.breakdown.length <= 1,
             'text-cyan-500': stat.breakdown.length > 1,
           }"
-          class="text-xs"
+          class="text-xs font-medium"
         >
           {{ stat.label }} : <span>+{{ stat.isPercentage ? stat.totalValue + '%' : stat.totalValue }}</span>
           <span v-if="stat.breakdown.length > 1"> <span class="text-gray-500"> (</span>
@@ -129,27 +132,35 @@
       </div>
 
       <!-- 업그레이드 가능 횟수 -->
-      <div v-if="scrollUpgradeableCount">
+      <div
+        v-if="scrollUpgradeableCount"
+        class="text-lucidgray-dark"
+      >
         업그레이드 가능 횟수 : {{ scrollUpgradeableCount }}
         <span class="text-yellow-500">
           (복구 가능 횟수 : {{ scrollResilienceCount }})
         </span>
       </div>
-      <div v-if="item.goldenHammerFlag">
+      <div
+        v-if="item.goldenHammerFlag"
+        class="text-lucidgray-dark"
+      >
         황금망치 재련 적용
       </div>
       <div v-if="item.cuttableCount && item.cuttableCount !== 255">
         <span class="text-yellow-500">가위 사용 가능 횟수 : {{ item.cuttableCount }}</span>
       </div>
 
-      <!-- 잠재 옵션 -->
+      <!-- 잠재옵션 -->
       <div v-if="item.potentialOption && item.potentialOption.length > 0">
         <!-- 점선 구분선 -->
-        <hr class="my-2 border-t border-dashed border-gray-300">
-        <div class="flex items-center break-words font-semibold">
+        <hr class="my-2 border-t border-dashed border-gray-200">
+        <div
+          class="mb-1 flex items-center break-words font-semibold"
+        >
           <!-- 원 아이콘 -->
           <span
-            class="mr-1 size-2 rounded-full"
+            class="mr-1 h-3 w-1 rounded-full"
             :class="getPotentialBackgroundColor(item.potentialOptionGrade)"
           />
           잠재옵션
@@ -157,19 +168,20 @@
         <div
           v-for="(option, index) in item.potentialOption"
           :key="index"
+          :class="(item.potentialOptionGrade)"
         >
           {{ option }}
         </div>
       </div>
 
-      <!-- 에디셔널 잠재 옵션 -->
+      <!-- 에디셔널 잠재옵션 -->
       <div v-if="item.additionalPotentialOption && item.additionalPotentialOption.length > 0">
         <!-- 점선 구분선 -->
-        <hr class="my-2 border-t border-dashed border-gray-300">
-        <div class="flex items-center break-words font-semibold">
+        <hr class="my-2 border-t border-dashed border-gray-200">
+        <div class="mb-1 flex items-center break-words font-semibold">
           <!-- 원 아이콘 -->
           <span
-            class="mr-1 size-2 rounded-full"
+            class="mr-1 h-3 w-1 rounded-full"
             :class="getPotentialBackgroundColor(item.additionalPotentialOptionGrade)"
           />
           에디셔널 잠재옵션
@@ -185,7 +197,7 @@
       <!-- 적용된 소울 옵션 -->
       <div v-if="item.soulName">
         <!-- 점선 구분선 -->
-        <hr class="my-2 border-t border-dashed border-gray-300">
+        <hr class="my-2 border-t border-dashed border-gray-200">
         <div class="break-words font-semibold">
           {{ item.soulName }}
         </div>
@@ -197,11 +209,11 @@
       <!-- 익셉셔널 옵션 -->
       <div v-if="item.exceptionalOption?.exceptionalUpgrade">
         <!-- 점선 구분선 -->
-        <hr class="my-2 border-t border-dashed border-gray-300">
-        <div class="flex items-center break-words font-semibold">
+        <hr class="my-2 border-t border-dashed border-gray-200">
+        <div class="mb-1 flex items-center break-words font-semibold">
           <!-- 원 아이콘 -->
           <span
-            class="mr-1 size-2 rounded-full"
+            class="mr-1 h-3 w-1 rounded-full"
             :class="getPotentialBackgroundColor('EXCEPTIONAL')"
           />
           익셉셔널
@@ -210,14 +222,16 @@
           올스탯 : +{{ item.exceptionalOption.str }} <br>
           최대 HP / 최대 MP : +{{ item.exceptionalOption.maxHp }} <br>
           공격력 / 마력 : +{{ item.exceptionalOption.attackPower }} <br>
-          익셉셔널 강화 {{ item.exceptionalOption.exceptionalUpgrade }}회 적용 <br>
+          <span class="text-lucidgray-dark">
+            익셉셔널 강화 {{ item.exceptionalOption.exceptionalUpgrade }}회 적용
+          </span>
         </div>
       </div>
 
       <!-- 아이템 설명 -->
       <div v-if="item.description">
         <!-- 점선 구분선 -->
-        <hr class="my-2 border-t border-dashed border-gray-300">
+        <hr class="my-2 border-t border-dashed border-gray-200">
         <div class="whitespace-pre-wrap text-pretty break-words">
           {{ item.description }}
         </div>
@@ -226,7 +240,7 @@
       <!-- 놀라운 장비강화 주문서 적용 -->
       <div v-if="item.starforceScrollFlag">
         <!-- 점선 구분선 -->
-        <hr class="my-2 border-t border-dashed border-gray-300">
+        <hr class="my-2 border-t border-dashed border-gray-200">
         <div>
           놀라운 장비강화 주문서가 사용되었습니다.
         </div>
@@ -236,12 +250,25 @@
 </template>
 
 <script lang="ts" setup>
+import { autoUpdate, limitShift, offset, shift, useFloating } from '@floating-ui/vue'
+
 const props = defineProps<{
   item: ItemEquipmentInfo | undefined
 }>()
 
 const { item } = toRefs(props)
 const visible = ref(false)
+
+const popupRef = ref<HTMLElement | null>(null)
+const popupFloating = ref<HTMLElement | null>(null)
+const { floatingStyles } = useFloating(popupRef, popupFloating, {
+  whileElementsMounted: autoUpdate,
+  placement: 'right-start',
+  middleware: [offset(10), shift({
+    crossAxis: true,
+    limiter: limitShift(),
+  })],
+})
 
 /**
  * 복구 가능 횟수가 undefined일 경우 0으로 변환
