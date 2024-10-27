@@ -9,6 +9,7 @@
           type="text"
           class="max-w-screen-md grow border-b-2 border-lucidviolet-300 bg-gradient-to-r from-lucidviolet-300 to-lucidviolet-800 bg-clip-text text-center text-8xl font-bold text-transparent caret-sunnyorange placeholder:text-lucidviolet-300 focus:ring-0"
           :value="inputText"
+          spellcheck="false"
           @input="inputEvent"
           @keyup.enter="onSearch"
         >
@@ -16,7 +17,7 @@
           class="grow basis-1 rounded-lg py-2 text-lucidviolet-400 hover:bg-lucidviolet-50 hover:text-sunnyorange"
           @click="onSearch"
         >
-          <IconSearch class="size-16" />
+          <IconRightArrow class="size-16" />
         </button>
       </div>
       <div class="mt-12 flex w-full max-w-screen-md flex-col gap-4">
