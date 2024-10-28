@@ -115,6 +115,8 @@ const getLinkClass = (linkPath: string) => {
 }
 
 const onSearch = () => {
+  // TODO: 검색 기능 구현!!!!!!!!!!
+  navigateTo('/character')
   console.log('search')
 }
 
