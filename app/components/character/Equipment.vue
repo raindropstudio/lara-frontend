@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex flex-col py-8">
+    <div class="flex flex-col py-12">
       <div class="text-8xl font-black text-lucidgray-light">
         Equipment
       </div>
@@ -73,13 +73,20 @@
         </div>
         <div class="flex flex-col">
           <div class="mb-8 flex flex-col">
-            <div class="mb-4 text-5xl font-extrabold text-lucidgray-light">
-              세트 옵션
+            <div class="mb-4 flex items-end gap-2">
+              <div class="text-5xl font-extrabold text-lucidgray-light">
+                세트 효과
+              </div>
+              <span
+                v-if="activePresetIdx !== undefined"
+                class="text-sm font-light text-lucidgray-dark"
+              >프리셋 {{ activePresetIdx + 1 }} 기준</span>
             </div>
             <div class="mx-auto">
-              <div class="text-xl font-light text-lucidviolet-700">
-                세트옵션세트옵션세트옵션
-              </div>
+              <CharacterEquipmentSetEffect
+                :active-preset="activePreset"
+                :set-effect="character?.setEffect ?? []"
+              />
             </div>
           </div>
           <div class="flex flex-col">
@@ -110,6 +117,8 @@ const equipPreset = computed(() => character.value?.itemEquipmentPreset)
 const activePresetIdx = computed(() => equipPreset.value?.findIndex(equip => equip.active))
 const viewPresetIdx = ref(activePresetIdx.value) // 기본값은 활성화 프리셋
 const viewMode = ref<'icon' | 'card'>('icon')
+
+const activePreset = computed(() => equipPreset.value?.[activePresetIdx.value ?? 0]?.itemEquipmentInfo)
 
 const viewPreset = computed(() => {
   // 백엔드 converter에서 프리셋 순서대로 보내주도록 보장함

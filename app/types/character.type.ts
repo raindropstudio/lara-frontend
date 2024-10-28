@@ -1,4 +1,6 @@
+import type { CashEquipmentPreset } from './cashEquipment.type'
 import type { ItemEquipmentPreset } from './itemEquipment.type'
+import type { SetEffect } from './setEffect.type'
 import type { Stat } from './stat.type'
 import type { Union } from './union.type'
 
@@ -20,5 +22,7 @@ export interface Character {
   updatedAt: string
   stat: Stat
   itemEquipmentPreset: ItemEquipmentPreset[]
+  cashEquipmentPreset: CashEquipmentPreset[]
+  setEffect: SetEffect[]
   union?: Union
 }
