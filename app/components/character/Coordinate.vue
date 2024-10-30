@@ -5,21 +5,123 @@
         Coordinate
       </div>
       <div class="my-12 flex items-center justify-around">
-        <div class="mb-4 text-left text-6xl font-black text-lucidgray-light">
-          성능
+        <div class="flex flex-col">
+          <div class="-mb-12 text-left text-6xl font-black text-lucidgray-light">
+            성능
+          </div>
+          <div class="flex flex-col items-end gap-4">
+            <CharacterCoordinateIconView
+              :view-preset="basePreset[viewBasePreset]?.cashEquipmentInfo"
+              :icon-view-map="baseIconViewMap"
+            />
+            <div
+              v-if="(character?.class === '제로' || character?.class === '엔젤릭버스터') && basePreset.length > 1"
+              class="flex rounded bg-gray-50 px-2 py-1 text-sm text-lucidgray-dark outline outline-lucidgray-medium"
+            >
+              <div class="flex gap-2">
+                <button
+                  class="flex items-center gap-1 rounded px-1 hover:bg-lucidviolet-100"
+                  :class="{
+                    'bg-lucidviolet-50 font-semibold text-lucidviolet-700': viewBasePreset === 0,
+                    'underline underline-offset-2': activeBaseIdx === 0,
+                  }"
+                  @click="viewBasePreset = 0"
+                >
+                  <span>{{
+                    character?.class === '제로' ? '알파' : character?.class === '엔젤릭버스터' ? '일반' : ''
+                  }}</span>
+                </button>
+                <button
+                  class="flex items-center gap-1 rounded px-1 hover:bg-lucidviolet-100"
+                  :class="{
+                    'bg-lucidviolet-50 font-semibold text-lucidviolet-700': viewBasePreset === 1,
+                    'underline underline-offset-2': activeBaseIdx === 1,
+                  }"
+                  @click="viewBasePreset = 1"
+                >
+                  {{ character?.class === '제로' ? '베타' : character?.class === '엔젤릭버스터' ? '드레스온' : '' }}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="mb-4 text-6xl font-black text-lucidgray-light">
-          외형
+        <div class="flex flex-col">
+          <div class="-mb-12 text-left text-6xl font-black text-lucidgray-light">
+            외형
+          </div>
+          <div class="flex flex-col items-end gap-4">
+            <CharacterCoordinateIconView
+              :view-preset="coordiPreset[viewCoordiPreset]?.cashEquipmentInfo"
+              :icon-view-map="coordiIconViewMap"
+            />
+            <div class="flex justify-end gap-4 rounded bg-gray-50 p-1 text-sm text-lucidgray-dark outline outline-lucidgray-medium">
+              <div
+                v-if="character?.class === '제로' || character?.class === '엔젤릭버스터'"
+                class="flex gap-2 px-1"
+              >
+                <button
+                  class="flex items-center gap-1 rounded px-1 hover:bg-lucidviolet-100"
+                  :class="{
+                    'bg-lucidviolet-50 font-semibold text-lucidviolet-700': viewCoordiAlpha === 0,
+                    'underline underline-offset-2': activeBaseIdx === 0,
+                  }"
+                  @click="viewCoordiAlpha = 0; viewCoordiPreset = viewCoordiPreset - 3"
+                >
+                  <span>{{
+                    character?.class === '제로' ? '알파' : character?.class === '엔젤릭버스터' ? '일반' : ''
+                  }}</span>
+                </button>
+                <button
+                  class="flex items-center gap-1 rounded px-1 hover:bg-lucidviolet-100"
+                  :class="{
+                    'bg-lucidviolet-50 font-semibold text-lucidviolet-700': viewCoordiAlpha === 1,
+                    'underline underline-offset-2': activeBaseIdx === 1,
+                  }"
+                  @click="viewCoordiAlpha = 1; viewCoordiPreset = viewCoordiPreset + 3"
+                >
+                  {{ character?.class === '제로' ? '베타' : character?.class === '엔젤릭버스터' ? '드레스온' : '' }}
+                </button>
+              </div>
+              <div class="flex gap-1">
+                <template
+                  v-for="(presetNo) in [1, 2, 3]"
+                  :key="presetNo"
+                >
+                  <button
+                    class="size-5 rounded hover:bg-lucidviolet-100 disabled:opacity-50 disabled:hover:bg-transparent"
+                    :disabled="!coordiPreset[presetNo - 1]?.cashEquipmentInfo"
+                    :class="{
+                      'bg-lucidviolet-100 font-semibold text-lucidviolet-700': viewCoordiPreset === (presetNo - 1) + (viewCoordiAlpha * 3),
+                      'underline': activeCoordiIdx === presetNo - 1,
+                    }"
+                    @click="viewCoordiPreset = (presetNo - 1) + (viewCoordiAlpha * 3)"
+                  >
+                    {{ presetNo }}
+                  </button>
+                </template>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="my-12 flex items-center justify-around">
-        <div class="mb-4 text-6xl font-black text-lucidgray-light">
-          안드로이드
+        <div class="flex flex-col">
+          <div class="mb-4 text-6xl font-black text-lucidgray-light">
+            안드로이드
+          </div>
+          <div>
+            asdf
+          </div>
         </div>
-        <div class="mb-4 text-6xl font-black text-lucidgray-light">
-          펫
-          <span class="font-normal">⋅</span>
-          장비
+        <div class="flex flex-col">
+          <div class="mb-4 text-6xl font-black text-lucidgray-light">
+            펫
+            <span class="font-normal">⋅</span>
+            장비
+          </div>
+          <div>
+            asdf
+          </div>
         </div>
       </div>
     </div>
@@ -32,4 +134,45 @@ const props = defineProps<{
 }>()
 
 const character = toRef(props, 'character')
+const cashEquipmentPreset = computed(() => character.value?.cashEquipmentPreset)
+const basePreset = computed(() => {
+  const preset = []
+  preset.push(cashEquipmentPreset.value?.find(item => item?.presetNo === 0))
+
+  // 제로 베타, 엔버 드레스온
+  if (cashEquipmentPreset.value?.find(item => item?.presetNo === 4))
+    preset.push(cashEquipmentPreset.value?.find(item => item?.presetNo === 4))
+  return preset
+})
+const coordiPreset = computed(() => {
+  const preset = []
+  preset.push(cashEquipmentPreset.value?.find(item => item?.presetNo === 1) || null)
+  preset.push(cashEquipmentPreset.value?.find(item => item?.presetNo === 2) || null)
+  preset.push(cashEquipmentPreset.value?.find(item => item?.presetNo === 3) || null)
+  preset.push(cashEquipmentPreset.value?.find(item => item?.presetNo === 5) || null)
+  preset.push(cashEquipmentPreset.value?.find(item => item?.presetNo === 6) || null)
+  preset.push(cashEquipmentPreset.value?.find(item => item?.presetNo === 7) || null)
+  return preset
+})
+
+const activeCoordiIdx = computed(() => {
+  return coordiPreset.value.findIndex(item => item?.active === true) % 3
+})
+const activeBaseIdx = computed(() => {
+  return coordiPreset.value.findIndex(item => item?.active === true) >= 3 ? 1 : 0
+})
+const viewBasePreset = ref(activeBaseIdx.value)
+const viewCoordiAlpha = ref(activeBaseIdx.value)
+const viewCoordiPreset = ref(activeCoordiIdx.value + (activeBaseIdx.value * 3))
+
+const baseIconViewMap = [
+  '', '', '', '', '헤어', '성형', '피부',
+  '반지1', '반지2', '반지3', '반지4', '얼굴장식', '눈장식', '귀고리',
+  '무기', '모자', '한벌옷', '망토', '신발', '장갑', '방패',
+]
+const coordiIconViewMap = [
+  '', '', '', '', '', '', '',
+  '반지1', '반지2', '반지3', '반지4', '얼굴장식', '눈장식', '귀고리',
+  '무기', '모자', '한벌옷', '망토', '신발', '장갑', '방패',
+]
 </script>

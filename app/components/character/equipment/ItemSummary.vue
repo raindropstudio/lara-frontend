@@ -6,10 +6,10 @@
         :key="idx"
       >
         <div class="flex flex-col items-center justify-center">
-          <div class="text-xl font-light text-lucidgray-medium">
+          <div class="text-xl font-light text-lucidgray-dark">
             {{ value.name }}
           </div>
-          <div class="text-3xl font-medium text-lucid-violetgray">
+          <div class="text-3xl font-medium text-lucidviolet-700">
             {{ value.value }}
           </div>
         </div>

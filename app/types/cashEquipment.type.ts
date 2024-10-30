@@ -4,8 +4,8 @@ export interface CashEquipmentInfo {
   name: string
   icon: string
   description?: string
-  dateExpire?: Date
-  dateOptionExpire?: Date
+  dateExpire?: string
+  dateOptionExpire?: string
   label?: string
   itemGender?: string
   option?: ItemOption
