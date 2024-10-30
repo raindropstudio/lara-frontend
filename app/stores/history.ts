@@ -73,6 +73,7 @@ export const useHistoryStore = defineStore(
       if (index !== -1 && history.value[index]) {
         history.value[index].count++
         history.value[index].date = new Date().toISOString()
+        history.value[index].info = info
 
         // 최상단 이동
         const item = history.value[index]

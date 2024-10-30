@@ -71,8 +71,8 @@ watch(
 )
 
 const getSlotColor = (item?: CashEquipmentInfo) => {
-  if (!viewPreset?.value) return 'ring-potential-normal'
   if (!item) return 'ring-lucidgray-light'
+  if (!viewPreset?.value) return 'ring-potential-normal'
 
   return 'ring-potential-normal'
 }
