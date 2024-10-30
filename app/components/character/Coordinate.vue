@@ -104,7 +104,7 @@
           </div>
         </div>
       </div>
-      <div class="my-12 flex items-center justify-around">
+      <div class="my-12 flex items-start justify-around">
         <div class="flex flex-col">
           <div class="-mb-8 text-left text-6xl font-black text-lucidgray-light">
             안드로이드
