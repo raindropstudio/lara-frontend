@@ -194,8 +194,167 @@ const getUpgrade = (item: ItemEquipmentInfo) => {
   const mainAtkUpgrade = ((atkStat.value === '마력' ? item.etcOption.magicPower : item.etcOption.attackPower) ?? 0) / count
   const upgradable = !!item.scrollResilienceCount || !!item.scrollUpgradeableCount
 
-  // TODO: 주흔작
+  // 주흔작
+  // 방어구 주흔작 수치 테이블 [0~70레벨 수치, 75~115레벨 수치, 120~250레벨 수치]
+  // 적용 대상: 방어구 - 모자, 상의, 하의, 한벌옷, 신발, 망토, 어깨장식, 방패
+  const armorUpgradeTable = {
+    '100%': { stat: [1, 2, 3], hp: [55, 120, 180], allStat: [0, 0, 0], armor: [1, 2, 3] },
+    '70%': { stat: [2, 3, 4], hp: [115, 190, 270], allStat: [0, 0, 0], armor: [2, 4, 5] },
+    '30%': { stat: [3, 5, 7], hp: [180, 320, 470], allStat: [1, 2, 3], armor: [4, 7, 10] },
+    '15%': { stat: [4, 7, 10], hp: [245, 460, 670], allStat: [2, 3, 4], armor: [6, 10, 15] },
+  }
+  // 장갑 주흔작 수치 테이블 [0~70레벨 수치, 75~250레벨 수치]
+  const gloveUpgradeTable = {
+    '100%': { atk: [0, 1] },
+    '70%': { atk: [1, 2] },
+    '30%': { atk: [2, 3] },
+    '15%': { atk: [3, 4] },
+  }
+  // 무기 주흔작 수치 테이블 [0~70레벨 수치, 80~100레벨 수치, 120~250레벨 수치]
+  // 적용 대상: 무기, 업그레이드 가능 횟수가 있는 보조무기
+  const weaponUpgradeTable = {
+    '100%': { atk: [1, 2, 3], stat: [0, 0, 2], hp: [0, 0, 50] },
+    '70%': { atk: [2, 3, 5], stat: [0, 1, 2], hp: [0, 50, 100] },
+    '30%': { atk: [3, 5, 7], stat: [1, 2, 3], hp: [50, 100, 150] },
+    '15%': { atk: [5, 7, 9], stat: [2, 3, 4], hp: [100, 150, 200] },
+  }
+  // 장신구 주흔작 수치 테이블 [0~70레벨 수치, 75~115레벨 수치, 120~250레벨 수치]
+  // 적용 대상: 반지, 펜던트, 벨트, 귀고리, 눈장식, 얼굴장식
+  const accUpgradeTable = {
+    '100%': { stat: [1, 1, 2], hp: [50, 50, 100], allStat: [0, 0, 0] },
+    '70%': { stat: [2, 2, 3], hp: [100, 100, 150], allStat: [0, 0, 0] },
+    '30%': { stat: [3, 4, 5], hp: [150, 200, 250], allStat: [1, 2, 3] },
+  }
 
+  // 방어구 주흔작 판별
+  if (['모자', '상의', '하의', '한벌옷', '신발', '망토', '어깨장식', '방패'].includes(item.slot)) {
+    const level = item.baseOption?.baseEquipmentLevel ?? 0
+    let levelIndex = 0
+    if (level >= 75 && level <= 115) levelIndex = 1
+    else if (level >= 120) levelIndex = 2
+
+    const armor = (item.etcOption.armor ?? 0) / count
+
+    // HP + 방어력 체크
+    const hp = (item.etcOption.maxHp ?? 0) / count
+    // Object.entries()로 주흔작 테이블 순회
+    for (const [percent, values] of Object.entries(armorUpgradeTable)) {
+      if (hp === values.hp[levelIndex] && armor === values.armor[levelIndex]) {
+        return `${percent}작${upgradable ? '*' : ''}`
+      }
+    }
+
+    // 주스탯 + 방어력 체크
+    const mainStatValue = (item.etcOption[mainStat as keyof ItemOption] ?? 0) / count
+    // Object.entries()로 주흔작 테이블 순회
+    for (const [percent, values] of Object.entries(armorUpgradeTable)) {
+      if (mainStatValue === values.stat[levelIndex] && armor === values.armor[levelIndex]) {
+        return `${percent}작${upgradable ? '*' : ''}`
+      }
+    }
+  }
+
+  // 장갑 주흔작 판별
+  if (item.slot === '장갑') {
+    const level = item.baseOption?.baseEquipmentLevel ?? 0
+    let levelIndex = 0
+    if (level >= 75) levelIndex = 1
+
+    const atk = atkStat.value === '공격력'
+      ? (item.etcOption.attackPower ?? 0) / count
+      : (item.etcOption.magicPower ?? 0) / count
+
+    // 70제 100% 주흔작을 제외한 나머지 주흔작 체크
+    for (const [percent, values] of Object.entries(gloveUpgradeTable)) {
+      if (atk === values.atk[levelIndex]) {
+        return `${percent}작${upgradable ? '*' : ''}`
+      }
+    }
+  }
+
+  // 무기 주흔작 판별
+  if (['무기', '보조무기'].includes(item.slot)) {
+    const level = item.baseOption?.baseEquipmentLevel ?? 0
+    let levelIndex = 0
+    if (level >= 80 && level <= 100) levelIndex = 1
+    else if (level >= 120) levelIndex = 2
+
+    const atk = atkStat.value === '공격력'
+      ? (item.etcOption.attackPower ?? 0) / count
+      : (item.etcOption.magicPower ?? 0) / count
+
+    // 공격력만으로 주흔작 판별
+    for (const [percent, values] of Object.entries(weaponUpgradeTable)) {
+      if (atk === values.atk[levelIndex]) {
+        return `${percent}작${upgradable ? '*' : ''}`
+      }
+    }
+  }
+
+  // 장신구 주흔작 판별
+  if (['반지', '펜던트', '벨트', '귀고리', '눈장식', '얼굴장식'].includes(item.slot)) {
+    // 귀지작 체크
+    if (item.slot === '귀고리') {
+      const stats = item.etcOption
+      if (count > 0
+        && (stats.int ?? 0) / count === 3
+        && (stats.magicPower ?? 0) / count === 5
+        && (stats.str ?? 0) / count === 0
+        && (stats.dex ?? 0) / count === 0
+        && (stats.luk ?? 0) / count === 0
+        && (stats.maxHp ?? 0) / count === 0
+        && (stats.attackPower ?? 0) / count === 0) {
+        return `귀지작${upgradable ? '*' : ''}`
+      }
+    }
+
+    const level = item.baseOption?.baseEquipmentLevel ?? 0
+    let levelIndex = 0
+    if (level >= 75 && level <= 115) levelIndex = 1
+    else if (level >= 120) levelIndex = 2
+
+    // 주스탯/HP 외의 다른 스탯이 있는지 체크
+    const hasOtherStats = Object.entries(item.etcOption).some(([key, value]) => {
+      // 주스탯/HP가 아닌 다른 스탯이 0이 아니면 true
+      if (mainStat === 'hp') {
+        return key !== 'maxHp' && value !== 0 && value !== undefined
+      }
+      else {
+        return key !== mainStat && value !== 0 && value !== undefined
+      }
+    })
+
+    // 다른 스탯이 없을 때만 주흔작 체크
+    if (!hasOtherStats) {
+      const statValue = mainStat === 'hp'
+        ? (item.etcOption.maxHp ?? 0) / count
+        : (item.etcOption[mainStat] ?? 0) / count
+
+      for (const [percent, values] of Object.entries(accUpgradeTable)) {
+        if (mainStat === 'hp'
+          ? statValue === values.hp[levelIndex]
+          : statValue === values.stat[levelIndex]) {
+          return `${percent}작${upgradable ? '*' : ''}`
+        }
+      }
+    }
+  }
+
+  // 도미네이터 펜던트 파편작 판별
+  if (item.name?.includes('도미네이터')) {
+    const stats = item.etcOption
+    if (count > 0
+      && (stats.str ?? 0) / count === 3
+      && (stats.dex ?? 0) / count === 3
+      && (stats.int ?? 0) / count === 3
+      && (stats.luk ?? 0) / count === 3
+      && (stats.maxHp ?? 0) / count === 40
+      && ((stats.attackPower ?? 0) / count === 3 || (stats.magicPower ?? 0) / count === 3)) {
+      return `파편작${upgradable ? '*' : ''}`
+    }
+  }
+
+  // 기존의 일반적인 경우 반환
   return Math.round(mainStatUpgrade * 10) / 10
     + '/'
     + Math.round(mainAtkUpgrade * 10) / 10
