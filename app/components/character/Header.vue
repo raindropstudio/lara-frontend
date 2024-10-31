@@ -5,7 +5,7 @@
       class="mx-auto w-full"
     />
     <div
-      class="flex w-full select-none justify-center overflow-x-clip text-nowrap"
+      class="-mt-12 flex w-full select-none justify-center overflow-x-clip text-nowrap pt-12"
     >
       <div
         class="flex min-w-0 flex-1 flex-col items-end text-right text-5xl"
