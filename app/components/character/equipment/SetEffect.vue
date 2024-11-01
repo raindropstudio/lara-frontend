@@ -5,17 +5,19 @@
         v-for="(set, idx) in armorSetEffect"
         :key="idx"
       >
-        <div class="flex items-center">
-          <div class="text-5xl font-thin text-lucidviolet-700">
-            {{ set.setCount }}
+        <UiSetEffectTooltip :set-effect="set">
+          <div class="flex items-center">
+            <div class="text-5xl font-thin text-lucidviolet-700">
+              {{ set.setCount }}
+            </div>
+            <img
+              v-if="set.setIcon"
+              :src="getItemImageUrl(set.setIcon)"
+              :alt="set.setName"
+              class="-ml-2 [image-rendering:pixelated]"
+            >
           </div>
-          <img
-            v-if="set.setIcon"
-            :src="getItemImageUrl(set.setIcon)"
-            :alt="set.setName"
-            class="-ml-2 [image-rendering:pixelated]"
-          >
-        </div>
+        </UiSetEffectTooltip>
       </template>
     </div>
     <div
@@ -27,17 +29,19 @@
         v-for="(set, idx) in accessorySetEffect"
         :key="idx"
       >
-        <div class="flex items-center">
-          <div class="text-5xl font-thin text-lucidviolet-700">
-            {{ set.setCount }}
+        <UiSetEffectTooltip :set-effect="set">
+          <div class="flex items-center">
+            <div class="text-5xl font-thin text-lucidviolet-700">
+              {{ set.setCount }}
+            </div>
+            <img
+              v-if="set.setIcon"
+              :src="getItemImageUrl(set.setIcon)"
+              :alt="set.setName"
+              class="-ml-2 [image-rendering:pixelated]"
+            >
           </div>
-          <img
-            v-if="set.setIcon"
-            :src="getItemImageUrl(set.setIcon)"
-            :alt="set.setName"
-            class="-ml-2 [image-rendering:pixelated]"
-          >
-        </div>
+        </UiSetEffectTooltip>
       </template>
     </div>
   </div>
