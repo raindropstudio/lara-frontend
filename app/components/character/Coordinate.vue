@@ -52,6 +52,7 @@
           <div class="flex flex-col items-end gap-4">
             <CharacterCoordinateIconView
               :view-preset="coordiPreset[viewCoordiPreset]?.cashEquipmentInfo"
+              :base-preset="basePreset[Math.floor(viewCoordiPreset / 3)]?.cashEquipmentInfo"
               :icon-view-map="coordiIconViewMap"
             />
             <div class="flex justify-end gap-4 rounded bg-white p-1 text-sm text-lucidgray-dark outline outline-lucidgray-medium">

@@ -9,7 +9,7 @@
       >
         <div class="flex items-center gap-4">
           <div
-            class="relative z-0 flex size-12 items-center justify-center rounded-lg bg-gray-50 ring-2 drop-shadow-md transition-all duration-700 ease-in-out hover:bg-gray-100"
+            class="relative z-0 flex size-12 shrink-0 items-center justify-center rounded-lg bg-gray-50 ring-2 drop-shadow-md transition-all duration-700 ease-in-out hover:bg-gray-100"
             :class="getSlotColor(pet)"
           >
             <img

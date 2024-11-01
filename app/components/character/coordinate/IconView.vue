@@ -8,14 +8,15 @@
         :key="idx"
       >
         <UiItemTooltip
-          :item="item"
+          :item="item || mappedBasePreset[idx]"
         >
           <div
             v-if="iconViewMap[idx]"
-            class="relative z-0 flex size-12 items-center justify-center rounded-lg bg-gray-50 drop-shadow-md transition-all duration-700 ease-in-out hover:bg-gray-100"
+            class="relative z-0 flex size-12 items-center justify-center rounded-lg drop-shadow-md transition-all duration-700 ease-in-out hover:bg-gray-100"
             :class="[
               getSlotColor(item),
               itemChanged[idx] ? '' : 'ring-2',
+              item ? 'bg-gray-50' : 'bg-gray-100',
             ]"
           >
             <img
@@ -24,12 +25,12 @@
               :alt="item.name"
               class="drop-shadow-md transition-all duration-300 ease-in-out [image-rendering:_pixelated]"
             >
-            <div
-              v-if="item?.dateOptionExpire === '1998-12-31T15:00:00.000Z'"
-              class="absolute bottom-0 right-0"
+            <img
+              v-else-if="mappedBasePreset[idx]"
+              :src="getItemImageUrl(mappedBasePreset[idx]?.icon)"
+              :alt="mappedBasePreset[idx]?.name"
+              class="opacity-40 drop-shadow-md transition-all duration-300 ease-in-out [image-rendering:_pixelated]"
             >
-              <IconWarn class="size-4 text-potential-expired" />
-            </div>
           </div>
           <div
             v-else
@@ -44,14 +45,19 @@
 <script lang="ts" setup>
 const props = defineProps<{
   viewPreset: CashEquipmentInfo[] | undefined
+  basePreset?: CashEquipmentInfo[] | undefined
   iconViewMap: string[]
 }>()
 
-const { viewPreset, iconViewMap } = toRefs(props)
+const { viewPreset, basePreset, iconViewMap } = toRefs(props)
 
 const mappedPreset = computed(() => {
   return iconViewMap.value
     .map(slot => viewPreset.value?.find(equip => equip.slot === slot))
+})
+const mappedBasePreset = computed(() => {
+  return iconViewMap.value
+    .map(slot => basePreset?.value?.find(equip => equip.slot === slot))
 })
 
 // 아이템 부드럽게 변경
@@ -72,8 +78,6 @@ watch(
 
 const getSlotColor = (item?: CashEquipmentInfo) => {
   if (!item) return 'ring-lucidgray-light'
-  if (!viewPreset?.value) return 'ring-potential-normal'
-
   return 'ring-potential-normal'
 }
 </script>
