@@ -3,6 +3,7 @@ import type { ItemEquipmentPreset } from './itemEquipment.type'
 import type { PetEquipment } from './petEquipment.type'
 import type { SetEffect } from './setEffect.type'
 import type { Stat } from './stat.type'
+import type { Symbol } from './symbol.type'
 import type { Union } from './union.type'
 
 export interface Character {
@@ -26,5 +27,6 @@ export interface Character {
   cashEquipmentPreset: CashEquipmentPreset[]
   setEffect: SetEffect[]
   petEquipment: PetEquipment[]
+  symbol: Symbol[]
   union?: Union
 }

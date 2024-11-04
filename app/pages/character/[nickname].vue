@@ -127,8 +127,12 @@
               />
             </div>
           </div>
-          <div class="h-[500px] w-full bg-white py-24">
-            심볼
+          <div class="w-full bg-white">
+            <div class="mx-auto max-w-screen-xl">
+              <CharacterSymbol
+                :character="character"
+              />
+            </div>
           </div>
         </div>
         <div
