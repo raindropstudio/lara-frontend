@@ -5,7 +5,9 @@
         v-for="(set, idx) in armorSetEffect"
         :key="idx"
       >
-        <UiSetEffectTooltip :set-effect="set">
+        <UiSetEffectTooltip
+          :set-effect="set"
+        >
           <div class="flex items-center">
             <div class="text-5xl font-thin text-lucidviolet-700">
               {{ set.setCount }}
@@ -29,7 +31,9 @@
         v-for="(set, idx) in accessorySetEffect"
         :key="idx"
       >
-        <UiSetEffectTooltip :set-effect="set">
+        <UiSetEffectTooltip
+          :set-effect="set"
+        >
           <div class="flex items-center">
             <div class="text-5xl font-thin text-lucidviolet-700">
               {{ set.setCount }}
@@ -55,14 +59,39 @@ const props = defineProps<{
 
 const { activePreset, setEffect } = toRefs(props)
 
+interface SetEffectResult {
+  setName: string
+  setCount: number
+  setIcon: string | null
+  setOptionList: SetOption[]
+}
+
+// armorSetEffect와 accessorySetEffect에서 동일한 로직 중복
+// 공통 함수로 추출 가능
+const createSetEffect = (
+  setD: { setNamePrefix: string },
+  findItem: (item: ItemEquipmentInfo) => boolean,
+): SetEffectResult | null => {
+  const curSetEffect = setEffect.value.find(set =>
+    set.setName.includes(setD.setNamePrefix),
+  )
+
+  if (!curSetEffect || curSetEffect.setCount <= 1) {
+    return null
+  }
+
+  const item = activePreset.value?.find(findItem)
+  return {
+    setName: setD.setNamePrefix,
+    setCount: curSetEffect.setCount,
+    setIcon: item?.icon ?? null,
+    setOptionList: curSetEffect.setOptionList,
+  }
+}
+
 // 장비 셋옵 추출
 const armorSetEffect = computed(() => {
-  const result: {
-    setName: string
-    setCount: number
-    setIcon: string | null
-    setOptionList: SetOption[]
-  }[] = []
+  const result: SetEffectResult[] = []
 
   const setData = [{
     setNamePrefix: '에테르넬 세트',
@@ -96,26 +125,12 @@ const armorSetEffect = computed(() => {
   }]
 
   for (const setD of setData) {
-    const curSetEffect = setEffect.value.find(set => set.setName.includes(setD.setNamePrefix))
+    const setEffect = createSetEffect(setD, item =>
+      setD.prefix.some(prefix => item.name.includes(prefix)),
+    )
 
-    if (curSetEffect && curSetEffect.setCount > 1) {
-      let setIcon = null
-      for (const part of setD.partList) {
-        const item = activePreset.value?.find((item) => {
-          return item.part === part && setD.prefix.some(prefix => item.name.includes(prefix))
-        })
-        if (item) {
-          setIcon = item.icon
-          break
-        }
-      }
-
-      result.push({
-        setName: setD.setNamePrefix,
-        setCount: curSetEffect.setCount,
-        setIcon,
-        setOptionList: curSetEffect.setOptionList,
-      })
+    if (setEffect) {
+      result.push(setEffect)
     }
   }
 
@@ -124,12 +139,7 @@ const armorSetEffect = computed(() => {
 
 // 장신구 셋옵 추출
 const accessorySetEffect = computed(() => {
-  const result: {
-    setName: string
-    setCount: number
-    setIcon: string | null
-    setOptionList: SetOption[]
-  }[] = []
+  const result: SetEffectResult[] = []
 
   const setData = [{
     setNamePrefix: '광휘의 보스 세트',
@@ -161,24 +171,12 @@ const accessorySetEffect = computed(() => {
   }]
 
   for (const setD of setData) {
-    const curSetEffect = setEffect.value.find(set => set.setName.includes(setD.setNamePrefix))
+    const setEffect = createSetEffect(setD, item =>
+      setD.itemListPrefix.some(prefix => item.name.includes(prefix)),
+    )
 
-    if (curSetEffect && curSetEffect.setCount > 1) {
-      let setIcon = null
-      for (const prefix of setD.itemListPrefix) {
-        const item = activePreset.value?.find(item => item.name.includes(prefix))
-        if (item) {
-          setIcon = item.icon
-          break
-        }
-      }
-
-      result.push({
-        setName: setD.setNamePrefix,
-        setCount: curSetEffect.setCount,
-        setIcon,
-        setOptionList: curSetEffect.setOptionList,
-      })
+    if (setEffect) {
+      result.push(setEffect)
     }
   }
 

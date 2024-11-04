@@ -89,8 +89,6 @@ import type { SetEffect } from '~/types/setEffect.type'
 
 const props = defineProps<{
   setEffect: SetEffect
-  mainStatName: string
-  atkStat: string
 }>()
 
 const visible = ref(false)
@@ -131,25 +129,20 @@ const { floatingStyles: secondFloatingStyles } = useFloating(popupFloating, seco
   })],
 })
 
-// 첫 번째 팝업에 표시할 옵션 (첫 5개)
-const firstPopupOptions = computed(() => {
-  const options = props.setEffect?.setOptionList ?? []
-  const parsedOptions = options.filter((option) => {
+// firstPopupOptions와 secondPopupOptions의 중복 로직 제거
+const filterOptions = (options: SetOption[]) => {
+  return options.filter((option) => {
     const optionText = parseSetOption(option.setOption)
-    return optionText.trim() !== '' // 빈 자열이 아닌 옵션만 포함
+    return optionText.trim() !== ''
   })
-  return parsedOptions.slice(0, 5)
+}
+
+const allOptions = computed(() => {
+  return filterOptions(props.setEffect?.setOptionList ?? [])
 })
 
-// 두 번째 팝업에 표시할 옵션 (6번째부터)
-const secondPopupOptions = computed(() => {
-  const options = props.setEffect?.setOptionList ?? []
-  const parsedOptions = options.filter((option) => {
-    const optionText = parseSetOption(option.setOption)
-    return optionText.trim() !== '' // 빈 문자열이 아닌 옵션만 포함
-  })
-  return parsedOptions.slice(5)
-})
+const firstPopupOptions = computed(() => allOptions.value.slice(0, 5))
+const secondPopupOptions = computed(() => allOptions.value.slice(5))
 
 const parseSetOption = (setOption: string): string => {
   const options = setOption.split(',').map(option => option.trim())
