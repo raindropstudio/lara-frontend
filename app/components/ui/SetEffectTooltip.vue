@@ -6,77 +6,60 @@
     @mouseleave="visible = false"
   >
     <slot />
-    <!-- 첫 번째 팝업 -->
     <div
       v-if="visible && setEffect"
       ref="popupFloating"
       :style="floatingStyles"
-      :class="styles.popupContainer"
+      class="pointer-events-none absolute left-0 top-0 z-50 flex gap-2"
     >
-      <div :class="styles.popupTitle">
-        {{ setEffect.setName }}
-      </div>
-      <div :class="styles.popupSubtitle">
-        {{ setEffect.setCount }}세트 효과 적용 중
-      </div>
-      <hr class="my-2 border-t border-dashed border-gray-200">
-      <div class="divide-y divide-dashed divide-gray-200">
+      <!-- 통합된 팝업 컴포넌트 -->
+      <template
+        v-for="(optionGroup, index) in optionGroups"
+        :key="index"
+      >
         <div
-          v-for="option in firstPopupOptions"
-          :key="option.setCount"
-          class="py-2 first:pt-0 last:pb-0"
+          :class="[
+            styles.popupContainer,
+            { 'h-fit': index === 1 },
+          ]"
         >
-          <div
-            :class="[
-              styles.setCountBase,
-              { [styles.setCountActive]: option.setCount <= setEffect.setCount },
-            ]"
-          >
-            {{ option.setCount }}세트 효과
-          </div>
-          <div
-            :class="[
-              styles.setOptionBase,
-              { [styles.setOptionActive.first]: option.setCount <= setEffect.setCount },
-            ]"
-          >
-            {{ parseSetOption(option.setOption) }}
-          </div>
-        </div>
-      </div>
-    </div>
+          <!-- 첫 번째 그룹에만 헤더 표시 -->
+          <template v-if="index === 0">
+            <div :class="styles.popupTitle">
+              {{ setEffect.setName }}
+            </div>
+            <div :class="styles.popupSubtitle">
+              {{ setEffect.setCount }}세트 효과 적용 중
+            </div>
+            <hr class="my-2 border-t border-dashed border-gray-200">
+          </template>
 
-    <!-- 두 번째 팝업 -->
-    <div
-      v-if="visible && setEffect && secondPopupOptions.length > 0"
-      ref="secondPopupFloating"
-      :style="secondFloatingStyles"
-      :class="styles.popupContainer"
-    >
-      <div class="divide-y divide-dashed divide-gray-200">
-        <div
-          v-for="option in secondPopupOptions"
-          :key="option.setCount"
-          class="py-2 first:pt-0 last:pb-0"
-        >
-          <div
-            :class="[
-              styles.setCountBase,
-              { [styles.setCountActive]: option.setCount <= setEffect.setCount },
-            ]"
-          >
-            {{ option.setCount }}세트 효과
-          </div>
-          <div
-            :class="[
-              styles.setOptionBase,
-              { [styles.setOptionActive.first]: option.setCount <= setEffect.setCount },
-            ]"
-          >
-            {{ parseSetOption(option.setOption) }}
+          <div class="divide-y divide-dashed divide-gray-200">
+            <div
+              v-for="option in optionGroup"
+              :key="option.setCount"
+              class="py-2 first:pt-0 last:pb-0"
+            >
+              <div
+                :class="[
+                  styles.setCountBase,
+                  { [styles.setCountActive]: option.setCount <= setEffect.setCount },
+                ]"
+              >
+                {{ option.setCount }}세트 효과
+              </div>
+              <div
+                :class="[
+                  styles.setOptionBase,
+                  { [styles.setOptionActive.first]: option.setCount <= setEffect.setCount },
+                ]"
+              >
+                {{ parseSetOption(option.setOption) }}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -94,11 +77,10 @@ const props = defineProps<{
 const visible = ref(false)
 const popupRef = ref<HTMLElement>()
 const popupFloating = ref<HTMLElement>()
-const secondPopupFloating = ref<HTMLElement>()
 
 // 공통 스타일 클래스
 const styles = {
-  popupContainer: 'pointer-events-none absolute left-0 top-0 z-30 w-64 rounded-md bg-white/50 p-2 text-xs font-light text-lucidviolet-900 ring-2 ring-lucidgray-light backdrop-blur-2xl',
+  popupContainer: 'w-64 rounded-md bg-white/50 p-2 text-xs font-light text-lucidviolet-900 ring-2 ring-lucidgray-light backdrop-blur-2xl',
   popupTitle: 'py-1 text-center text-lg font-bold',
   popupSubtitle: '-mt-2 text-center text-sm text-lucidviolet-800',
   setCountBase: 'text-xs font-medium text-lucidviolet-500',
@@ -109,7 +91,7 @@ const styles = {
   },
 }
 
-// 첫 번째 팝업 위치 설정
+// 단일 floating 설정
 const { floatingStyles } = useFloating(popupRef, popupFloating, {
   whileElementsMounted: autoUpdate,
   placement: 'right-start',
@@ -119,30 +101,13 @@ const { floatingStyles } = useFloating(popupRef, popupFloating, {
   })],
 })
 
-// 두 번째 팝업 위치 설정
-const { floatingStyles: secondFloatingStyles } = useFloating(popupFloating, secondPopupFloating, {
-  whileElementsMounted: autoUpdate,
-  placement: 'right-start',
-  middleware: [offset(10), shift({
-    crossAxis: true,
-    limiter: limitShift(),
-  })],
-})
-
-// firstPopupOptions와 secondPopupOptions의 중복 로직 제거
-const filterOptions = (options: SetOption[]) => {
+const allOptions = computed(() => {
+  const options = props.setEffect?.setOptionList ?? []
   return options.filter((option) => {
     const optionText = parseSetOption(option.setOption)
     return optionText.trim() !== ''
   })
-}
-
-const allOptions = computed(() => {
-  return filterOptions(props.setEffect?.setOptionList ?? [])
 })
-
-const firstPopupOptions = computed(() => allOptions.value.slice(0, 5))
-const secondPopupOptions = computed(() => allOptions.value.slice(5))
 
 const parseSetOption = (setOption: string): string => {
   const options = setOption.split(',').map(option => option.trim())
@@ -172,4 +137,13 @@ const parseSetOption = (setOption: string): string => {
 
   return parsedOptions.join('\n')
 }
+
+// 옵션 그룹 분리
+const optionGroups = computed(() => {
+  const options = allOptions.value
+  return [
+    options.slice(0, 5), // 첫 번째 팝업 (0-4번째 세트효과)
+    options.slice(5), // 두 번째 팝업 (5+)
+  ].filter(group => group.length > 0) // 빈 그룹 제거
+})
 </script>
