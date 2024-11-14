@@ -155,9 +155,16 @@
         <div
           id="stat"
           ref="stat"
-          class="h-[500px] w-full bg-white py-24"
+          class="w-full"
         >
-          스텟
+          <div class="w-full bg-white">
+            <div class="mx-auto w-full max-w-screen-xl px-4">
+              <CharacterStat
+                v-if="character"
+                :character="character"
+              />
+            </div>
+          </div>
         </div>
         <div
           id="union"
