@@ -1,8 +1,8 @@
 <template>
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-2">
     <!-- 전투력 & 스탯 공격력 (메인 스탯) -->
     <StatCard>
-      <div class="grid grid-cols-2 gap-y-4">
+      <div class="grid grid-cols-2 gap-2">
         <div class="flex flex-col items-start">
           <span :class="styles.mainStatTitle">전투력</span>
           <span :class="styles.mainStatValue">
@@ -10,21 +10,33 @@
           </span>
         </div>
         <div class="flex flex-col items-start">
-          <span :class="styles.mainStatTitle">스탯 공격력</span>
-          <span :class="styles.mainStatValue">
-            {{ character.stat.minStatAttackPower?.toLocaleString() }} ~ {{ character.stat.maxStatAttackPower?.toLocaleString() }}
-          </span>
+          <span :class="styles.mainStatTitle">최대 스탯 공격력</span>
+          <StatsTooltip>
+            <span :class="styles.mainStatValue">
+              {{ character.stat.maxStatAttackPower?.toLocaleString() }}
+            </span>
+            <template #tooltip>
+              <div class="flex flex-col">
+                <div class="text-sm text-lucidviolet-700">
+                  스탯 공격력
+                </div>
+                <div class="text-sm font-bold text-lucidviolet-700">
+                  {{ character.stat.minStatAttackPower?.toLocaleString() }} ~ {{ character.stat.maxStatAttackPower?.toLocaleString() }}
+                </div>
+              </div>
+            </template>
+          </StatsTooltip>
         </div>
       </div>
     </StatCard>
 
     <!-- 기본 스탯 -->
     <StatCard>
-      <div class="grid grid-cols-2 gap-y-2">
+      <div class="grid grid-cols-2 gap-2">
         <div
           v-for="stat in basicStats"
           :key="stat.key"
-          class="flex items-center gap-8"
+          class="flex items-center justify-between gap-8 px-1"
         >
           <span :class="styles.baseStatLabel">{{ stat.label }}</span>
 
@@ -87,11 +99,11 @@ const props = defineProps<{
 
 // 공통 스타일 정의
 const styles = {
-  mainStatTitle: 'text-lg font-medium text-lucidviolet-700',
-  mainStatValue: 'text-2xl font-bold text-lucidviolet-700',
+  mainStatTitle: 'text-base font-medium text-lucidviolet-700',
+  mainStatValue: 'text-xl font-bold text-lucidviolet-900',
   baseStatLabel: 'w-8 text-lg font-medium text-lucidviolet-700',
   label: 'text-sm text-lucidviolet-700',
-  value: 'text-base text-lucidviolet-900',
+  value: 'text-base text-lucidviolet-900 ml-5',
   subValue: 'text-sm text-lucidviolet-400',
 }
 
