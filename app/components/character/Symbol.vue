@@ -57,7 +57,7 @@
                         class="flex h-7 w-[84px] grow flex-col items-stretch justify-start"
                       >
                         <div
-                          class="z-10 text-xl font-medium text-lucidviolet-700"
+                          class="text-xl font-medium text-lucidviolet-700"
                         >
                           <span class="text-lg">Lv.</span>
                           {{ mappedArcane[idx]?.level === 20 ? 'MAX' : mappedArcane[idx]?.level }}
@@ -132,7 +132,7 @@
                       >
                         <div
                           v-if="mappedAuthentic[idx]?.force"
-                          class="z-10 text-xl font-medium text-lucidviolet-700"
+                          class="text-xl font-medium text-lucidviolet-700"
                         >
                           <span class="text-lg">Lv.</span>
                           {{ mappedAuthentic[idx]?.level === 11 ? 'MAX' : mappedAuthentic[idx]?.level }}
