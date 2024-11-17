@@ -10,20 +10,28 @@
 
       <div class="flex flex-col gap-12">
         <div class="flex flex-col">
-          <div class="-mb-8 text-left text-6xl font-black text-lucidgray-light">
-            Ability
+          <div class="text-left text-6xl font-black text-lucidgray-light">
+            어빌리티
           </div>
+          <AbilitySection
+            v-if="character?.ability"
+            :ability="character.ability"
+          />
         </div>
 
         <div class="flex flex-col">
-          <div class="-mb-8 text-left text-6xl font-black text-lucidgray-light">
-            Hyperstat
+          <div class="text-left text-6xl font-black text-lucidgray-light">
+            하이퍼스탯
           </div>
+          <HyperStatSection
+            v-if="character?.hyperStatPreset"
+            :hyper-stat-preset="character.hyperStatPreset"
+          />
         </div>
 
         <div class="flex flex-col">
-          <div class="-mb-8 text-left text-6xl font-black text-lucidgray-light">
-            Propensity
+          <div class="text-left text-6xl font-black text-lucidgray-light">
+            성향
           </div>
         </div>
       </div>
@@ -32,6 +40,8 @@
 </template>
 
 <script setup lang="ts">
+import AbilitySection from './stat/AbilitySection.vue'
+import HyperStatSection from './stat/HyperStatSection.vue'
 import StatInfo from './stat/StatInfo.vue'
 import type { Character } from '~/types/character.type'
 

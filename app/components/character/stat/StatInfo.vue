@@ -17,9 +17,6 @@
             </span>
             <template #tooltip>
               <div class="flex flex-col">
-                <div class="text-sm text-lucidviolet-700">
-                  스탯 공격력
-                </div>
                 <div class="text-sm font-bold text-lucidviolet-700">
                   {{ character.stat.minStatAttackPower?.toLocaleString() }} ~ {{ character.stat.maxStatAttackPower?.toLocaleString() }}
                 </div>

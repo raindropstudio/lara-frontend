@@ -1,4 +1,6 @@
+import type { Ability } from './ability.type'
 import type { CashEquipmentPreset } from './cashEquipment.type'
+import type { HyperStatPreset } from './hyperStat'
 import type { ItemEquipmentPreset } from './itemEquipment.type'
 import type { PetEquipment } from './petEquipment.type'
 import type { SetEffect } from './setEffect.type'
@@ -23,6 +25,8 @@ export interface Character {
   popularity: number
   updatedAt: string
   stat: Stat
+  hyperStatPreset?: HyperStatPreset[]
+  ability?: Ability
   itemEquipmentPreset: ItemEquipmentPreset[]
   cashEquipmentPreset: CashEquipmentPreset[]
   setEffect: SetEffect[]

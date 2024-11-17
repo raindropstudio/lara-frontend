@@ -1,0 +1,45 @@
+<template>
+  <PresetCard
+    point-label="남은 포인트"
+    :remain-point="selectedPreset?.remainPoint ?? 0"
+    :selected-preset-no="selectedPresetNo"
+    :is-active-preset="(presetNo: number) => hyperStatPreset.find(p => p.presetNo === presetNo)?.active ?? false"
+    @update:selected-preset-no="selectedPresetNo = $event"
+  >
+    <template #preset-info>
+      <div
+        v-for="stat in selectedPreset?.hyperStatInfo"
+        :key="stat.statType"
+        class="flex items-center"
+      >
+        <span class="mr-1 w-12 text-base font-bold text-lucidviolet-700">Lv. {{ stat.statLevel }}</span>
+        <span class="flex-1 text-sm text-lucidviolet-900">{{ formatStatIncrease(stat.statIncrease) }}</span>
+      </div>
+    </template>
+  </PresetCard>
+</template>
+
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import PresetCard from '~/components/character/stat/PresetCard.vue'
+import type { HyperStatPreset } from '~/types/hyperStat'
+
+const props = defineProps<{
+  hyperStatPreset: HyperStatPreset[]
+}>()
+
+const activePreset = computed(() =>
+  props.hyperStatPreset.find(preset => preset.active),
+)
+
+const selectedPresetNo = ref(activePreset.value?.presetNo ?? 1)
+
+const selectedPreset = computed(() =>
+  props.hyperStatPreset.find(preset => preset.presetNo === selectedPresetNo.value),
+)
+
+// statIncrease 포맷팅 함수 (공격력과 마력이라고 API에서 반환됨.)
+const formatStatIncrease = (statIncrease: string) => {
+  return statIncrease.replace('공격력과 마력', '공격력/마력')
+}
+</script>
