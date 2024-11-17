@@ -57,6 +57,7 @@
                         class="flex h-7 w-[84px] grow flex-col items-stretch justify-start"
                       >
                         <div
+                          v-if="mappedArcane[idx]?.force"
                           class="text-xl font-medium text-lucidviolet-700"
                         >
                           <span class="text-lg">Lv.</span>
@@ -216,7 +217,7 @@
                       >
                         <div
                           v-if="mappedGrandAuthentic[idx]?.force"
-                          class="z-10 text-xl font-medium text-lucidviolet-700"
+                          class="text-xl font-medium text-lucidviolet-700"
                         >
                           <span class="text-lg">Lv.</span>
                           {{ mappedGrandAuthentic[idx]?.level === 11 ? 'MAX' : mappedGrandAuthentic[idx]?.level }}

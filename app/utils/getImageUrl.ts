@@ -22,6 +22,7 @@ export const getSymbolImageUrl = async (symbolName: string | undefined) => {
   if (!symbolName) return ''
 
   const symbolImages: { [key: string]: () => Promise<typeof import('*.png')> } = {
+    '아케인심볼': () => import('~/assets/symbol/arc.png'),
     '아케인심볼 : 소멸의 여로': () => import('~/assets/symbol/arc-1.png'),
     '아케인심볼 : 츄츄 아일랜드': () => import('~/assets/symbol/arc-2.png'),
     '아케인심볼 : 레헬른': () => import('~/assets/symbol/arc-3.png'),

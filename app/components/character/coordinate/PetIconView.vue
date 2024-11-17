@@ -8,23 +8,25 @@
         :key="idx"
       >
         <div class="flex items-center gap-4">
-          <div
-            class="relative z-0 flex size-12 shrink-0 items-center justify-center rounded-lg bg-gray-50 ring-2 drop-shadow-md transition-all duration-700 ease-in-out hover:bg-gray-100"
-            :class="getSlotColor(pet)"
-          >
-            <img
-              v-if="pet"
-              :src="getItemImageUrl(pet?.petInfo.petIcon)"
-              :alt="pet?.petInfo.petName"
-              class="drop-shadow-md transition-all duration-300 ease-in-out [image-rendering:_pixelated]"
-            >
+          <UiPetTooltip :pet="pet">
             <div
-              v-if="pet?.petInfo.petDateExpire === '1998-12-31T15:00:00.000Z'"
-              class="absolute bottom-0 right-0"
+              class="relative z-0 flex size-12 shrink-0 items-center justify-center rounded-lg bg-gray-50 ring-2 drop-shadow-md transition-all duration-700 ease-in-out hover:bg-gray-100"
+              :class="getSlotColor(pet)"
             >
-              <IconWarn class="size-4 text-potential-expired" />
+              <img
+                v-if="pet"
+                :src="getItemImageUrl(pet?.petInfo.petIcon)"
+                :alt="pet?.petInfo.petName"
+                class="drop-shadow-md transition-all duration-300 ease-in-out [image-rendering:_pixelated]"
+              >
+              <div
+                v-if="pet?.petInfo.petDateExpire === '1998-12-31T15:00:00.000Z'"
+                class="absolute bottom-0 right-0"
+              >
+                <IconWarn class="size-4 text-potential-expired" />
+              </div>
             </div>
-          </div>
+          </UiPetTooltip>
           <UiItemTooltip
             :item="pet?.petInfo.petEquipment ? mapPetItem(pet?.petInfo.petEquipment) : undefined"
           >
