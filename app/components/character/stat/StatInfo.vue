@@ -1,44 +1,40 @@
 <template>
   <div class="flex flex-col gap-2">
     <!-- 전투력 & 스탯 공격력 (메인 스탯) -->
-    <StatCard>
-      <div class="grid grid-cols-2 gap-2">
-        <div class="flex flex-col items-start">
-          <span :class="styles.mainStatTitle">전투력</span>
-          <span :class="styles.mainStatValue">
+    <CharacterStatCard>
+      <div class="grid grid-cols-2 gap-x-4">
+        <div class="flex flex-col items-stretch justify-between">
+          <span class="text-base font-medium text-lucidgray-dark">전투력</span>
+          <span class="text-right text-xl font-bold text-lucidviolet-700">
             {{ character.stat.combatPower?.toLocaleString() }}
           </span>
         </div>
-        <div class="flex flex-col items-start">
-          <span :class="styles.mainStatTitle">최대 스탯 공격력</span>
-          <StatsTooltip>
-            <span :class="styles.mainStatValue">
+        <div class="flex flex-col items-stretch">
+          <span class="text-base font-medium text-lucidgray-dark">스탯 공격력</span>
+          <div class="flex flex-col items-stretch">
+            <span class="-mb-3 text-base font-bold text-lucidgray-medium">
+              {{ character.stat.minStatAttackPower?.toLocaleString() }} ~
+            </span>
+            <span class="self-end text-xl font-bold text-lucidviolet-700">
               {{ character.stat.maxStatAttackPower?.toLocaleString() }}
             </span>
-            <template #tooltip>
-              <div class="flex flex-col">
-                <div class="text-sm font-bold text-lucidviolet-700">
-                  {{ character.stat.minStatAttackPower?.toLocaleString() }} ~ {{ character.stat.maxStatAttackPower?.toLocaleString() }}
-                </div>
-              </div>
-            </template>
-          </StatsTooltip>
+          </div>
         </div>
       </div>
-    </StatCard>
+    </CharacterStatCard>
 
     <!-- 기본 스탯 -->
-    <StatCard>
-      <div class="grid grid-cols-2 gap-2">
+    <CharacterStatCard>
+      <div class="grid grid-cols-2 gap-x-4">
         <div
           v-for="stat in basicStats"
           :key="stat.key"
-          class="flex items-center justify-between gap-8 px-1"
+          class="flex items-center justify-between gap-8"
         >
-          <span :class="styles.baseStatLabel">{{ stat.label }}</span>
+          <span class="w-8 text-lucidgray-dark">{{ stat.label }}</span>
 
-          <StatsTooltip>
-            <span :class="styles.value">
+          <UiTooltip>
+            <span class="ml-5 text-lucidviolet-700">
               <!-- 투자 스탯이 4 이상일 경우 볼드처리 -->
               <span
                 v-if="character.stat[stat.ap] && Number(character.stat[stat.ap]) > 4"
@@ -51,58 +47,38 @@
               </span>
             </span>
             <template #tooltip>
-              <div>
+              <div class="text-lucidviolet-700">
                 {{ getTooltipContent(stat.key) }}
               </div>
             </template>
-          </StatsTooltip>
+          </UiTooltip>
         </div>
       </div>
-    </StatCard>
+    </CharacterStatCard>
 
     <!-- 상세 스탯 -->
-    <StatCard
+    <CharacterStatCard
       v-for="(section, index) in detailStats"
       :key="index"
     >
-      <div
-        class="grid grid-cols-2 gap-2"
-      >
+      <div class="grid grid-cols-2 gap-x-4">
         <div
           v-for="(stat, idx) in section"
           :key="idx"
-          class="flex items-center justify-between px-1"
+          class="flex items-center justify-between"
         >
-          <span :class="styles.label">{{ stat.label }}</span>
-          <span
-            :class="styles.value"
-          >{{ stat.value }}</span>
+          <span class="text-sm text-lucidgray-dark">{{ stat.label }}</span>
+          <span class="ml-5 text-base font-medium text-lucidviolet-700">{{ stat.value }}</span>
         </div>
       </div>
-    </StatCard>
+    </CharacterStatCard>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import StatCard from './StatCard.vue'
-import StatsTooltip from '@/components/ui/StatsTooltip.vue'
-import type { Character } from '~/types/character.type'
-import type { Stat } from '~/types/stat.type'
-
 const props = defineProps<{
   character: Character
 }>()
-
-// 공통 스타일 정의
-const styles = {
-  mainStatTitle: 'text-base font-medium text-lucidviolet-700',
-  mainStatValue: 'text-xl font-bold text-lucidviolet-900',
-  baseStatLabel: 'w-8 text-lg font-medium text-lucidviolet-700',
-  label: 'text-sm text-lucidviolet-700',
-  value: 'text-base text-lucidviolet-900 ml-5',
-  subValue: 'text-sm text-lucidviolet-400',
-}
 
 // 기본 스탯 데이터
 const basicStats = [
@@ -155,12 +131,12 @@ const detailStats = computed(() => [
 
 const getTooltipContent = (key: keyof Stat) => {
   const tooltipContents: Record<keyof Stat, string> = {
-    hp: `투자 스탯: ${props.character.stat.apHp?.toLocaleString() ?? 0}`,
-    mp: `투자 스탯: ${props.character.stat.apMp?.toLocaleString() ?? 0}`,
-    str: `투자 스탯: ${props.character.stat.apStr?.toLocaleString() ?? 0}`,
-    dex: `투자 스탯: ${props.character.stat.apDex?.toLocaleString() ?? 0}`,
-    int: `투자 스탯: ${props.character.stat.apInt?.toLocaleString() ?? 0}`,
-    luk: `투자 스탯: ${props.character.stat.apLuk?.toLocaleString() ?? 0}`,
+    hp: `(${props.character.stat.apHp?.toLocaleString() ?? 0} + ${((props.character.stat.hp ?? 0) - (props.character.stat.apHp ?? 0)).toLocaleString()})`,
+    mp: `(${props.character.stat.apMp?.toLocaleString() ?? 0} + ${((props.character.stat.mp ?? 0) - (props.character.stat.apMp ?? 0)).toLocaleString()})`,
+    str: `(${props.character.stat.apStr?.toLocaleString() ?? 0} + ${((props.character.stat.str ?? 0) - (props.character.stat.apStr ?? 0)).toLocaleString()})`,
+    dex: `(${props.character.stat.apDex?.toLocaleString() ?? 0} + ${((props.character.stat.dex ?? 0) - (props.character.stat.apDex ?? 0)).toLocaleString()})`,
+    int: `(${props.character.stat.apInt?.toLocaleString() ?? 0} + ${((props.character.stat.int ?? 0) - (props.character.stat.apInt ?? 0)).toLocaleString()})`,
+    luk: `(${props.character.stat.apLuk?.toLocaleString() ?? 0} + ${((props.character.stat.luk ?? 0) - (props.character.stat.apLuk ?? 0)).toLocaleString()})`,
   } as Record<keyof Stat, string>
 
   return tooltipContents[key] || '정보 없음'

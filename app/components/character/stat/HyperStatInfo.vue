@@ -7,13 +7,15 @@
     @update:selected-preset-no="selectedPresetNo = $event"
   >
     <template #preset-info>
-      <div
-        v-for="stat in selectedPreset?.hyperStatInfo"
-        :key="stat.statType"
-        class="flex items-center"
-      >
-        <span class="mr-1 w-12 text-base font-bold text-lucidviolet-700">Lv. {{ stat.statLevel }}</span>
-        <span class="flex-1 text-sm text-lucidviolet-900">{{ formatStatIncrease(stat.statIncrease) }}</span>
+      <div class="flex flex-col">
+        <div
+          v-for="stat in selectedPreset?.hyperStatInfo"
+          :key="stat.statType"
+          class="flex items-center"
+        >
+          <span class="mr-1 w-12 text-base font-bold text-lucidviolet-700">Lv. {{ stat.statLevel }}</span>
+          <span class="flex-1 text-sm text-lucidviolet-900">{{ formatStatIncrease(stat.statIncrease) }}</span>
+        </div>
       </div>
     </template>
   </PresetCard>
@@ -34,9 +36,11 @@ const activePreset = computed(() =>
 
 const selectedPresetNo = ref(activePreset.value?.presetNo ?? 1)
 
-const selectedPreset = computed(() =>
-  props.hyperStatPreset.find(preset => preset.presetNo === selectedPresetNo.value),
-)
+const selectedPreset = computed(() => {
+  const preset = props.hyperStatPreset.find(preset => preset.presetNo === selectedPresetNo.value)
+  preset?.hyperStatInfo.sort((a, b) => b.statLevel - a.statLevel)
+  return preset
+})
 
 // statIncrease 포맷팅 함수 (공격력과 마력이라고 API에서 반환됨.)
 const formatStatIncrease = (statIncrease: string) => {

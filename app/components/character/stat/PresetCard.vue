@@ -1,17 +1,15 @@
 <template>
   <div class="flex flex-col gap-2">
     <!-- 현재 선택된 프리셋의 정보 (윗쪽 박스) -->
-    <div class="rounded-lg border border-lucidviolet-100 bg-gray-50 p-4">
-      <div class="flex flex-col gap-1">
-        <slot name="preset-info" />
-      </div>
+    <div class="rounded-lg bg-lucid-light p-3 outline outline-lucidgray-light">
+      <slot name="preset-info" />
     </div>
 
     <!-- 포인트와 프리셋 선택 (아랫쪽 프리셋 선택 박스) -->
-    <div class="flex justify-between gap-4 rounded border border-lucidgray-medium bg-gray-50 p-1 text-sm text-lucidgray-dark">
+    <div class="flex justify-between gap-4 rounded bg-lucid-light p-1 text-sm text-lucidgray-dark outline outline-lucidgray-medium">
       <div class="flex items-center gap-1 px-1">
-        <span class="text-sm text-lucidviolet-500">{{ pointLabel }}</span>
-        <span class="font-medium">{{ remainPoint?.toLocaleString() }}</span>
+        <span class="text-sm">{{ pointLabel }}</span>
+        <span class="text-lucidviolet-800">{{ remainPoint?.toLocaleString() }}</span>
       </div>
       <div class="flex gap-1">
         <template
