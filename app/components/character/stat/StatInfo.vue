@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-2">
+  <div class="flex flex-col gap-4">
     <!-- 전투력 & 스탯 공격력 (메인 스탯) -->
     <CharacterStatCard>
       <div class="grid grid-cols-2 gap-x-4">
@@ -57,21 +57,23 @@
     </CharacterStatCard>
 
     <!-- 상세 스탯 -->
-    <CharacterStatCard
-      v-for="(section, index) in detailStats"
-      :key="index"
-    >
-      <div class="grid grid-cols-2 gap-x-4">
-        <div
-          v-for="(stat, idx) in section"
-          :key="idx"
-          class="flex items-center justify-between"
-        >
-          <span class="text-sm text-lucidgray-dark">{{ stat.label }}</span>
-          <span class="ml-5 text-base font-medium text-lucidviolet-700">{{ stat.value }}</span>
+    <div class="flex flex-col gap-2">
+      <CharacterStatCard
+        v-for="(section, index) in detailStats"
+        :key="index"
+      >
+        <div class="grid grid-cols-2 gap-x-4">
+          <div
+            v-for="(stat, idx) in section"
+            :key="idx"
+            class="flex items-center justify-between"
+          >
+            <span class="text-sm text-lucidgray-dark">{{ stat.label }}</span>
+            <span class="ml-5 text-base font-medium text-lucidviolet-700">{{ stat.value }}</span>
+          </div>
         </div>
-      </div>
-    </CharacterStatCard>
+      </CharacterStatCard>
+    </div>
   </div>
 </template>
 

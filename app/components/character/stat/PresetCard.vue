@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-2">
     <!-- 현재 선택된 프리셋의 정보 (윗쪽 박스) -->
-    <div class="rounded-lg bg-lucid-light p-3 outline outline-lucidgray-light">
+    <div class="rounded-lg bg-lucid-light p-3 shadow-md outline outline-lucidgray-light">
       <slot name="preset-info" />
     </div>
 

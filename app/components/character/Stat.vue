@@ -33,6 +33,10 @@
           <div class="-mb-3 text-left text-5xl font-extrabold text-lucidgray-light">
             성향
           </div>
+          <CharacterStatPropensityInfo
+            v-if="character?.propensity"
+            :propensity="character.propensity"
+          />
         </div>
       </div>
     </div>

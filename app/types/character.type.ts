@@ -3,6 +3,7 @@ import type { CashEquipmentPreset } from './cashEquipment.type'
 import type { HyperStatPreset } from './hyperStat'
 import type { ItemEquipmentPreset } from './itemEquipment.type'
 import type { PetEquipment } from './petEquipment.type'
+import type { Propensity } from './propensity.type'
 import type { SetEffect } from './setEffect.type'
 import type { Stat } from './stat.type'
 import type { Symbol } from './symbol.type'
@@ -25,6 +26,7 @@ export interface Character {
   popularity: number
   updatedAt: string
   stat: Stat
+  propensity: Propensity
   hyperStatPreset?: HyperStatPreset[]
   ability?: Ability
   itemEquipmentPreset: ItemEquipmentPreset[]
