@@ -10,12 +10,12 @@ export const getCharacterImageUrl = (characterImageCode: string | undefined) => 
 
 export const getItemImageUrl = (itemImageCode: string | undefined) => {
   if (!itemImageCode) return ''
-  return 'https://open.api.nexon.com/static/maplestory/ItemIcon/' + itemImageCode + '.png'
+  return 'https://open.api.nexon.com/static/maplestory/item/icon/' + itemImageCode
 }
 
 export const getSkillImageUrl = (skillImageCode: string | undefined) => {
   if (!skillImageCode) return ''
-  return 'https://open.api.nexon.com/static/maplestory/SkillIcon/' + skillImageCode + '.png'
+  return 'https://open.api.nexon.com/static/maplestory/skill/icon/' + skillImageCode
 }
 
 export const getSymbolImageUrl = async (symbolName: string | undefined) => {
