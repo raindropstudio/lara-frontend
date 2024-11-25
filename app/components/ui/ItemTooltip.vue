@@ -24,7 +24,6 @@
               :key="'star-' + index"
             >
               <IconStar
-                v-if="index <= (item?.starforce ?? 0)"
                 :class="getStarColor(index, item?.starforceScrollFlag ?? false)"
               />
               <span
@@ -476,7 +475,7 @@ const getStarColor = (index: number, isScrollFlag: boolean) => {
   if (isScrollFlag) {
     return {
       'size-3': true,
-      'text-blue-500': index <= (item.value?.starforce ?? 0), // 파란색 별
+      'text-blue-500': index <= (item.value?.starforce ?? 0), // 놀장강 파란별
     }
   }
   else {
