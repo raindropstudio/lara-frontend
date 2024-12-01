@@ -9,7 +9,18 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'nuxt-headlessui',
     '@formkit/auto-animate/nuxt',
+    '@nuxt/scripts',
   ],
+
+  $production: {
+    scripts: {
+      registry: {
+        clarity: {
+          id: 'p72fcmul7c',
+        },
+      },
+    },
+  },
   imports: {
     dirs: ['types/*.ts'],
   },
