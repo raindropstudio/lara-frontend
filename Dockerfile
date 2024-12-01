@@ -12,6 +12,8 @@ RUN npm run build
 # 러너 스테이지
 FROM node:20-alpine
 
+RUN apk --no-cache add curl
+
 # 빌더에서 필요한 파일들만 복사
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
