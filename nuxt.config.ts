@@ -18,6 +18,9 @@ export default defineNuxtConfig({
         clarity: {
           id: 'p72fcmul7c',
         },
+        googleTagManager: {
+          id: 'G-C00XKTBGWY',
+        },
       },
     },
   },
