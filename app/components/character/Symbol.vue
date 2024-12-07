@@ -5,7 +5,7 @@
         Symbol
       </div>
       <div class="my-12 flex flex-col items-center justify-around gap-8">
-        <div class="flex flex-col items-stretch">
+        <div class="flex flex-col items-stretch px-4">
           <div class="flex items-start justify-between gap-8">
             <div class="text-6xl font-extrabold text-lucidgray-light">
               아케인
@@ -79,7 +79,7 @@
         </div>
         <div
           v-if="(authentic?.length ?? 0) > 0"
-          class="flex flex-col items-stretch"
+          class="flex flex-col items-stretch px-4"
         >
           <div class="flex items-start justify-between gap-8">
             <div class="text-6xl font-extrabold text-lucidgray-light">
@@ -154,7 +154,7 @@
         </div>
         <div
           v-if="(grandAuthentic?.length ?? 0) > 0"
-          class="flex flex-col items-stretch"
+          class="flex flex-col items-stretch px-4"
         >
           <div class="flex items-start justify-between gap-8">
             <div class="text-6xl font-extrabold text-lucidgray-light">

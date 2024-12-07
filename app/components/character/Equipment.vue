@@ -4,9 +4,9 @@
       <div class="text-8xl font-black text-lucidgray-light">
         Equipment
       </div>
-      <div class="my-12 flex items-center justify-around">
+      <div class="my-12 flex flex-wrap items-center justify-around gap-y-24">
         <div
-          class="flex flex-col gap-4"
+          class="flex flex-col gap-4 px-4"
         >
           <HTransitionRoot
             :show="viewMode === 'icon'"
@@ -71,7 +71,7 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-col">
+        <div class="flex flex-col px-4">
           <div class="mb-8 flex flex-col">
             <div class="mb-4 flex items-end gap-2">
               <div class="text-5xl font-extrabold text-lucidgray-light">

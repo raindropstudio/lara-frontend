@@ -1,6 +1,6 @@
 <template>
-  <div class="flex items-center justify-between">
-    <div class="flex w-28 flex-col items-center justify-center">
+  <div class="flex flex-wrap items-center justify-around gap-y-8 lg:flex-nowrap lg:justify-between">
+    <div class="order-2 flex w-28 flex-col items-center justify-center lg:order-none">
       <div class="text-base font-normal text-gray-500">
         유니온
       </div>
@@ -8,7 +8,7 @@
         {{ character?.union?.unionLevel ?? '-' }}
       </div>
     </div>
-    <div class="flex w-28 flex-col items-center justify-center">
+    <div class="order-3 flex w-28 flex-col items-center justify-center lg:order-none">
       <div class="text-base font-normal text-gray-500">
         레벨
       </div>
@@ -16,7 +16,7 @@
         {{ character?.level }}.{{ character?.expRate.toFixed(0).padStart(2, '0') }}
       </div>
     </div>
-    <div class="flex flex-col items-center justify-center">
+    <div class="order-1 flex w-full flex-col items-center justify-center lg:order-none lg:mb-0 lg:w-auto">
       <div class="text-lg font-normal text-gray-500">
         전투력
       </div>
@@ -24,7 +24,7 @@
         {{ combatPower }}
       </div>
     </div>
-    <div class="flex w-28 flex-col items-center justify-center">
+    <div class="order-4 flex w-28 flex-col items-center justify-center lg:order-none">
       <div class="inline-flex items-center text-base font-normal text-lucidgray-dark">
         {{ mainStat.statName }}
         <UiTooltip v-if="mainStat.statName === 'MIX'">
@@ -51,7 +51,7 @@
         {{ mainStat.statValue }}
       </div>
     </div>
-    <div class="flex w-28 flex-col items-center justify-center">
+    <div class="order-5 flex w-28 flex-col items-center justify-center lg:order-none">
       <div class="text-base font-normal text-gray-500">
         헥사 강화
       </div>

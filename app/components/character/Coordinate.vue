@@ -4,8 +4,8 @@
       <div class="text-8xl font-black text-lucidgray-light">
         Coordinate
       </div>
-      <div class="my-12 flex items-start justify-around">
-        <div class="flex flex-col">
+      <div class="my-12 flex flex-wrap items-start justify-around gap-y-24">
+        <div class="flex flex-col px-4">
           <div class="-mb-8 text-left text-6xl font-black text-lucidgray-light">
             성능
           </div>
@@ -45,7 +45,7 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-col">
+        <div class="flex flex-col px-4">
           <div class="-mb-8 text-left text-6xl font-black text-lucidgray-light">
             외형
           </div>
@@ -105,8 +105,8 @@
           </div>
         </div>
       </div>
-      <div class="my-12 flex items-start justify-around">
-        <div class="flex flex-col">
+      <div class="my-12 flex flex-wrap items-start justify-around gap-y-24">
+        <div class="flex flex-col px-4">
           <div class="-mb-8 text-left text-6xl font-black text-lucidgray-light">
             안드로이드
           </div>
@@ -115,7 +115,7 @@
             :icon-view-map="androidIconViewMap"
           />
         </div>
-        <div class="flex flex-col">
+        <div class="flex flex-col px-4">
           <div class="mb-12 text-left text-6xl font-black text-lucidgray-light">
             펫
             <span class="font-normal">⋅</span>
