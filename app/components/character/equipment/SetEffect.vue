@@ -66,11 +66,9 @@ interface SetEffectResult {
   setOptionList: SetOption[]
 }
 
-// armorSetEffect와 accessorySetEffect에서 동일한 로직 중복
-// 공통 함수로 추출 가능
 const createSetEffect = (
   setD: { setNamePrefix: string },
-  findItem: (item: ItemEquipmentInfo) => boolean,
+  getMainItem: (activePreset: ItemEquipmentInfo[]) => ItemEquipmentInfo | null,
 ): SetEffectResult | null => {
   const curSetEffect = setEffect.value.find(set =>
     set.setName.includes(setD.setNamePrefix),
@@ -80,7 +78,10 @@ const createSetEffect = (
     return null
   }
 
-  const item = activePreset.value?.find(findItem)
+  // 세트효과 대표 아이템 추출
+  // 아이템 리스트 앞부터 검색하기
+  const item = getMainItem(activePreset.value ?? [])
+
   return {
     setName: setD.setNamePrefix,
     setCount: curSetEffect.setCount,
@@ -125,9 +126,17 @@ const armorSetEffect = computed(() => {
   }]
 
   for (const setD of setData) {
-    const setEffect = createSetEffect(setD, item =>
-      setD.prefix.some(prefix => item.name.includes(prefix)),
-    )
+    const setEffect = createSetEffect(setD, (items) => {
+      // partList 순서대로 해당 리스트에 속한 첫번째 아이템 반환
+      for (const part of setD.partList) {
+        const item = items.find(item => item.part === part && setD.prefix.some(prefix => item.name.includes(prefix)))
+        if (item) {
+          return item
+        }
+      }
+
+      return null
+    })
 
     if (setEffect) {
       result.push(setEffect)
@@ -171,9 +180,17 @@ const accessorySetEffect = computed(() => {
   }]
 
   for (const setD of setData) {
-    const setEffect = createSetEffect(setD, item =>
-      setD.itemListPrefix.some(prefix => item.name.includes(prefix)),
-    )
+    const setEffect = createSetEffect(setD, (items) => {
+      // itemListPrefix 순서대로 검색
+      for (const prefix of setD.itemListPrefix) {
+        const item = items.find(item => item.name.includes(prefix))
+        if (item) {
+          return item
+        }
+      }
+
+      return null
+    })
 
     if (setEffect) {
       result.push(setEffect)

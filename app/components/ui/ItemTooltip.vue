@@ -234,6 +234,13 @@
         <div class="whitespace-pre-wrap text-pretty break-words">
           {{ item.description }}
         </div>
+        <!-- 시드링 레벨 -->
+        <div
+          v-if="item.specialRingLevel"
+          class="font-medium text-yellow-500"
+        >
+          {{ item.name }} Lv.{{ item.specialRingLevel }}
+        </div>
       </div>
 
       <!-- 놀라운 장비강화 주문서 적용 -->
