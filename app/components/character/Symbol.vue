@@ -6,8 +6,8 @@
       </div>
       <div class="my-12 flex flex-col items-center justify-around gap-8">
         <div class="flex flex-col items-stretch px-4">
-          <div class="flex items-start justify-between gap-8">
-            <div class="text-6xl font-extrabold text-lucidgray-light">
+          <div class="flex flex-wrap items-start justify-between gap-x-8">
+            <div class="shrink-0 text-6xl font-extrabold text-lucidgray-light">
               아케인
             </div>
             <div class="flex items-start gap-4">
@@ -29,7 +29,7 @@
               </div>
             </div>
           </div>
-          <div class="-mt-2 flex justify-center gap-4">
+          <div class="mx-auto -mt-2 grid w-[428px] grid-cols-3 justify-items-center gap-4 min-[872px]:w-[872px] min-[872px]:grid-cols-6">
             <template
               v-for="(arcName, idx) in arcaneMapper"
               :key="idx"
@@ -81,8 +81,8 @@
           v-if="(authentic?.length ?? 0) > 0"
           class="flex flex-col items-stretch px-4"
         >
-          <div class="flex items-start justify-between gap-8">
-            <div class="text-6xl font-extrabold text-lucidgray-light">
+          <div class="flex flex-wrap items-start justify-between gap-x-8">
+            <div class="shrink-0 text-6xl font-extrabold text-lucidgray-light">
               어센틱
             </div>
             <div class="flex items-start gap-4">
@@ -104,7 +104,7 @@
               </div>
             </div>
           </div>
-          <div class="-mt-2 flex justify-center gap-4">
+          <div class="mx-auto -mt-2 grid w-[428px] grid-cols-3 justify-items-center gap-4 min-[872px]:w-[872px] min-[872px]:grid-cols-6">
             <template
               v-for="(autSymbol, idx) in authenticMapper"
               :key="idx"
@@ -156,8 +156,8 @@
           v-if="(grandAuthentic?.length ?? 0) > 0"
           class="flex flex-col items-stretch px-4"
         >
-          <div class="flex items-start justify-between gap-8">
-            <div class="text-6xl font-extrabold text-lucidgray-light">
+          <div class="flex flex-wrap items-start justify-between gap-x-8">
+            <div class="shrink-0 text-6xl font-extrabold text-lucidgray-light">
               그랜드 어센틱
             </div>
             <div class="flex items-start gap-4">
@@ -186,7 +186,7 @@
               </div>
             </div>
           </div>
-          <div class="-mt-2 flex justify-center gap-4">
+          <div class="mx-auto -mt-2 grid w-[428px] grid-cols-3 justify-items-center gap-4 min-[872px]:w-[872px] min-[872px]:grid-cols-6">
             <template
               v-for="(autSymbol, idx) in grandAuthenticMapper"
               :key="idx"
