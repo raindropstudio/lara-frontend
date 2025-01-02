@@ -130,7 +130,9 @@ const getWeaponAddOption = (item: ItemEquipmentInfo) => {
     }
   }
 
-  if (optionText) optionText += ' + '
+  if (optionText && (item.addOption.bossDamage || item.addOption.damage || item.addOption.allStat)) {
+    optionText += ' + '
+  }
   if (item.addOption.bossDamage) optionText += '보'
   if (item.addOption.damage) optionText += '뎀'
   if (item.addOption.allStat) optionText += '올'
