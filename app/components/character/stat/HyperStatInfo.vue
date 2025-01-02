@@ -44,6 +44,10 @@ const selectedPreset = computed(() => {
 
 // statIncrease 포맷팅 함수 (공격력과 마력이라고 API에서 반환됨.)
 const formatStatIncrease = (statIncrease: string) => {
-  return statIncrease.replace('공격력과 마력', '공격력/마력')
+  return statIncrease
+    .replace('공격력과 마력', '공격력/마력')
+    .replace('데몬 포스/타임 포스', 'DF/TF')
+    .replace(' 증가 최대', ', ')
+    .replace('싸이킥 포인트', 'PP')
 }
 </script>
