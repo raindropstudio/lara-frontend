@@ -66,7 +66,11 @@
         <div class="mb-1 font-semibold">
           자동 스킬
         </div>
-        <div class="mb-1 flex items-center gap-1">
+        <!-- skill1이 있을 때만 표시 -->
+        <div
+          v-if="pet.petInfo.petAutoSkill.skill1"
+          class="mb-1 flex items-center gap-1"
+        >
           <img
             :src="getSkillImageUrl(pet.petInfo.petAutoSkill.skill1Icon)"
             :alt="pet.petInfo.petAutoSkill.skill1"
@@ -74,6 +78,7 @@
           >
           {{ pet.petInfo.petAutoSkill.skill1 }}
         </div>
+        <!-- skill2가 있을 때만 표시 -->
         <div
           v-if="pet.petInfo.petAutoSkill.skill2"
           class="flex items-center gap-1"
