@@ -11,14 +11,14 @@
         <div class="flex flex-col items-center">
           <img
             :src="getSkillImageUrl(skill.icon)"
-            class="size-16 object-contain [image-rendering:pixelated]"
+            class="size-14 object-contain [image-rendering:pixelated]"
           >
           <div
-            class="-mt-3 flex h-7 w-12 items-center justify-center rounded-lg border-[2.5px] bg-white"
+            class="-mt-3 flex h-6 w-10 items-center justify-center rounded-lg border-[2.5px] bg-white"
             :class="skill.level === 30 ? 'border-lucidviolet-700' : 'border-lucidgray-medium'"
           >
             <span
-              class="text-lg font-medium"
+              class="text-base font-medium"
               :class="skill.level === 30 ? 'text-lucidviolet-800' : 'text-lucidgray-dark'"
             >{{ skill.level }}</span>
           </div>
@@ -29,7 +29,7 @@
         :key="'empty-' + index"
       >
         <div
-          class="mb-4 size-16 rounded-xl border-4 border-lucidgray-light bg-gray-100 shadow-md"
+          class="mb-4 size-14 rounded-xl border-4 border-lucidgray-light bg-gray-100 shadow-md"
         />
       </template>
     </div>
