@@ -56,7 +56,7 @@
         헥사 강화
       </div>
       <div class="text-3xl font-bold text-lucid-violetgray">
-        00.00%
+        {{ (hexaProgress.currentErdaPiece / hexaProgress.totalErdaPiece * 100).toFixed(2) }}%
       </div>
     </div>
   </div>
@@ -96,5 +96,7 @@ const mainStat = computed(() => {
   return mainStat
 })
 
-// TODO: 임시값 처리한것들 실제값 받아와서 변경하기
+const hexaProgress = computed(() => {
+  return getHexaProgress(character.value)
+})
 </script>

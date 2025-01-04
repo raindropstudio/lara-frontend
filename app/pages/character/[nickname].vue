@@ -140,10 +140,12 @@
           ref="skill"
           class="w-full"
         >
-          <div
-            class="h-[500px] w-full py-24"
-          >
-            헥사스킬
+          <div class="w-full">
+            <div class="mx-auto max-w-screen-xl">
+              <CharacterHexaSkill
+                :character="character"
+              />
+            </div>
           </div>
           <div class="h-[500px] w-full bg-white py-24">
             5차스킬

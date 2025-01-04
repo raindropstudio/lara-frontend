@@ -3,7 +3,7 @@
     <div class="text-8xl font-black text-lucidgray-light">
       Stats
     </div>
-    <div class="my-12 flex flex-wrap items-start justify-around gap-y-24">
+    <div class="my-12 flex flex-wrap items-start justify-evenly gap-y-24">
       <div class="flex flex-col px-4">
         <CharacterStatInfo :character="character" />
       </div>

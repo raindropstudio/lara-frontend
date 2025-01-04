@@ -34,5 +34,7 @@ export interface Character {
   setEffect: SetEffect[]
   petEquipment: PetEquipment[]
   symbol: Symbol[]
+  skill: Skill[]
+  skillCore: SkillCore[]
   union?: Union
 }

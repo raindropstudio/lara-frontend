@@ -4,7 +4,7 @@
       <div class="text-8xl font-black text-lucidgray-light">
         Equipment
       </div>
-      <div class="my-12 flex flex-wrap items-center justify-around gap-y-24">
+      <div class="my-12 flex flex-wrap items-center justify-evenly gap-y-24">
         <div
           class="flex flex-col gap-4 px-4"
         >

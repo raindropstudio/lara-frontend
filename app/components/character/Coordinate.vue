@@ -4,7 +4,7 @@
       <div class="text-8xl font-black text-lucidgray-light">
         Coordinate
       </div>
-      <div class="my-12 flex flex-wrap items-start justify-around gap-y-24">
+      <div class="my-12 flex flex-wrap items-start justify-evenly gap-y-24">
         <div class="flex flex-col px-4">
           <div class="-mb-8 text-left text-6xl font-black text-lucidgray-light">
             성능
@@ -105,7 +105,7 @@
           </div>
         </div>
       </div>
-      <div class="my-12 flex flex-wrap items-start justify-around gap-y-24">
+      <div class="my-12 flex flex-wrap items-start justify-evenly gap-y-24">
         <div class="flex flex-col px-4">
           <div class="-mb-8 text-left text-6xl font-black text-lucidgray-light">
             안드로이드
