@@ -99,7 +99,7 @@ const solTable = {
     { level: 29, solErda: 108, solErdaPiece: 3008 },
     { level: 30, solErda: 123, solErdaPiece: 3383 },
   ],
-  '공통 코어': [
+  '공용 코어': [
     { level: 0, solErda: 0, solErdaPiece: 0 },
     { level: 1, solErda: 7, solErdaPiece: 125 },
     { level: 2, solErda: 9, solErdaPiece: 163 },
@@ -136,13 +136,13 @@ const solTable = {
 
 export const getHexaProgress = (character: Character | undefined) => {
   // 각 코어별 30레벨 에르다 합
-  const totalErda = solTable['공통 코어'][30].solErda * 1
+  const totalErda = solTable['공용 코어'][30].solErda * 1
     + solTable['마스터리 코어'][30].solErda * 4
     + solTable['강화 코어'][30].solErda * 4
     + solTable['스킬 코어'][30].solErda * 1
 
   // 각 코어별 30레벨 에르다 조각 합
-  const totalErdaPiece = solTable['공통 코어'][30].solErdaPiece * 1
+  const totalErdaPiece = solTable['공용 코어'][30].solErdaPiece * 1
     + solTable['마스터리 코어'][30].solErdaPiece * 4
     + solTable['강화 코어'][30].solErdaPiece * 4
     + solTable['스킬 코어'][30].solErdaPiece * 1
