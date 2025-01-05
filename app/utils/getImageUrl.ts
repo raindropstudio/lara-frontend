@@ -18,6 +18,41 @@ export const getSkillImageUrl = (skillImageCode: string | undefined) => {
   return 'https://open.api.nexon.com/static/maplestory/skill/icon/' + skillImageCode
 }
 
+export const getSpecialSkillImageUrl = async (specialSkillName: string) => {
+  const specialSkillImages: { [key: string]: () => Promise<typeof import('*.png')> } = {
+    '견뎌내기': () => import('~/assets/skill/v/resist.png'),
+    '견뎌내기 II': () => import('~/assets/skill/v/resist-2.png'),
+    '극복하는 경험 I': () => import('~/assets/skill/v/overcoming-experience-1.png'),
+    '근성 I': () => import('~/assets/skill/v/tenacity-1.png'),
+    '반격 I': () => import('~/assets/skill/v/counterattack-1.png'),
+    '방어구 부수기 I': () => import('~/assets/skill/v/destroy-armor-1.png'),
+    '치명적인 일격 I': () => import('~/assets/skill/v/fatal-blow-1.png'),
+    '한놈만 I': () => import('~/assets/skill/v/beat-one-1.png'),
+    '룬의 가호': () => import('~/assets/skill/v/runes-protection.png'),
+    '룬의 경험 I': () => import('~/assets/skill/v/runes-experience-1.png'),
+    '룬의 폭주': () => import('~/assets/skill/v/frenzy-rune.png'),
+    '끊임없는 공격': () => import('~/assets/skill/v/endless-attack.png'),
+    '연속된 일격 I': () => import('~/assets/skill/v/combo-kill-1.png'),
+    '치명적인 일격 II': () => import('~/assets/skill/v/fatal-blow-2.png'),
+    '보스 슬레이어 I': () => import('~/assets/skill/v/boss-slayer-1.png'),
+    '운 좋은 회복 I': () => import('~/assets/skill/v/lucky-restoration-1.png'),
+    '일격필살 I': () => import('~/assets/skill/v/deathblow-1.png'),
+    '방어구 부수기 II': () => import('~/assets/skill/v/destroy-armor-2.png'),
+    '보스 슬레이어 II': () => import('~/assets/skill/v/boss-slayer-2.png'),
+    '자동회복 I': () => import('~/assets/skill/v/auto-restoration-1.png'),
+    '자동회복 II': () => import('~/assets/skill/v/auto-restoration-2.png'),
+    '보스 슬레이어 III': () => import('~/assets/skill/v/boss-slayer-3.png'),
+    '폭주하는 힘 I': () => import('~/assets/skill/v/frenzy-power-1.png'),
+    '컴 백 I': () => import('~/assets/skill/v/comeback-1.png'),
+    '컴 백 II': () => import('~/assets/skill/v/comeback-2.png'),
+  }
+
+  if (!specialSkillImages[specialSkillName]) return ''
+
+  const image = await specialSkillImages[specialSkillName]()
+  return image.default
+}
+
 export const getSymbolImageUrl = async (symbolName: string | undefined) => {
   if (!symbolName) return ''
 

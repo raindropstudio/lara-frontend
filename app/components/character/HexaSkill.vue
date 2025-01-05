@@ -20,24 +20,24 @@
       <div class="my-12 flex flex-col items-start justify-center gap-y-12">
         <div class="flex w-full flex-wrap items-start justify-evenly gap-y-12">
           <CharacterSkillIconView
-            title="스킬코어"
+            title="스킬 코어"
             :skills="skillCores"
             class="px-4"
           />
           <CharacterSkillIconView
-            title="공용코어"
+            title="공용 코어"
             :skills="commonCores"
             class="px-4"
           />
         </div>
         <div class="flex w-full flex-wrap items-start justify-evenly gap-y-12">
           <CharacterSkillIconView
-            title="마스터리코어"
+            title="마스터리 코어"
             :skills="masteryCores"
             class="px-4"
           />
           <CharacterSkillIconView
-            title="강화코어"
+            title="강화 코어"
             :skills="enhanceCores"
             class="px-4"
           />

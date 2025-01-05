@@ -35,6 +35,7 @@ const popularityText = computed(() => {
   if (character.value.popularity >= 500) return '걸어다니는 좋아요'
   if (character.value.popularity >= 100) return '모두가 좋아하는'
   if (character.value.popularity >= 10) return '좋아요 수집가'
+  if (character.value.popularity >= 2) return '작은 인기인'
   if (character.value.popularity === 1) return '친구가 눌러준'
   if (character.value.popularity === 0) return '중립적인 사람'
   if (character.value.popularity === -1) return '실수로 비추누른'
