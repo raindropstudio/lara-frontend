@@ -154,8 +154,12 @@
               />
             </div>
           </div>
-          <div class="h-[500px] w-full py-24">
-            링크스킬
+          <div class="w-full">
+            <div class="mx-auto w-full max-w-screen-xl">
+              <CharacterLinkSkill
+                :character="character"
+              />
+            </div>
           </div>
         </div>
         <div

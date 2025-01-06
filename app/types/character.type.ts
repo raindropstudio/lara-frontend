@@ -36,5 +36,6 @@ export interface Character {
   symbol: Symbol[]
   skill: Skill[]
   skillCore: SkillCore[]
+  linkSkill: LinkSkill[]
   union?: Union
 }
