@@ -251,6 +251,24 @@
           놀라운 장비강화 주문서가 사용되었습니다.
         </div>
       </div>
+
+      <!-- 컬러링 프리즘 -->
+      <div v-if="item.coloringPrismRange">
+        <!-- 점선 구분선 -->
+        <hr class="my-2 border-t border-dashed border-gray-200">
+        <div class="whitespace-pre-wrap text-pretty break-words">
+          <span>컬러링 프리즘이 적용된 아이템입니다.</span>
+        </div>
+        <div class="font-semibold">
+          적용 범위 : {{ getPrismRangeText(item.coloringPrismRange) }} 계열
+        </div>
+        <div
+          v-if="item.coloringPrismHue || item.coloringPrismSaturation || item.coloringPrismValue"
+          class="font-semibold"
+        >
+          색조: {{ getPrismSignedValue(item.coloringPrismHue) }}, 채도: {{ getPrismSignedValue(item.coloringPrismSaturation) }}, 명도: {{ getPrismSignedValue(item.coloringPrismValue) }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -492,5 +510,29 @@ const getStarColor = (index: number, isScrollFlag: boolean) => {
       'text-gray-300': index > (item.value?.starforce ?? 0),
     }
   }
+}
+
+/**
+ * 컬러링 프리즘 범위를 한글로 변환
+ */
+const getPrismRangeText = (range: 'ALL' | 'RED' | 'YELLOW' | 'GREEN' | 'CYAN' | 'BLUE' | 'PURPLE') => {
+  const rangeMap: Record<string, string> = {
+    ALL: '전체 색상',
+    RED: '빨간색',
+    YELLOW: '노란색',
+    GREEN: '초록색',
+    CYAN: '청록색',
+    BLUE: '파란색',
+    PURPLE: '보라색',
+  }
+  return rangeMap[range] || range
+}
+
+/**
+ * 프리즘 값 앞에 +/- 기호를 붙여서 반환 (NXAPI에서 양수일 때는 +기호를 반환하지 않지만, 음수일 때는 -기호를 반환하는 문제를 일괄적으로 해결)
+ */
+const getPrismSignedValue = (value: number | undefined) => {
+  if (value === undefined) return '+0'
+  return value >= 0 ? `+${value}` : `${value}`
 }
 </script>

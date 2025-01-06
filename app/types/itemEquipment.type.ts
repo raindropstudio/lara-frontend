@@ -55,6 +55,10 @@ export interface ItemEquipmentInfo {
   addOption?: ItemOption
   etcOption?: ItemOption
   starforceOption?: ItemOption
+  coloringPrismRange?: 'ALL' | 'RED' | 'YELLOW' | 'GREEN' | 'CYAN' | 'BLUE' | 'PURPLE'
+  coloringPrismHue?: number
+  coloringPrismSaturation?: number
+  coloringPrismValue?: number
 }
 
 export interface ItemEquipmentPreset {
