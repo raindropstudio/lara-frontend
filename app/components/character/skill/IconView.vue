@@ -65,7 +65,7 @@ const emptyCount = computed(() => {
   // 슬롯 개수가 있으면 슬롯 개수에 맞춰서 빈칸 개수 계산
   if (slotCount.value) {
     const left = slotCount.value - (skills.value?.length ?? 0)
-    const count = left > 0 ? left % 4 : 0
+    const count = left > 0 ? left : 0
     return skills.value?.length === 0 ? slotCount.value : count
   }
 

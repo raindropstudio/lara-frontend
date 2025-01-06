@@ -15,30 +15,57 @@
             <p class="mb-4 text-2xl font-light text-lucidviolet-700">
               내 링크 스킬
             </p>
-            <div class="flex max-w-80 flex-col gap-4 rounded-2xl border-4 border-lucidgray-light bg-white p-4">
+            <div class="flex w-80 flex-col gap-4 rounded-2xl border-4 border-lucidgray-light bg-white p-4">
               <div class="flex items-start gap-4">
                 <div class="flex shrink-0 flex-col items-center">
                   <img
+                    v-if="linkSkill[0]?.ownedSkill.icon"
                     :src="getSkillImageUrl(linkSkill[0]?.ownedSkill.icon)"
                     class="size-14 object-contain [image-rendering:pixelated]"
                   >
+                  <div
+                    v-else
+                    class="mb-4 size-14 rounded-xl border-4 border-lucidgray-light bg-gray-100 shadow-md"
+                  />
                 </div>
                 <div>
-                  <p class="text-xl font-medium text-lucidgray-dark">
+                  <p
+                    v-if="formattedSkillName"
+                    class="text-xl font-medium text-lucidgray-dark"
+                  >
                     {{ formattedSkillName }}
                   </p>
-                  <p class="text-lg font-light text-lucidgray-dark">
+                  <p
+                    v-else
+                    class="text-xl font-medium text-lucidgray-medium"
+                  >
+                    링크 스킬 정보가 없어요!
+                  </p>
+                  <p
+                    v-if="linkSkill[0]?.ownedSkill.level"
+                    class="text-lg font-light text-lucidgray-dark"
+                  >
                     Lv. <span class="font-medium">{{ linkSkill[0]?.ownedSkill.level }}</span> / {{ masterLevel }}
                   </p>
                 </div>
               </div>
-              <div class="flex flex-col gap-2">
+              <div
+                v-if="formattedDescription"
+                class="flex flex-col gap-2"
+              >
                 <p class="whitespace-break-spaces text-sm font-light text-lucidgray-dark">
                   {{ formattedDescription }}
                 </p>
                 <p class="whitespace-break-spaces text-sm font-light text-lucid-violetgray">
                   {{ linkSkill[0]?.ownedSkill.effect }}
                 </p>
+              </div>
+              <div
+                v-else
+                class="flex flex-col gap-2"
+              >
+                <span class="whitespace-break-spaces text-sm font-light text-lucidgray-dark">게임 내에서 링크 스킬 정보를 확인해주세요.
+                </span>
               </div>
             </div>
           </div>
