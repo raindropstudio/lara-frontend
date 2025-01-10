@@ -9,12 +9,14 @@
         :key="index"
       >
         <div class="flex flex-col items-center">
-          <img
-            :src="getSkillImageUrl(skill.icon) || specialSkillImage[index]"
-            class="size-14 object-contain [image-rendering:pixelated]"
-          >
+          <UiSkillTooltip :skill="skill">
+            <img
+              :src="getSkillImageUrl(skill.icon) || specialSkillImage[index]"
+              class="size-14 object-contain [image-rendering:pixelated]"
+            >
+          </UiSkillTooltip>
           <div
-            class="-mt-3 flex h-6 w-10 items-center justify-center rounded-lg border-[2.5px] bg-white"
+            class="relative z-10 -mt-3 flex h-6 w-10 items-center justify-center rounded-lg border-[2.5px] bg-white"
             :class="skill.level === maxSkillLevel ? 'border-lucidviolet-700' : 'border-lucidgray-medium'"
           >
             <span
