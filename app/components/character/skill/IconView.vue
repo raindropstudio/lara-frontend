@@ -13,6 +13,7 @@
             <img
               :src="getSkillImageUrl(skill.icon) || specialSkillImage[index]"
               class="size-14 object-contain [image-rendering:pixelated]"
+              :alt="skill.name"
             >
           </UiSkillTooltip>
           <div

@@ -11,7 +11,7 @@
       <!-- 스킬 그리드 영역 -->
       <div class="my-12 flex flex-col items-start justify-center gap-y-12">
         <div class="flex w-full flex-wrap items-start justify-evenly gap-y-12">
-          <div>
+          <div class="px-4">
             <p class="mb-4 text-2xl font-light text-lucidviolet-700">
               내 링크 스킬
             </p>
@@ -22,6 +22,7 @@
                     v-if="linkSkill[0]?.ownedSkill.icon"
                     :src="getSkillImageUrl(linkSkill[0]?.ownedSkill.icon)"
                     class="size-14 object-contain [image-rendering:pixelated]"
+                    :alt="linkSkill[0]?.ownedSkill.name"
                   >
                   <div
                     v-else
@@ -69,12 +70,41 @@
               </div>
             </div>
           </div>
-          <CharacterSkillIconView
-            title="전수받은 링크 스킬"
-            :skills="linkSkill[0]?.skill"
-            :slot-count="12"
-            class="px-4"
-          />
+          <div class="flex flex-col items-end justify-center gap-4 px-4">
+            <CharacterSkillIconView
+              title="전수받은 링크 스킬"
+              :skills="linkSkill[viewLinkPreset]?.skill"
+              :slot-count="12"
+            />
+            <div class="flex justify-end gap-4 rounded bg-white p-1 text-sm text-lucidgray-dark outline outline-lucidgray-medium">
+              <button
+                class="flex items-center gap-1 rounded px-1 underline underline-offset-2 hover:bg-lucidviolet-100"
+                :class="{
+                  'bg-lucidviolet-50 font-semibold text-lucidviolet-700': viewLinkPreset === 0,
+                }"
+                @click="viewLinkPreset = 0"
+              >
+                <span>적용중</span>
+              </button>
+              <div class="flex gap-1">
+                <template
+                  v-for="(presetNo) in [1, 2, 3]"
+                  :key="presetNo"
+                >
+                  <button
+                    class="size-5 rounded hover:bg-lucidviolet-100 disabled:opacity-50 disabled:hover:bg-transparent"
+                    :disabled="!linkSkill[presetNo]?.skill"
+                    :class="{
+                      'bg-lucidviolet-100 font-semibold text-lucidviolet-700': viewLinkPreset === presetNo,
+                    }"
+                    @click="viewLinkPreset = presetNo"
+                  >
+                    {{ presetNo }}
+                  </button>
+                </template>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -89,17 +119,18 @@ const props = defineProps<{
 const { character } = toRefs(props)
 
 const linkSkill = computed(() => character.value?.linkSkill ?? [])
+const viewLinkPreset = ref(0)
 
 const formattedDescription = computed(() => {
-  return linkSkill.value[0]?.ownedSkill.description?.replace(/^[^\n]*\n/, '') ?? ''
+  return linkSkill.value[viewLinkPreset.value]?.ownedSkill.description?.replace(/^[^\n]*\n/, '') ?? ''
 })
 
 const masterLevel = computed(() => {
-  const firstLine = linkSkill.value[0]?.ownedSkill.description?.split('\n')[0] ?? ''
+  const firstLine = linkSkill.value[viewLinkPreset.value]?.ownedSkill.description?.split('\n')[0] ?? ''
   return firstLine.match(/\[\s*마스터\s*레벨\s*:\s*(\d+)\s*\]/)?.[1] ?? ''
 })
 
 const formattedSkillName = computed(() => {
-  return linkSkill.value[0]?.ownedSkill.name?.replace(/\s*\([^)]*\)/g, '') ?? ''
+  return linkSkill.value[viewLinkPreset.value]?.ownedSkill.name?.replace(/\s*\([^)]*\)/g, '') ?? ''
 })
 </script>

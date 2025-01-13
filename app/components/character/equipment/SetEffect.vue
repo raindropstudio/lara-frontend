@@ -9,7 +9,7 @@
           :set-effect="set"
         >
           <div class="flex items-center">
-            <div class="text-5xl font-thin text-lucidviolet-700">
+            <div class="cursor-default text-5xl font-thin text-lucidviolet-700">
               {{ set.setCount }}
             </div>
             <img
@@ -35,7 +35,7 @@
           :set-effect="set"
         >
           <div class="flex items-center">
-            <div class="text-5xl font-thin text-lucidviolet-700">
+            <div class="cursor-default text-5xl font-thin text-lucidviolet-700">
               {{ set.setCount }}
             </div>
             <img
