@@ -327,7 +327,7 @@ const maxStarforce = computed(() => {
   if (level < 118) return 10
   if (level < 128) return 15
   if (level < 138) return 20
-  return 25
+  return 30
 })
 
 /**
