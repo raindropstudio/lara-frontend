@@ -4,7 +4,7 @@
       <div class="text-8xl font-black text-lucidgray-light">
         Symbol
       </div>
-      <div class="my-12 flex flex-col items-center justify-around gap-8">
+      <div class="my-12 flex flex-col items-center justify-around gap-16">
         <div class="flex flex-col items-stretch px-4">
           <div class="flex flex-wrap items-start justify-between gap-x-8">
             <div class="shrink-0 text-6xl font-extrabold text-lucidgray-light">

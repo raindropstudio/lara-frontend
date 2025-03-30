@@ -17,7 +17,7 @@
             >
           </UiSkillTooltip>
           <div
-            class="relative z-10 -mt-3 flex h-6 w-10 items-center justify-center rounded-lg border-[2.5px] bg-white"
+            class="z-10 -mt-3 flex h-6 w-10 items-center justify-center rounded-lg border-[2.5px] bg-white"
             :class="skill.level === maxSkillLevel ? 'border-lucidviolet-700' : 'border-lucidgray-medium'"
           >
             <span

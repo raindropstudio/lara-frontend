@@ -356,10 +356,10 @@ const getUpgrade = (item: ItemEquipmentInfo) => {
     }
   }
 
-  // 기존의 일반적인 경우 반환
-  return Math.round(mainStatUpgrade * 10) / 10
+  // 기존의 일반적인 경우 반환 (공마/스텟)
+  return Math.round(mainAtkUpgrade * 10) / 10
     + '/'
-    + Math.round(mainAtkUpgrade * 10) / 10
+    + Math.round(mainStatUpgrade * 10) / 10
     + '작'
     + (upgradable ? '*' : '')
 }

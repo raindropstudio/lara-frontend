@@ -16,7 +16,7 @@
               v-if="set.setIcon"
               :src="getItemImageUrl(set.setIcon)"
               :alt="set.setName"
-              class="-ml-2 [image-rendering:pixelated]"
+              class="-ml-2 max-w-10 [image-rendering:pixelated]"
             >
           </div>
         </UiSetEffectTooltip>
@@ -42,7 +42,7 @@
               v-if="set.setIcon"
               :src="getItemImageUrl(set.setIcon)"
               :alt="set.setName"
-              class="-ml-2 [image-rendering:pixelated]"
+              class="-ml-2 max-w-10 [image-rendering:pixelated]"
             >
           </div>
         </UiSetEffectTooltip>

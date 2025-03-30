@@ -86,7 +86,7 @@
         class="flex w-full flex-col items-center justify-center"
       >
         <div
-          class="sticky top-4 z-10"
+          class="sticky top-4 z-30"
         >
           <CharacterNav
             :character-image-url="character?.imageUrl"
