@@ -85,7 +85,7 @@
 
 <script lang="ts" setup>
 const linkList = [
-  { name: 'Status', url: 'https://lara.instatus.com/' },
+  { name: 'Status', url: 'https://status.lara.moe' },
   { name: 'Changelog', url: 'https://laramoe.notion.site' },
   { name: 'GitHub', url: 'https://github.com/raindropstudio' },
 ]
