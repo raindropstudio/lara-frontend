@@ -67,7 +67,7 @@
                           v-if="mappedArcane[idx]?.force"
                           class="-mr-1 -mt-3 text-right text-3xl font-black text-lucidgray-light"
                         >
-                          {{ getArcanePercent(mappedArcane[idx]).toFixed(0) + '%' }}
+                          {{ getArcaneProgress(mappedArcane[idx]).progressPercent.toFixed(0) + '%' }}
                         </div>
                       </div>
                     </div>
@@ -142,7 +142,7 @@
                           v-if="mappedAuthentic[idx]?.force"
                           class="-mr-1 -mt-3 text-right text-3xl font-black text-lucidgray-light"
                         >
-                          {{ getAuthenticPercent(mappedAuthentic[idx]).toFixed(0) + '%' }}
+                          {{ getAuthenticProgress(mappedAuthentic[idx]).progressPercent.toFixed(0) + '%' }}
                         </div>
                       </div>
                     </div>
@@ -226,7 +226,7 @@
                           v-if="mappedGrandAuthentic[idx]?.force"
                           class="-mr-1 -mt-3 text-right text-3xl font-black text-lucidgray-light"
                         >
-                          {{ getAuthenticPercent(mappedGrandAuthentic[idx]).toFixed(0) + '%' }}
+                          {{ getAuthenticProgress(mappedGrandAuthentic[idx]).progressPercent.toFixed(0) + '%' }}
                         </div>
                       </div>
                     </div>
@@ -308,17 +308,5 @@ const getStatSum = (symbols: Symbol[] | undefined) => {
     return symbols.reduce((sum, symbol) => sum + symbol.str, 0)
   }
   return symbols.reduce((sum, symbol) => sum + symbol[mainStat], 0)
-}
-
-const getArcanePercent = (symbol: Symbol) => {
-  // 레벨당 필요치: n^2 + 11
-  const psum = [0, 12, 27, 47, 74, 110, 157, 217, 292, 384, 495, 627, 782, 962, 1169, 1405, 1672, 1972, 2307, 2679]
-  return ((psum[symbol.level - 1] ?? 0) + symbol.growthCount) / 2679 * 100
-}
-
-const getAuthenticPercent = (symbol: Symbol) => {
-  // 레벨당 필요치 9n^2 + 20n
-  const psum = [0, 29, 105, 246, 470, 795, 1239, 1820, 2556, 3456, 4565]
-  return ((psum[symbol.level - 1] ?? 0) + symbol.growthCount) / 4565 * 100
 }
 </script>

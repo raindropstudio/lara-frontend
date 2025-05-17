@@ -39,6 +39,9 @@
           <span v-else>
             성장치 : MAX
           </span>
+          <span class="text-lucidviolet-700">
+            누적 : {{ symbolProgress.accCount }} / {{ symbolProgress.totalRequire }} ({{ symbolProgress.progressPercent.toFixed(0) }}%)
+          </span>
         </div>
       </div>
 
@@ -101,4 +104,18 @@ const { floatingStyles } = useFloating(popupRef, popupFloating, {
   })],
 })
 const symbolImage = await getSymbolImageUrl(symbol.value?.name)
+
+const symbolProgress = computed(() => {
+  if (!symbol.value) {
+    return {
+      accCount: 0,
+      totalRequire: 0,
+      progressPercent: 0,
+    }
+  }
+  if (symbol.value?.name.startsWith('아케인')) {
+    return getArcaneProgress(symbol.value)
+  }
+  return getAuthenticProgress(symbol.value)
+})
 </script>

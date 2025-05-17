@@ -1,3 +1,5 @@
+export type MainStat = 'str' | 'dex' | 'int' | 'luk' | 'mix' | 'hp'
+
 export const findMainStat = (character?: Character) => {
   if (!character || !character?.stat) return null
 

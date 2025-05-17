@@ -78,3 +78,17 @@ export const getSymbolImageUrl = async (symbolName: string | undefined) => {
   const image = await symbolImages[symbolName]()
   return image.default
 }
+
+export const getHexaStatImageUrl = async (hexaStatName: string | undefined) => {
+  if (!hexaStatName) return ''
+  const hexaStatImages: { [key: string]: () => Promise<typeof import('*.png')> } = {
+    1: () => import('~/assets/hexastat/hexastat-1.png'),
+    2: () => import('~/assets/hexastat/hexastat-2.png'),
+    3: () => import('~/assets/hexastat/hexastat-3.png'),
+  }
+
+  if (!hexaStatImages[hexaStatName]) return ''
+
+  const image = await hexaStatImages[hexaStatName]()
+  return image.default
+}
