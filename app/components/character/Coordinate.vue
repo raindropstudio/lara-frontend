@@ -182,6 +182,20 @@ const viewBasePreset = ref(activeBaseIdx.value)
 const viewCoordiAlpha = ref(activeBaseIdx.value)
 const viewCoordiPreset = ref(activeCoordiIdx.value + (activeBaseIdx.value * 3))
 
+watch(activeBaseIdx, (newValue) => {
+  if (newValue !== undefined) {
+    viewBasePreset.value = newValue
+    viewCoordiAlpha.value = newValue
+    viewCoordiPreset.value = activeCoordiIdx.value + (newValue * 3)
+  }
+}, { immediate: true })
+
+watch(activeCoordiIdx, (newValue) => {
+  if (newValue !== undefined) {
+    viewCoordiPreset.value = newValue + (activeBaseIdx.value * 3)
+  }
+}, { immediate: true })
+
 const baseIconViewMap = [
   '', '', '', '', '헤어', '성형', '피부',
   '반지1', '반지2', '반지3', '반지4', '얼굴장식', '눈장식', '귀고리',

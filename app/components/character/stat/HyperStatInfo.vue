@@ -22,9 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
 import PresetCard from '~/components/character/stat/PresetCard.vue'
-import type { HyperStatPreset } from '~/types/hyperStat'
 
 const props = defineProps<{
   hyperStatPreset: HyperStatPreset[]
@@ -35,6 +33,12 @@ const activePreset = computed(() =>
 )
 
 const selectedPresetNo = ref(activePreset.value?.presetNo ?? 1)
+
+watch(activePreset, (newValue) => {
+  if (newValue?.presetNo !== undefined) {
+    selectedPresetNo.value = newValue.presetNo
+  }
+}, { immediate: true })
 
 const selectedPreset = computed(() => {
   const preset = props.hyperStatPreset.find(preset => preset.presetNo === selectedPresetNo.value)

@@ -115,8 +115,14 @@ const props = defineProps<{
 const character = toRef(props, 'character')
 const equipPreset = computed(() => character.value?.itemEquipmentPreset)
 const activePresetIdx = computed(() => equipPreset.value?.findIndex(equip => equip.active))
-const viewPresetIdx = ref(activePresetIdx.value) // 기본값은 활성화 프리셋
+const viewPresetIdx = ref(activePresetIdx.value)
 const viewMode = ref<'icon' | 'card'>('icon')
+
+watch(activePresetIdx, (newValue) => {
+  if (newValue !== undefined) {
+    viewPresetIdx.value = newValue
+  }
+}, { immediate: true })
 
 const activePreset = computed(() => equipPreset.value?.[activePresetIdx.value ?? 0]?.itemEquipmentInfo)
 

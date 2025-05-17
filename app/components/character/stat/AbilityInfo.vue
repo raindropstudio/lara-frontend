@@ -35,6 +35,12 @@ const activePreset = computed(() =>
 
 const selectedPresetNo = ref(activePreset.value?.presetNo ?? 1)
 
+watch(activePreset, (newValue) => {
+  if (newValue?.presetNo !== undefined) {
+    selectedPresetNo.value = newValue.presetNo
+  }
+}, { immediate: true })
+
 const selectedPreset = computed(() =>
   props.ability.preset.find(preset => preset.presetNo === selectedPresetNo.value),
 )
