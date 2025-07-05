@@ -179,9 +179,11 @@
         <div
           id="union"
           ref="union"
-          class="h-[500px] w-full py-24"
+          class="w-full py-24"
         >
-          유니온
+          <div class="flex h-60 items-center justify-center">
+            <span class="text-5xl font-extralight text-lucidgray-light">작업중!</span>
+          </div>
         </div>
       </HTransitionRoot>
     </div>

@@ -110,6 +110,11 @@ const armorSetEffect = computed(() => {
     partList: ['무기', '모자', '한벌옷', '장갑', '어깨장식', '망토', '신발'],
   },
   {
+    setNamePrefix: '도전자의 장비 세트',
+    prefix: ['도전자의'],
+    partList: ['무기', '모자', '상의', '하의', '장갑', '어깨장식', '망토', '신발'],
+  },
+  {
     setNamePrefix: '루타비스 세트',
     prefix: ['파프니르', '하이네스', '이글아이', '트릭스터'],
     partList: ['무기', '모자', '상의', '하의'],
@@ -152,7 +157,7 @@ const accessorySetEffect = computed(() => {
 
   const setData = [{
     setNamePrefix: '광휘의 보스 세트',
-    itemListPrefix: ['근원의 속삭임'],
+    itemListPrefix: ['근원의 속삭임', '죽음의 맹세', '불멸의 유산'],
   },
   {
     setNamePrefix: '칠흑의 보스 세트',

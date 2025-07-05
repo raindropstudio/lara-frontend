@@ -80,8 +80,12 @@ const input = ref<HTMLInputElement | null>(null)
 const inputText = ref<string>('')
 
 const inputEvent = () => {
-  // TODO: 닉네임에 못쓰는 글자 입력제한
-  if (input.value) inputText.value = input.value.value
+  if (input.value) {
+    // 한글(자음, 모음, 완성형), 영어, 숫자만 허용
+    const filteredValue = input.value.value.replace(/[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]/g, '')
+    input.value.value = filteredValue
+    inputText.value = filteredValue
+  }
 }
 
 // 검색기록 관련

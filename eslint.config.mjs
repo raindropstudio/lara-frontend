@@ -4,4 +4,7 @@ import withNuxt from './.nuxt/eslint.config.mjs'
 
 export default withNuxt(
   tailwind.configs['flat/recommended'],
+  {
+    ignores: ['commitlint.config.ts'],
+  },
 )

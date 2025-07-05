@@ -156,6 +156,6 @@ const getExpirationText = computed(() => {
     return '마법의 시간이 끝났음'
   }
 
-  return `마법의 시간 : ${formatDate(pet.value.petInfo.petDateExpire)}까지`
+  return `마법의 시간 : ${formatDateTime(pet.value.petInfo.petDateExpire)}까지`
 })
 </script>

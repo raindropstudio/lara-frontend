@@ -269,6 +269,46 @@
           색조: {{ getPrismSignedValue(item.coloringPrismHue) }}, 채도: {{ getPrismSignedValue(item.coloringPrismSaturation) }}, 명도: {{ getPrismSignedValue(item.coloringPrismValue) }}
         </div>
       </div>
+
+      <!-- 기간제 능력치 아이템 -->
+      <div v-if="item.dateOptionExpire">
+        <!-- 점선 구분선 -->
+        <hr class="my-2 border-t border-dashed border-gray-200">
+        <div class="font-medium">
+          <span
+            v-if="isOptionExpired"
+            class="text-red-500"
+          >
+            옵션 기간 만료
+          </span>
+          <span
+            v-else
+            class="text-lucidgray-dark"
+          >
+            {{ formatKoreanDateTime(item.dateOptionExpire) }}까지 옵션 사용가능
+          </span>
+        </div>
+      </div>
+
+      <!-- 기간제 아이템 -->
+      <div v-if="item.dateExpire">
+        <!-- 점선 구분선 -->
+        <hr class="my-2 border-t border-dashed border-gray-200">
+        <div class="font-medium">
+          <span
+            v-if="isExpired"
+            class="text-red-500"
+          >
+            아이템 기간 만료
+          </span>
+          <span
+            v-else
+            class="text-lucidgray-dark"
+          >
+            {{ formatKoreanDateTime(item.dateExpire) }}까지 사용가능
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -535,4 +575,20 @@ const getPrismSignedValue = (value: number | undefined) => {
   if (value === undefined) return '+0'
   return value >= 0 ? `+${value}` : `${value}`
 }
+
+/**
+ * 기간제 능력치 옵션이 만료되었는지 확인
+ */
+const isOptionExpired = computed(() => {
+  if (!item.value?.dateOptionExpire) return false
+  return new Date(item.value.dateOptionExpire) < new Date()
+})
+
+/**
+ * 기간제 아이템이 만료되었는지 확인
+ */
+const isExpired = computed(() => {
+  if (!item.value?.dateExpire) return false
+  return new Date(item.value.dateExpire) < new Date()
+})
 </script>

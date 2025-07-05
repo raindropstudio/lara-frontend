@@ -467,13 +467,13 @@ const getPotentialLine = (item: ItemEquipmentInfo) => {
       // 초단위 제거
       contents.push({
         color: isExpired ? 'EXPIRED' : 'NORMAL',
-        text: isExpired ? '옵션 기간 만료' : formatDate(item.dateOptionExpire) + ' 만료',
+        text: isExpired ? '옵션 기간 만료' : formatDateTime(item.dateOptionExpire) + ' 만료',
       })
     }
     else if (item.dateExpire) {
       contents.push({
         color: 'NORMAL',
-        text: formatDate(item.dateExpire) + ' 까지',
+        text: formatDateTime(item.dateExpire) + ' 까지',
       })
     }
     else {

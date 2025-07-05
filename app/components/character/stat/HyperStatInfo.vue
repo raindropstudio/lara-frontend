@@ -42,7 +42,7 @@ watch(activePreset, (newValue) => {
 
 const selectedPreset = computed(() => {
   const preset = props.hyperStatPreset.find(preset => preset.presetNo === selectedPresetNo.value)
-  preset?.hyperStatInfo.sort((a, b) => b.statLevel - a.statLevel)
+  preset?.hyperStatInfo?.sort((a, b) => b.statLevel - a.statLevel)
   return preset
 })
 
