@@ -21,7 +21,7 @@ export function useCapture(options: CaptureOptions) {
     elementRef,
     filename = 'capture.png',
     width = 1400,
-    backgroundColor = '#f8fafc',
+    backgroundColor = '#fafaff',
     pixelRatio = 2,
     quality = 1,
     header,
