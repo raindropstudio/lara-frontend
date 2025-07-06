@@ -107,7 +107,7 @@
                   title="이미지로 복사"
                   class="flex items-center justify-center rounded-full bg-lucidviolet-500 p-2 text-white shadow-lg transition-all duration-200 hover:bg-lucidviolet-600 hover:shadow-xl"
                   :disabled="copyStatus === 'pending'"
-                  @click="copyPageAsImage"
+                  @click="copyAsImage"
                 >
                   <UiTooltip>
                     <IconSpinner
@@ -140,7 +140,7 @@
                   title="이미지로 저장"
                   class="flex items-center justify-center rounded-full bg-emerald-500 p-2 text-white shadow-lg transition-all duration-200 hover:bg-emerald-600 hover:shadow-xl"
                   :disabled="saveStatus === 'pending'"
-                  @click="savePageAsImage"
+                  @click="saveAsImage"
                 >
                   <UiTooltip>
                     <IconSpinner
@@ -266,7 +266,6 @@
 </template>
 
 <script setup lang="ts">
-import * as htmlToImage from 'html-to-image'
 import type { AsyncDataRequestStatus } from '#app'
 
 const route = useRoute()
@@ -372,150 +371,17 @@ sections.forEach((section) => {
   })
 })
 
+// 캡쳐 기능
 const captureElement = ref<HTMLElement | null>(null)
-const copyStatus = ref<AsyncDataRequestStatus>('idle')
-const saveStatus = ref<AsyncDataRequestStatus>('idle')
 
-const copyPageAsImage = async () => {
-  copyStatus.value = 'pending'
+const generateFilename = computed(() => {
+  if (!character.value) return 'capture.png'
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, '')
+  return `${character.value.nickname}_${date}.png`
+})
 
-  try {
-    if (captureElement.value) {
-      // 원본 스타일 저장
-      const originalStyle = {
-        width: captureElement.value.style.width,
-        minWidth: captureElement.value.style.minWidth,
-        maxWidth: captureElement.value.style.maxWidth,
-        overflow: captureElement.value.style.overflow,
-      }
-
-      // 캡쳐용 고정 너비 적용
-      captureElement.value.style.width = '1200px'
-      captureElement.value.style.minWidth = '1200px'
-      captureElement.value.style.maxWidth = '1200px'
-      captureElement.value.style.overflow = 'visible'
-
-      // 잠깐 기다려서 스타일 적용 완료
-      await new Promise(resolve => setTimeout(resolve, 100))
-
-      const blob = await htmlToImage.toBlob(captureElement.value, {
-        quality: 1,
-        pixelRatio: 2, // 더 선명한 이미지를 위해 2배 해상도
-        skipAutoScale: true,
-        backgroundColor: '#f8fafc', // 배경색 설정
-      })
-
-      // 원본 스타일 복원
-      captureElement.value.style.width = originalStyle.width
-      captureElement.value.style.minWidth = originalStyle.minWidth
-      captureElement.value.style.maxWidth = originalStyle.maxWidth
-      captureElement.value.style.overflow = originalStyle.overflow
-
-      if (blob) {
-        const item = new ClipboardItem({
-          'image/png': blob,
-        })
-
-        await navigator.clipboard.write([item])
-        copyStatus.value = 'success'
-
-        setTimeout(() => {
-          copyStatus.value = 'idle'
-        }, 3000)
-      }
-    }
-  }
-  catch (error) {
-    console.error('이미지 복사 실패:', error)
-    copyStatus.value = 'error'
-
-    // 오류 발생 시에도 스타일 복원
-    if (captureElement.value) {
-      captureElement.value.style.width = ''
-      captureElement.value.style.minWidth = ''
-      captureElement.value.style.maxWidth = ''
-      captureElement.value.style.overflow = ''
-    }
-
-    setTimeout(() => {
-      copyStatus.value = 'idle'
-    }, 3000)
-  }
-}
-
-const savePageAsImage = async () => {
-  saveStatus.value = 'pending'
-
-  try {
-    if (captureElement.value && character.value) {
-      // 원본 스타일 저장
-      const originalStyle = {
-        width: captureElement.value.style.width,
-        minWidth: captureElement.value.style.minWidth,
-        maxWidth: captureElement.value.style.maxWidth,
-        overflow: captureElement.value.style.overflow,
-      }
-
-      // 캡쳐용 고정 너비 적용
-      captureElement.value.style.width = '1200px'
-      captureElement.value.style.minWidth = '1200px'
-      captureElement.value.style.maxWidth = '1200px'
-      captureElement.value.style.overflow = 'visible'
-
-      // 잠깐 기다려서 스타일 적용 완료
-      await new Promise(resolve => setTimeout(resolve, 100))
-
-      const dataUrl = await htmlToImage.toPng(captureElement.value, {
-        quality: 1,
-        pixelRatio: 2, // 더 선명한 이미지를 위해 2배 해상도
-        skipAutoScale: true,
-        backgroundColor: '#f8fafc', // 배경색 설정
-      })
-
-      // 원본 스타일 복원
-      captureElement.value.style.width = originalStyle.width
-      captureElement.value.style.minWidth = originalStyle.minWidth
-      captureElement.value.style.maxWidth = originalStyle.maxWidth
-      captureElement.value.style.overflow = originalStyle.overflow
-
-      if (dataUrl) {
-        // 파일명 생성 (캐릭터명_날짜)
-        const date = new Date().toISOString().slice(0, 10).replace(/-/g, '')
-        const fileName = `${character.value.nickname}_${date}.png`
-
-        // 다운로드 링크 생성
-        const link = document.createElement('a')
-        link.download = fileName
-        link.href = dataUrl
-
-        // 자동 다운로드 실행
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-
-        saveStatus.value = 'success'
-
-        setTimeout(() => {
-          saveStatus.value = 'idle'
-        }, 3000)
-      }
-    }
-  }
-  catch (error) {
-    console.error('이미지 저장 실패:', error)
-    saveStatus.value = 'error'
-
-    // 오류 발생 시에도 스타일 복원
-    if (captureElement.value) {
-      captureElement.value.style.width = ''
-      captureElement.value.style.minWidth = ''
-      captureElement.value.style.maxWidth = ''
-      captureElement.value.style.overflow = ''
-    }
-
-    setTimeout(() => {
-      saveStatus.value = 'idle'
-    }, 3000)
-  }
-}
+const { copyAsImage, saveAsImage, copyStatus, saveStatus } = useCapture({
+  elementRef: captureElement,
+  filename: generateFilename,
+})
 </script>
