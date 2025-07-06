@@ -100,7 +100,7 @@ const route = useRoute()
 
 const links = [
   { name: '캐릭터', path: '/character' },
-  { name: '군장검사', path: '/', disabled: true },
+  { name: '군장검사', path: '/party' },
   { name: '코디', path: '/', disabled: true },
   { name: '지표', path: '/', disabled: true },
   { name: '도구', path: '/', disabled: true },
