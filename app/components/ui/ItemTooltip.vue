@@ -493,7 +493,7 @@ const computedStats = computed(() => {
 const optionTypeClassMap: { [key: string]: string } = {
   base: 'text-gray-600',
   add: 'text-green-500',
-  etc: 'text-gray-500',
+  etc: 'text-purple-400',
   starforce: 'text-yellow-500',
 }
 

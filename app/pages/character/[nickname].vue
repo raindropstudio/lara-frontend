@@ -1,7 +1,6 @@
 <template>
   <div>
     <div
-      ref="captureElement"
       class="relative flex flex-col items-center justify-center"
     >
       <div class="mt-20 flex items-center justify-center">
@@ -100,76 +99,6 @@
               :current-section="headerIsVisible ? '' : currentSection"
               @refresh="updateCharacter"
             />
-            <ClientOnly>
-              <div class="flex gap-2">
-                <button
-                  v-if="character"
-                  title="이미지로 복사"
-                  class="flex items-center justify-center rounded-full bg-lucidviolet-500 p-2 text-white shadow-lg transition-all duration-200 hover:bg-lucidviolet-600 hover:shadow-xl"
-                  :disabled="copyStatus === 'pending'"
-                  @click="copyAsImage"
-                >
-                  <UiTooltip>
-                    <IconSpinner
-                      v-if="copyStatus === 'pending'"
-                      class="size-4 animate-spin"
-                    />
-                    <svg
-                      v-else
-                      class="size-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                      />
-                    </svg>
-                    <template #tooltip>
-                      <div>
-                        {{ copyStatus === 'success' ? '복사 완료!' : copyStatus === 'error' ? '복사 실패' : '이미지로 복사' }}
-                      </div>
-                    </template>
-                  </UiTooltip>
-                </button>
-                <button
-                  v-if="character"
-                  title="이미지로 저장"
-                  class="flex items-center justify-center rounded-full bg-emerald-500 p-2 text-white shadow-lg transition-all duration-200 hover:bg-emerald-600 hover:shadow-xl"
-                  :disabled="saveStatus === 'pending'"
-                  @click="saveAsImage"
-                >
-                  <UiTooltip>
-                    <IconSpinner
-                      v-if="saveStatus === 'pending'"
-                      class="size-4 animate-spin"
-                    />
-                    <svg
-                      v-else
-                      class="size-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                      />
-                    </svg>
-                    <template #tooltip>
-                      <div>
-                        {{ saveStatus === 'success' ? '저장 완료!' : saveStatus === 'error' ? '저장 실패' : '이미지로 저장' }}
-                      </div>
-                    </template>
-                  </UiTooltip>
-                </button>
-              </div>
-            </ClientOnly>
           </div>
         </div>
         <div
@@ -369,19 +298,5 @@ sections.forEach((section) => {
     rootMargin: '-50% 0% -50% 0%',
     threshold: 0,
   })
-})
-
-// 캡쳐 기능
-const captureElement = ref<HTMLElement | null>(null)
-
-const generateFilename = computed(() => {
-  if (!character.value) return 'capture.png'
-  const date = new Date().toISOString().slice(0, 10).replace(/-/g, '')
-  return `${character.value.nickname}_${date}.png`
-})
-
-const { copyAsImage, saveAsImage, copyStatus, saveStatus } = useCapture({
-  elementRef: captureElement,
-  filename: generateFilename,
 })
 </script>
