@@ -139,13 +139,13 @@ export const getHexaProgress = (character: Character | undefined) => {
   const totalErda = solTable['공용 코어'][30].solErda * 1
     + solTable['마스터리 코어'][30].solErda * 4
     + solTable['강화 코어'][30].solErda * 4
-    + solTable['스킬 코어'][30].solErda * 1
+    + solTable['스킬 코어'][30].solErda * 2
 
   // 각 코어별 30레벨 에르다 조각 합
   const totalErdaPiece = solTable['공용 코어'][30].solErdaPiece * 1
     + solTable['마스터리 코어'][30].solErdaPiece * 4
     + solTable['강화 코어'][30].solErdaPiece * 4
-    + solTable['스킬 코어'][30].solErdaPiece * 1
+    + solTable['스킬 코어'][30].solErdaPiece * 2
 
   if (!character || !character.skillCore) return {
     totalErda,
